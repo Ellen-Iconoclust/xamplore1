@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Xamplore – Secure Exam (Backend Integrated)</title>
+<title>Xamplore – Secure Exam Platform</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Tailwind -->
@@ -27,32 +27,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   0%, 100% { background-color: #fef3c7; }
   50% { background-color: #fde68a; }
 }
-.completed-pattern { opacity: 0.7; position: relative; }
-.completed-pattern::after { 
-  content: "✓ Completed"; 
-  position: absolute; 
-  top: -5px; 
-  right: -5px; 
-  background: #10b981; 
-  color: white; 
-  font-size: 10px; 
-  padding: 2px 6px; 
-  border-radius: 10px; 
-  font-weight: bold;
-}
-.pattern-not-available { opacity: 0.5; position: relative; }
-.pattern-not-available::after { 
-  content: "⏰ Not Available"; 
-  position: absolute; 
-  top: -5px; 
-  right: -5px; 
-  background: #f59e0b; 
-  color: white; 
-  font-size: 10px; 
-  padding: 2px 6px; 
-  border-radius: 10px; 
-  font-weight: bold;
-}
 </style>
 </head>
 
@@ -69,11 +43,11 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       <h3 class="text-xl font-bold text-emerald-600">Welcome to Xamplore!</h3>
     </div>
     <p class="text-gray-600 mb-4">
-      Ready to test your knowledge? Head over to the <span class="font-semibold text-emerald-600">Test</span> section in the menu to take secure exams.
+      Ready to test your knowledge? Head over to the <span class="font-semibold text-emerald-600">Test</span> section to take exams.
     </p>
     <div class="text-sm text-gray-500">
       <i data-lucide="info" class="inline w-4 h-4 mr-1"></i>
-      Platform Version: <span class="font-bold">Xam1.0 (Server)</span>
+      Platform Version: <span class="font-bold">Xam1.0</span>
     </div>
   </div>
 </div>
@@ -83,7 +57,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
     <div class="flex items-center gap-2 brand text-2xl font-extrabold text-emerald-600">
       <i data-lucide="graduation-cap"></i> Xamplore
-      <span class="text-xs font-normal bg-emerald-100 text-emerald-700 px-2 py-1 rounded">v2.4</span>
+      <span class="text-xs font-normal bg-emerald-100 text-emerald-700 px-2 py-1 rounded">v2.5</span>
     </div>
 
     <div class="hidden md:flex gap-8 font-semibold">
@@ -124,13 +98,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 <section id="test" class="hidden py-16">
   <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-xl">
 
-    <!-- Pattern Availability Display -->
-    <div id="patternTimerDisplay" class="hidden mb-4 p-3 border rounded-lg">
-      <div id="patternTimerContent">
-        <!-- Will be populated dynamically -->
-      </div>
-    </div>
-
     <!-- Global Timer Display -->
     <div id="globalTimerDisplay" class="hidden mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
       <div class="flex items-center justify-center gap-2">
@@ -150,18 +117,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
     <div id="login">
       <h2 class="text-2xl font-bold mb-4 text-emerald-600">Exam Login</h2>
       
-      <!-- Completed Patterns Indicator -->
-      <div id="completedPatternsInfo" class="hidden mb-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
-        <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
-          <i data-lucide="check-circle" class="text-emerald-600"></i>
-          <span class="font-semibold">Completed Patterns:</span>
-        </div>
-        <div id="completedPatternsList" class="flex flex-wrap gap-2">
-          <!-- Will be populated dynamically -->
-        </div>
-        <p class="text-xs text-gray-500 mt-2">You can take tests for other patterns</p>
-      </div>
-      
       <input id="nameInput" class="w-full p-2 mb-3 border rounded" placeholder="Your Name">
       <select id="patternSelect" class="w-full p-2 mb-3 border rounded">
         <option value="">Select Pattern</option>
@@ -169,9 +124,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         <option value="B">Pattern B</option>
         <option value="C">Pattern C</option>
       </select>
-      
-      <!-- Pattern Status Display -->
-      <div id="patternStatus" class="hidden mb-3 p-2 text-sm rounded"></div>
       
       <input id="passwordInput" type="password" class="w-full p-2 mb-4 border rounded" placeholder="Pattern Password">
       <button onclick="verifyLogin()" class="w-full bg-emerald-600 text-white p-2 rounded font-semibold">
@@ -233,7 +185,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       </button>
       <div id="retryMsg" class="text-red-500 text-xs mt-2"></div>
       <button onclick="resetToLogin()" class="mt-4 w-full bg-gray-600 text-white p-2 rounded text-sm">
-        Try Different Pattern
+        Back to Login
       </button>
     </div>
 
@@ -243,10 +195,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       </div>
       <h2 class="text-2xl font-bold text-emerald-600">Test Completed Successfully!</h2>
       <p id="resultText" class="mt-3 text-lg font-semibold"></p>
-      <div class="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
-        <p class="text-sm text-emerald-700 mb-2">Pattern Completed: <span class="font-bold" id="completedPatternDisplay"></span></p>
-        <p class="text-xs text-emerald-600">You can now take tests for other patterns</p>
-      </div>
       <div class="mt-6 space-y-3">
         <button onclick="downloadPDF()" class="w-full bg-emerald-600 text-white p-2 rounded font-semibold">
           <i data-lucide="download" class="inline w-4 h-4 mr-2"></i> Download PDF Certificate
@@ -278,7 +226,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 
 <!-- ADMIN PAGE -->
 <section id="admin" class="hidden py-16">
-  <div class="max-w-6xl mx-auto px-4">
+  <div class="max-w-4xl mx-auto px-4">
     <h2 class="text-3xl font-bold text-center text-emerald-600 mb-8">Admin Dashboard</h2>
     
     <!-- Admin Login -->
@@ -300,85 +248,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         </button>
       </div>
 
-      <!-- Pattern Timer Control Section -->
-      <div class="mb-8 p-4 bg-gray-50 rounded-lg">
-        <h4 class="font-bold text-lg text-gray-700 mb-3 flex items-center gap-2">
-          <i data-lucide="calendar-clock"></i> Pattern Timer Control
-        </h4>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <!-- Pattern A Timer -->
-          <div class="border rounded-lg p-4">
-            <h5 class="font-bold text-lg text-emerald-700 mb-3">Pattern A</h5>
-            <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
-              <input id="patternAStart" type="datetime-local" class="w-full p-2 border rounded">
-            </div>
-            <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
-              <input id="patternAEnd" type="datetime-local" class="w-full p-2 border rounded">
-            </div>
-            <div class="flex items-center mb-3">
-              <input id="patternAActive" type="checkbox" class="mr-2" checked>
-              <label class="text-sm text-gray-700">Active</label>
-            </div>
-            <button onclick="setPatternTimer('A')" class="w-full bg-emerald-600 text-white p-2 rounded font-semibold">
-              Set Timer
-            </button>
-            <div id="patternAStatus" class="mt-2 text-sm"></div>
-          </div>
-
-          <!-- Pattern B Timer -->
-          <div class="border rounded-lg p-4">
-            <h5 class="font-bold text-lg text-blue-700 mb-3">Pattern B</h5>
-            <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
-              <input id="patternBStart" type="datetime-local" class="w-full p-2 border rounded">
-            </div>
-            <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
-              <input id="patternBEnd" type="datetime-local" class="w-full p-2 border rounded">
-            </div>
-            <div class="flex items-center mb-3">
-              <input id="patternBActive" type="checkbox" class="mr-2" checked>
-              <label class="text-sm text-gray-700">Active</label>
-            </div>
-            <button onclick="setPatternTimer('B')" class="w-full bg-blue-600 text-white p-2 rounded font-semibold">
-              Set Timer
-            </button>
-            <div id="patternBStatus" class="mt-2 text-sm"></div>
-          </div>
-
-          <!-- Pattern C Timer -->
-          <div class="border rounded-lg p-4">
-            <h5 class="font-bold text-lg text-purple-700 mb-3">Pattern C</h5>
-            <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
-              <input id="patternCStart" type="datetime-local" class="w-full p-2 border rounded">
-            </div>
-            <div class="mb-3">
-              <label class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
-              <input id="patternCEnd" type="datetime-local" class="w-full p-2 border rounded">
-            </div>
-            <div class="flex items-center mb-3">
-              <input id="patternCActive" type="checkbox" class="mr-2" checked>
-              <label class="text-sm text-gray-700">Active</label>
-            </div>
-            <button onclick="setPatternTimer('C')" class="w-full bg-purple-600 text-white p-2 rounded font-semibold">
-              Set Timer
-            </button>
-            <div id="patternCStatus" class="mt-2 text-sm"></div>
-          </div>
-        </div>
-
-        <div class="text-center">
-          <button onclick="clearAllPatternTimers()" class="px-4 py-2 bg-gray-600 text-white rounded">
-            <i data-lucide="trash-2" class="inline w-4 h-4 mr-1"></i> Clear All Timers
-          </button>
-        </div>
-      </div>
-
-      <!-- Global Timer Control Section -->
+      <!-- Timer Control Section -->
       <div class="mb-8 p-4 bg-gray-50 rounded-lg">
         <h4 class="font-bold text-lg text-gray-700 mb-3 flex items-center gap-2">
           <i data-lucide="clock"></i> Global Timer Control
@@ -402,7 +272,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Set Duration (Minutes)</label>
-            <input id="timerMinutes" type="number" min="1" max="60" value="10" class="w-full p-2 border rounded">
+            <input id="timerMinutes" type="number" min="1" max="120" value="10" class="w-full p-2 border rounded">
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Set Duration (Seconds)</label>
@@ -439,7 +309,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       </div>
 
       <!-- Exam Statistics -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div class="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
           <div class="flex items-center justify-between">
             <div>
@@ -467,15 +337,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
             <i data-lucide="check-circle" class="text-purple-500"></i>
           </div>
         </div>
-        <div class="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-yellow-600">Waiting</p>
-              <p id="waitingExams" class="text-2xl font-bold text-yellow-700">0</p>
-            </div>
-            <i data-lucide="clock" class="text-yellow-500"></i>
-          </div>
-        </div>
       </div>
 
       <!-- Student List -->
@@ -489,7 +350,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
                 <th class="p-3 text-left">Pattern</th>
                 <th class="p-3 text-left">Status</th>
                 <th class="p-3 text-left">Progress</th>
-                <th class="p-3 text-left">Completed Patterns</th>
                 <th class="p-3 text-left">Actions</th>
               </tr>
             </thead>
@@ -507,8 +367,8 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 <section id="about" class="hidden py-20">
     <div class="text-center text-gray-600">
         <h2 class="text-3xl font-bold text-emerald-600">About</h2>
-        <p class="mt-4">Xamplore Backend Version with Pattern Timer Controls.</p>
-        <p class="text-sm text-gray-500 mt-2">Version 2.4 - Enhanced pattern timing controls</p>
+        <p class="mt-4">Xamplore - Simple and Secure Exam Platform.</p>
+        <p class="text-sm text-gray-500 mt-2">Version 2.5 - Simplified timer system</p>
     </div>
 </section>
 
@@ -528,18 +388,14 @@ let studentPattern = "";
 let adminAuthenticated = false;
 let adminPollingInterval = null;
 let studentTimerInterval = null;
-let patternTimerInterval = null;
 let lastTimerState = { active: false };
-let completedPatterns = []; // Track which patterns this student has completed
 let isWaitingForTimer = false; // Track if we're in waiting mode
 let examSubmitted = false; // Track if exam has been submitted
-let patternTimers = {}; // Track pattern timers
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => el('welcomePopup').classList.remove('hidden'), 500);
   checkAuth();
-  checkPatternTimers();
 });
 function closeWelcomePopup() { el('welcomePopup').classList.add('hidden'); }
 
@@ -559,10 +415,6 @@ function showSection(id){
       adminPollingInterval = null;
     }
   }
-  if(id === 'test') {
-    checkCompletedPatterns();
-    checkPatternTimers();
-  }
 }
 
 // Reset to login screen
@@ -575,7 +427,6 @@ function resetToLogin() {
   el('failed').classList.add('hidden');
   el('result').classList.add('hidden');
   el('loader').classList.add('hidden');
-  el('patternTimerDisplay').classList.add('hidden');
   el('globalTimerDisplay').classList.add('hidden');
   
   // Reset form
@@ -583,7 +434,6 @@ function resetToLogin() {
   el('patternSelect').value = '';
   el('passwordInput').value = '';
   el('patternWarning').classList.add('hidden');
-  el('patternStatus').classList.add('hidden');
   
   // Reset state
   questions = [];
@@ -593,165 +443,8 @@ function resetToLogin() {
   isWaitingForTimer = false;
   examSubmitted = false;
   
-  // Clear intervals
-  if (patternTimerInterval) {
-    clearInterval(patternTimerInterval);
-    patternTimerInterval = null;
-  }
-  
-  // Check completed patterns again
-  checkCompletedPatterns();
-  checkPatternTimers();
-}
-
-// --- PATTERN TIMER FUNCTIONS ---
-
-async function checkPatternTimers() {
-  try {
-    const res = await fetch('/api/pattern-timers');
-    if (res.ok) {
-      patternTimers = await res.json();
-      updatePatternSelectUI();
-      updatePatternTimerDisplay();
-    }
-  } catch (e) {
-    console.error("Error checking pattern timers:", e);
-  }
-}
-
-function updatePatternSelectUI() {
-  const patternSelect = el('patternSelect');
-  const patternStatus = el('patternStatus');
-  
-  if (Object.keys(patternTimers).length === 0) return;
-  
-  Array.from(patternSelect.options).forEach(option => {
-    if (option.value && patternTimers[option.value]) {
-      const timer = patternTimers[option.value];
-      
-      if (!timer.available) {
-        // Pattern not available
-        option.disabled = true;
-        option.textContent = `Pattern ${option.value} (${timer.message})`;
-        option.classList.add('text-gray-400');
-      } else {
-        // Pattern available
-        option.disabled = false;
-        option.textContent = `Pattern ${option.value}`;
-        option.classList.remove('text-gray-400');
-        
-        // If there's a timer active, add info
-        if (timer.endTime) {
-          const now = Date.now();
-          if (timer.endTime > now) {
-            const timeLeft = timer.endTime - now;
-            const minutes = Math.floor(timeLeft / 60000);
-            const seconds = Math.floor((timeLeft % 60000) / 1000);
-            option.textContent = `Pattern ${option.value} (Ends in ${minutes}m ${seconds}s)`;
-          }
-        }
-      }
-    }
-  });
-  
-  // Update pattern status display
-  const selectedPattern = patternSelect.value;
-  if (selectedPattern && patternTimers[selectedPattern]) {
-    const timer = patternTimers[selectedPattern];
-    patternStatus.classList.remove('hidden');
-    
-    if (!timer.available) {
-      patternStatus.innerHTML = `
-        <div class="flex items-center gap-2 text-yellow-600">
-          <i data-lucide="clock" class="w-4 h-4"></i>
-          <span class="font-medium">${timer.message}</span>
-        </div>
-      `;
-      patternStatus.className = 'mb-3 p-2 text-sm rounded bg-yellow-50 border border-yellow-200';
-    } else if (timer.endTime) {
-      const now = Date.now();
-      if (timer.endTime > now) {
-        const timeLeft = timer.endTime - now;
-        const minutes = Math.floor(timeLeft / 60000);
-        const seconds = Math.floor((timeLeft % 60000) / 1000);
-        patternStatus.innerHTML = `
-          <div class="flex items-center gap-2 text-green-600">
-            <i data-lucide="check-circle" class="w-4 h-4"></i>
-            <span class="font-medium">Available - Ends in ${minutes}m ${seconds}s</span>
-          </div>
-        `;
-        patternStatus.className = 'mb-3 p-2 text-sm rounded bg-green-50 border border-green-200';
-      } else {
-        patternStatus.innerHTML = `
-          <div class="flex items-center gap-2 text-gray-600">
-            <i data-lucide="check-circle" class="w-4 h-4"></i>
-            <span class="font-medium">Available</span>
-          </div>
-        `;
-        patternStatus.className = 'mb-3 p-2 text-sm rounded bg-gray-50 border border-gray-200';
-      }
-    } else {
-      patternStatus.innerHTML = `
-        <div class="flex items-center gap-2 text-green-600">
-          <i data-lucide="check-circle" class="w-4 h-4"></i>
-          <span class="font-medium">Available</span>
-        </div>
-      `;
-      patternStatus.className = 'mb-3 p-2 text-sm rounded bg-green-50 border border-green-200';
-    }
-    
-    lucide.createIcons();
-  } else {
-    patternStatus.classList.add('hidden');
-  }
-}
-
-function updatePatternTimerDisplay() {
-  const display = el('patternTimerDisplay');
-  const content = el('patternTimerContent');
-  
-  // Check if any pattern has an active timer
-  let hasActiveTimer = false;
-  let timerInfo = [];
-  
-  Object.keys(patternTimers).forEach(pattern => {
-    const timer = patternTimers[pattern];
-    if (timer.endTime) {
-      const now = Date.now();
-      if (timer.endTime > now) {
-        hasActiveTimer = true;
-        const timeLeft = timer.endTime - now;
-        const minutes = Math.floor(timeLeft / 60000);
-        const seconds = Math.floor((timeLeft % 60000) / 1000);
-        timerInfo.push(`Pattern ${pattern}: ${minutes}m ${seconds}s left`);
-      }
-    }
-  });
-  
-  if (hasActiveTimer) {
-    display.classList.remove('hidden');
-    content.innerHTML = `
-      <div class="flex items-center gap-2">
-        <i data-lucide="calendar-clock" class="text-emerald-600"></i>
-        <span class="font-semibold text-emerald-700">Pattern Timers Active:</span>
-        <span class="text-sm text-gray-600">${timerInfo.join(', ')}</span>
-      </div>
-    `;
-    display.className = 'mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg';
-  } else {
-    display.classList.add('hidden');
-  }
-  
-  // Start interval to update pattern timers if not already running
-  if (hasActiveTimer && !patternTimerInterval) {
-    patternTimerInterval = setInterval(() => {
-      updatePatternSelectUI();
-      updatePatternTimerDisplay();
-    }, 1000);
-  } else if (!hasActiveTimer && patternTimerInterval) {
-    clearInterval(patternTimerInterval);
-    patternTimerInterval = null;
-  }
+  // Clear cookies
+  document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
 
 // --- ADMIN FUNCTIONS ---
@@ -814,40 +507,9 @@ async function loadAdminDashboard() {
     el('totalStudents').textContent = stats.totalStudents || 0;
     el('activeExams').textContent = stats.activeExams || 0;
     el('completedExams').textContent = stats.completedExams || 0;
-    el('waitingExams').textContent = stats.waitingExams || 0;
     
     updateTimerDisplay(timer);
     updateStudentList(students);
-    
-    // Load pattern timer values if available
-    if (timer.patternTimers) {
-      ['A', 'B', 'C'].forEach(pattern => {
-        const timerData = timer.patternTimers[pattern];
-        if (timerData) {
-          // Set checkbox
-          el(`pattern${pattern}Active`).checked = timerData.active !== false;
-          
-          // Set start time
-          if (timerData.startTime) {
-            const startDate = new Date(timerData.startTime);
-            el(`pattern${pattern}Start`).value = startDate.toISOString().slice(0, 16);
-          } else {
-            el(`pattern${pattern}Start`).value = '';
-          }
-          
-          // Set end time
-          if (timerData.endTime) {
-            const endDate = new Date(timerData.endTime);
-            el(`pattern${pattern}End`).value = endDate.toISOString().slice(0, 16);
-          } else {
-            el(`pattern${pattern}End`).value = '';
-          }
-          
-          // Update status display
-          updatePatternTimerStatus(pattern, timerData);
-        }
-      });
-    }
     
   } catch (e) {
     console.error("Error loading admin dashboard:", e);
@@ -897,7 +559,7 @@ function updateTimerDisplay(timer) {
 function updateStudentList(students) {
   const tbody = el('studentTableBody');
   if (!students || students.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-500">No active students</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-500">No active students</td></tr>';
     return;
   }
   
@@ -921,14 +583,6 @@ function updateStudentList(students) {
           <div class="bg-emerald-600 h-2 rounded-full" style="width: ${student.progress || 0}%"></div>
         </div>
         <div class="text-xs text-gray-500 mt-1">${student.currentQuestion || 0}/${student.totalQuestions || 0}</div>
-      </td>
-      <td class="p-3">
-        ${student.completedPatterns && student.completedPatterns.length > 0 ? 
-          student.completedPatterns.map(p => 
-            `<span class="inline-block px-2 py-1 mr-1 mb-1 text-xs bg-emerald-100 text-emerald-800 rounded">${p}</span>`
-          ).join('') : 
-          '<span class="text-gray-400 text-xs">None</span>'
-        }
       </td>
       <td class="p-3">
         ${student.status === 'started' || student.status === 'waiting' ? 
@@ -970,104 +624,6 @@ async function startGlobalTimer() {
     }
   } catch (e) {
     alert("Error starting timer");
-  }
-}
-
-async function setPatternTimer(pattern) {
-  const startInput = el(`pattern${pattern}Start`);
-  const endInput = el(`pattern${pattern}End`);
-  const activeInput = el(`pattern${pattern}Active`);
-  
-  const startTime = startInput.value ? new Date(startInput.value).toISOString() : null;
-  const endTime = endInput.value ? new Date(endInput.value).toISOString() : null;
-  const active = activeInput.checked;
-  
-  // Validate end time is after start time if both are set
-  if (startTime && endTime && new Date(startTime) >= new Date(endTime)) {
-    alert("End time must be after start time");
-    return;
-  }
-  
-  try {
-    const res = await fetch('/api/admin/timer/pattern', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pattern, startTime, endTime, active })
-    });
-    
-    const data = await res.json();
-    if (res.ok) {
-      alert(`Pattern ${pattern} timer set successfully!`);
-      updatePatternTimerStatus(pattern, data.patternTimer);
-      loadAdminDashboard();
-    } else {
-      alert(data.error || "Failed to set pattern timer");
-    }
-  } catch (e) {
-    alert("Error setting pattern timer");
-  }
-}
-
-function updatePatternTimerStatus(pattern, timerData) {
-  const statusEl = el(`pattern${pattern}Status`);
-  
-  if (!timerData.active) {
-    statusEl.innerHTML = '<span class="text-gray-500">Timer inactive</span>';
-    return;
-  }
-  
-  const now = Date.now();
-  let statusHtml = '';
-  
-  if (timerData.startTime && now < timerData.startTime) {
-    const timeUntilStart = timerData.startTime - now;
-    const days = Math.floor(timeUntilStart / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeUntilStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeUntilStart % (1000 * 60 * 60)) / (1000 * 60));
-    
-    statusHtml = `<span class="text-yellow-600">Starts in ${days}d ${hours}h ${minutes}m</span>`;
-  } else if (timerData.endTime && now > timerData.endTime) {
-    statusHtml = '<span class="text-red-600">Time has ended</span>';
-  } else if (timerData.endTime) {
-    const timeLeft = timerData.endTime - now;
-    const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-    
-    if (hours > 0) {
-      statusHtml = `<span class="text-green-600">Ends in ${hours}h ${minutes}m</span>`;
-    } else {
-      statusHtml = `<span class="text-green-600">Ends in ${minutes}m ${seconds}s</span>`;
-    }
-  } else {
-    statusHtml = '<span class="text-green-600">No time limit set</span>';
-  }
-  
-  statusEl.innerHTML = statusHtml;
-}
-
-async function clearAllPatternTimers() {
-  if (!confirm("Are you sure you want to clear all pattern timers?")) return;
-  
-  try {
-    // Clear all three patterns
-    await Promise.all(['A', 'B', 'C'].map(async (pattern) => {
-      await fetch('/api/admin/timer/pattern', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          pattern, 
-          startTime: null, 
-          endTime: null, 
-          active: false 
-        })
-      });
-    }));
-    
-    alert("All pattern timers cleared!");
-    loadAdminDashboard();
-  } catch (e) {
-    alert("Error clearing pattern timers");
   }
 }
 
@@ -1167,42 +723,6 @@ async function checkAuth() {
     } catch (e) { console.error("Auth check failed", e); }
 }
 
-async function checkCompletedPatterns() {
-  try {
-    const res = await fetch('/api/completed-patterns');
-    const data = await res.json();
-    
-    if (res.ok && data.completedPatterns) {
-      completedPatterns = data.completedPatterns;
-      updatePatternUI();
-    }
-  } catch (e) {
-    console.error("Error checking completed patterns:", e);
-  }
-}
-
-function updatePatternUI() {
-  const patternSelect = el('patternSelect');
-  const completedInfo = el('completedPatternsInfo');
-  const completedList = el('completedPatternsList');
-  const patternWarning = el('patternWarning');
-  
-  if (completedPatterns.length > 0) {
-    completedInfo.classList.remove('hidden');
-    
-    // Update completed patterns list
-    completedList.innerHTML = completedPatterns.map(pattern => 
-      `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-        <i data-lucide="check" class="w-3 h-3 mr-1"></i> Pattern ${pattern}
-      </span>`
-    ).join('');
-    
-    lucide.createIcons();
-  } else {
-    completedInfo.classList.add('hidden');
-  }
-}
-
 async function verifyLogin() {
     const name = el('nameInput').value.trim();
     const pattern = el('patternSelect').value;
@@ -1211,13 +731,6 @@ async function verifyLogin() {
 
     if (!name || !pattern || !password) {
         patternWarning.textContent = "Please fill all fields";
-        patternWarning.classList.remove('hidden');
-        return;
-    }
-    
-    // Check if pattern is already completed
-    if (completedPatterns.includes(pattern)) {
-        patternWarning.textContent = `Pattern ${pattern} is already completed. Please select a different pattern.`;
         patternWarning.classList.remove('hidden');
         return;
     }
@@ -1346,12 +859,6 @@ async function checkForResults() {
       showResultScreen(data.score, data.total);
       stopMonitoring();
       isWaitingForTimer = false;
-      
-      // Add pattern to completed patterns
-      if (!completedPatterns.includes(studentPattern)) {
-        completedPatterns.push(studentPattern);
-        updatePatternUI();
-      }
     } else if (res.ok && !data.completed) {
       // Still waiting
       el('waitingStatus').textContent = "Still waiting for timer to end...";
@@ -1404,17 +911,9 @@ async function startExam() {
             checkGlobalTimer();
         } else {
             alert(data.error);
-            if (data.error.includes("completed")) {
-                checkCompletedPatterns();
-                showSection('test');
-            }
             if (data.error.includes("failed")) failTestUI();
             if (data.error.includes("waiting")) {
                 showWaitingForTimer();
-            }
-            if (data.error.includes("not available")) {
-                checkPatternTimers();
-                resetToLogin();
             }
         }
     } catch (e) { alert("Could not start exam"); }
@@ -1520,12 +1019,6 @@ async function submitExam() {
                 showResultScreen(data.score, data.total);
                 stopMonitoring();
                 
-                // Add pattern to completed patterns
-                if (!completedPatterns.includes(studentPattern)) {
-                    completedPatterns.push(studentPattern);
-                    updatePatternUI();
-                }
-                
                 if (studentTimerInterval) {
                     clearInterval(studentTimerInterval);
                     studentTimerInterval = null;
@@ -1547,13 +1040,11 @@ function showResultScreen(score, total, minimal = false) {
     el('waitingForTimer').classList.add('hidden');
     el('failed').classList.add('hidden');
     el('result').classList.remove('hidden');
-    el('patternTimerDisplay').classList.add('hidden');
     el('globalTimerDisplay').classList.add('hidden');
     
     try { document.exitFullscreen(); } catch(e){}
     
     el('resultText').textContent = `${studentName} — Pattern ${studentPattern} — Score ${score}/${total}`;
-    el('completedPatternDisplay').textContent = studentPattern;
     
     if (minimal) {
         if (!finalResults) document.querySelector("#result button").style.display = 'none';
@@ -1619,7 +1110,6 @@ function failTestUI() {
     el('waitingForTimer').classList.add('hidden');
     el('result').classList.add('hidden');
     el('failed').classList.remove('hidden');
-    el('patternTimerDisplay').classList.add('hidden');
     el('globalTimerDisplay').classList.add('hidden');
     
     try { document.exitFullscreen(); } catch(e){}
@@ -1719,9 +1209,6 @@ window.guess = function(l) {
     hangman.guessed.push(l);
     updateHangmanUI();
 }
-
-// Add event listener for pattern select change
-el('patternSelect').addEventListener('change', updatePatternSelectUI);
 </script>
 
 </body>
