@@ -22,6 +22,24 @@
 body { font-family:'Poppins',sans-serif; overflow-x: hidden; }
 .brand { font-family:'Montserrat',sans-serif; }
 input[type="password"] { user-select: none; -webkit-user-select: none; }
+.timer-running { animation: pulse 2s infinite; }
+@keyframes pulse {
+  0%, 100% { background-color: #fef3c7; }
+  50% { background-color: #fde68a; }
+}
+.completed-pattern { opacity: 0.7; position: relative; }
+.completed-pattern::after { 
+  content: "✓ Completed"; 
+  position: absolute; 
+  top: -5px; 
+  right: -5px; 
+  background: #10b981; 
+  color: white; 
+  font-size: 10px; 
+  padding: 2px 6px; 
+  border-radius: 10px; 
+  font-weight: bold;
+}
 </style>
 </head>
 
@@ -52,13 +70,14 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
     <div class="flex items-center gap-2 brand text-2xl font-extrabold text-emerald-600">
       <i data-lucide="graduation-cap"></i> Xamplore
-      <span class="text-xs font-normal bg-emerald-100 text-emerald-700 px-2 py-1 rounded">v2.0</span>
+      <span class="text-xs font-normal bg-emerald-100 text-emerald-700 px-2 py-1 rounded">v2.1</span>
     </div>
 
     <div class="hidden md:flex gap-8 font-semibold">
       <button onclick="showSection('home')">Home</button>
       <button onclick="showSection('test')">Test</button>
       <button onclick="showSection('hangman')">Hangman</button>
+      <button onclick="showSection('admin')">Admin</button>
       <button onclick="showSection('about')">About</button>
     </div>
 
@@ -71,6 +90,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
     <button onclick="showSection('home')" class="block">Home</button>
     <button onclick="showSection('test')" class="block">Test</button>
     <button onclick="showSection('hangman')" class="block">Hangman</button>
+    <button onclick="showSection('admin')" class="block">Admin</button>
     <button onclick="showSection('about')" class="block">About</button>
   </div>
 </nav>
@@ -85,12 +105,21 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
     Xamplore is a secure online examination platform designed to
     reduce malpractice and ensure fair evaluation.
   </p>
-  <!-- FEATURES, WHY (Omitted for brevity, kept structure) -->
 </section>
 
 <!-- TEST -->
 <section id="test" class="hidden py-16">
   <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-xl">
+
+    <!-- Global Timer Display (Visible during exam) -->
+    <div id="globalTimerDisplay" class="hidden mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+      <div class="flex items-center justify-center gap-2">
+        <i data-lucide="clock" class="text-yellow-600"></i>
+        <span class="font-bold text-yellow-700">Global Timer Active:</span>
+        <span id="globalTimer" class="font-mono text-xl font-bold text-yellow-800">--:--</span>
+      </div>
+      <p class="text-xs text-yellow-600 mt-1">Final question locked until timer ends</p>
+    </div>
 
     <!-- Loading State -->
     <div id="loader" class="hidden text-center py-10">
@@ -100,6 +129,18 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 
     <div id="login">
       <h2 class="text-2xl font-bold mb-4 text-emerald-600">Exam Login</h2>
+      
+      <!-- Completed Patterns Indicator -->
+      <div id="completedPatternsInfo" class="hidden mb-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+        <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
+          <i data-lucide="check-circle" class="text-emerald-600"></i>
+          <span class="font-semibold">Completed Patterns:</span>
+        </div>
+        <div id="completedPatternsList" class="flex flex-wrap gap-2">
+          <!-- Will be populated dynamically -->
+        </div>
+      </div>
+      
       <input id="nameInput" class="w-full p-2 mb-3 border rounded" placeholder="Your Name">
       <select id="patternSelect" class="w-full p-2 mb-3 border rounded">
         <option value="">Select Pattern</option>
@@ -111,6 +152,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       <button onclick="verifyLogin()" class="w-full bg-emerald-600 text-white p-2 rounded font-semibold">
         Continue
       </button>
+      <p id="patternWarning" class="text-red-500 text-xs mt-2 hidden"></p>
     </div>
 
     <div id="rules" class="hidden">
@@ -128,7 +170,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 
     <div id="exam" class="hidden">
       <div id="questionBox"></div>
-      <button onclick="nextQuestion()" class="mt-4 w-full bg-emerald-600 text-white p-2 rounded">
+      <button id="nextButton" onclick="nextQuestion()" class="mt-4 w-full bg-emerald-600 text-white p-2 rounded">
         Next
       </button>
     </div>
@@ -157,19 +199,19 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       <button onclick="downloadPDF()" class="mt-4 bg-emerald-600 text-white p-2 rounded">
         Download PDF
       </button>
+      <button onclick="showSection('home')" class="mt-4 ml-2 bg-gray-600 text-white p-2 rounded">
+        Return to Home
+      </button>
     </div>
 
   </div>
 </section>
 
-<!-- HANGMAN (Keeping logic, it handles itself) -->
+<!-- HANGMAN -->
 <section id="hangman" class="hidden py-16">
   <div class="max-w-4xl mx-auto px-4">
     <h2 class="text-3xl font-bold text-center text-emerald-600 mb-8">Tech Hangman</h2>
     <div class="flex justify-center"><p class="text-gray-500">(Game functionality preserved)</p></div>
-    <!-- Simplified placeholder for brevity as user didn't ask to change this -->
-    <!-- BUT user provided full file, I should try to preserve it if possible or just include necessary parts -->
-    <!-- Re-including simplified hangman UI for completeness -->
     <div class="bg-white p-6 rounded-xl shadow-lg border mt-4 text-center">
         <div id="hangmanWordDisplay" class="text-2xl font-mono mb-4"></div>
         <div id="letterButtons" class="flex flex-wrap gap-2 justify-center"></div>
@@ -178,11 +220,152 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   </div>
 </section>
 
+<!-- ADMIN PAGE -->
+<section id="admin" class="hidden py-16">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center text-emerald-600 mb-8">Admin Dashboard</h2>
+    
+    <!-- Admin Login -->
+    <div id="adminLogin" class="bg-white p-6 rounded-xl shadow-lg border max-w-md mx-auto">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">Admin Authentication</h3>
+      <input id="adminName" class="w-full p-2 mb-3 border rounded" placeholder="Admin Name" value="Ellen@SRCAS">
+      <input id="adminPassword" type="password" class="w-full p-2 mb-4 border rounded" placeholder="Password" value="srcasadmin123">
+      <button onclick="adminLogin()" class="w-full bg-emerald-600 text-white p-2 rounded font-semibold">
+        Login as Admin
+      </button>
+    </div>
+
+    <!-- Admin Dashboard (Hidden Initially) -->
+    <div id="adminDashboard" class="hidden bg-white p-6 rounded-xl shadow-lg border mt-6">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-gray-800">Exam Control Panel</h3>
+        <button onclick="adminLogout()" class="text-sm text-red-600 hover:text-red-800">
+          <i data-lucide="log-out" class="inline w-4 h-4 mr-1"></i> Logout
+        </button>
+      </div>
+
+      <!-- Timer Control Section -->
+      <div class="mb-8 p-4 bg-gray-50 rounded-lg">
+        <h4 class="font-bold text-lg text-gray-700 mb-3 flex items-center gap-2">
+          <i data-lucide="clock"></i> Global Timer Control
+        </h4>
+        
+        <!-- Timer Status -->
+        <div id="timerStatus" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="font-semibold text-blue-700">Status:</span>
+              <span id="currentTimerStatus" class="ml-2 px-2 py-1 rounded text-sm font-medium bg-gray-100">Not Active</span>
+            </div>
+            <div id="activeTimerInfo" class="hidden">
+              <span class="font-semibold text-blue-700">Remaining:</span>
+              <span id="activeTimerRemaining" class="ml-2 font-mono text-lg font-bold">00:00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timer Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Set Duration (Minutes)</label>
+            <input id="timerMinutes" type="number" min="1" max="60" value="10" class="w-full p-2 border rounded">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Set Duration (Seconds)</label>
+            <input id="timerSeconds" type="number" min="0" max="59" value="0" class="w-full p-2 border rounded">
+          </div>
+          <div class="flex items-end">
+            <button onclick="startGlobalTimer()" class="w-full bg-emerald-600 text-white p-2 rounded font-semibold">
+              Start Timer
+            </button>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button onclick="pauseGlobalTimer()" class="flex-1 bg-yellow-500 text-white p-2 rounded">
+            <i data-lucide="pause" class="inline w-4 h-4 mr-1"></i> Pause
+          </button>
+          <button onclick="resumeGlobalTimer()" class="flex-1 bg-blue-500 text-white p-2 rounded">
+            <i data-lucide="play" class="inline w-4 h-4 mr-1"></i> Resume
+          </button>
+          <button onclick="stopGlobalTimer()" class="flex-1 bg-red-600 text-white p-2 rounded">
+            <i data-lucide="square" class="inline w-4 h-4 mr-1"></i> Stop
+          </button>
+        </div>
+
+        <!-- Timer History -->
+        <div class="mt-6">
+          <h5 class="font-bold text-gray-700 mb-2 flex items-center gap-2">
+            <i data-lucide="history"></i> Timer History
+          </h5>
+          <div id="timerHistory" class="text-sm text-gray-600">
+            <p class="text-gray-400 italic">No timer history yet</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exam Statistics -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-emerald-600">Total Students</p>
+              <p id="totalStudents" class="text-2xl font-bold text-emerald-700">0</p>
+            </div>
+            <i data-lucide="users" class="text-emerald-500"></i>
+          </div>
+        </div>
+        <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-blue-600">Active Exams</p>
+              <p id="activeExams" class="text-2xl font-bold text-blue-700">0</p>
+            </div>
+            <i data-lucide="activity" class="text-blue-500"></i>
+          </div>
+        </div>
+        <div class="p-4 bg-purple-50 rounded-lg border border-purple-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-purple-600">Completed</p>
+              <p id="completedExams" class="text-2xl font-bold text-purple-700">0</p>
+            </div>
+            <i data-lucide="check-circle" class="text-purple-500"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Student List -->
+      <div>
+        <h4 class="font-bold text-lg text-gray-700 mb-3">Active Students</h4>
+        <div id="studentList" class="border rounded-lg overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="p-3 text-left">Name</th>
+                <th class="p-3 text-left">Pattern</th>
+                <th class="p-3 text-left">Status</th>
+                <th class="p-3 text-left">Progress</th>
+                <th class="p-3 text-left">Completed Patterns</th>
+                <th class="p-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentTableBody" class="divide-y">
+              <!-- Will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ABOUT -->
 <section id="about" class="hidden py-20">
     <div class="text-center text-gray-600">
         <h2 class="text-3xl font-bold text-emerald-600">About</h2>
-        <p class="mt-4">Xamplore Backend Version.</p>
+        <p class="mt-4">Xamplore Backend Version with Admin Controls.</p>
+        <p class="text-sm text-gray-500 mt-2">Version 2.1 - Multi-pattern support with completion tracking</p>
     </div>
 </section>
 
@@ -199,6 +382,11 @@ let userAnswers = []; // Array of strings (options)
 let finalResults = null; // For PDF
 let studentName = "";
 let studentPattern = "";
+let adminAuthenticated = false;
+let adminPollingInterval = null;
+let studentTimerInterval = null;
+let lastTimerState = { active: false };
+let completedPatterns = []; // Track which patterns this student has completed
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
@@ -210,10 +398,279 @@ function closeWelcomePopup() { el('welcomePopup').classList.add('hidden'); }
 // Nav
 function toggleMenu(){ el('mobileMenu').classList.toggle("hidden"); }
 function showSection(id){
-  ["home","test","hangman","about"].forEach(s => el(s).classList.add("hidden"));
+  ["home","test","hangman","admin","about"].forEach(s => el(s).classList.add("hidden"));
   el(id).classList.remove("hidden");
   el('mobileMenu').classList.add("hidden");
   if(id === 'hangman') initializeHangman();
+  if(id === 'admin' && adminAuthenticated) {
+    loadAdminDashboard();
+    startAdminPolling();
+  } else if(id !== 'admin' && adminAuthenticated) {
+    if (adminPollingInterval) {
+      clearInterval(adminPollingInterval);
+      adminPollingInterval = null;
+    }
+  }
+  if(id === 'test') {
+    checkCompletedPatterns();
+  }
+}
+
+// --- ADMIN FUNCTIONS ---
+
+async function adminLogin() {
+  const name = el('adminName').value.trim();
+  const password = el('adminPassword').value;
+
+  if (name !== "Ellen@SRCAS" || password !== "srcasadmin123") {
+    alert("Invalid admin credentials");
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, password })
+    });
+    
+    const data = await res.json();
+    if (res.ok) {
+      adminAuthenticated = true;
+      el('adminLogin').classList.add('hidden');
+      el('adminDashboard').classList.remove('hidden');
+      loadAdminDashboard();
+      startAdminPolling();
+    } else {
+      alert(data.error || "Admin login failed");
+    }
+  } catch (e) {
+    alert("Server error during admin login");
+  }
+}
+
+function adminLogout() {
+  adminAuthenticated = false;
+  el('adminLogin').classList.remove('hidden');
+  el('adminDashboard').classList.add('hidden');
+  if (adminPollingInterval) {
+    clearInterval(adminPollingInterval);
+    adminPollingInterval = null;
+  }
+}
+
+async function loadAdminDashboard() {
+  if (!adminAuthenticated) return;
+  
+  try {
+    const [statsRes, timerRes, studentsRes] = await Promise.all([
+      fetch('/api/admin/stats'),
+      fetch('/api/admin/timer'),
+      fetch('/api/admin/students')
+    ]);
+    
+    const stats = await statsRes.json();
+    const timer = await timerRes.json();
+    const students = await studentsRes.json();
+    
+    el('totalStudents').textContent = stats.totalStudents || 0;
+    el('activeExams').textContent = stats.activeExams || 0;
+    el('completedExams').textContent = stats.completedExams || 0;
+    
+    updateTimerDisplay(timer);
+    updateStudentList(students);
+    
+  } catch (e) {
+    console.error("Error loading admin dashboard:", e);
+  }
+}
+
+function updateTimerDisplay(timer) {
+  const statusEl = el('currentTimerStatus');
+  const activeInfoEl = el('activeTimerInfo');
+  const remainingEl = el('activeTimerRemaining');
+  
+  if (timer.active) {
+    statusEl.textContent = timer.paused ? 'Paused' : 'Running';
+    statusEl.className = 'ml-2 px-2 py-1 rounded text-sm font-medium ' + 
+      (timer.paused ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800');
+    
+    activeInfoEl.classList.remove('hidden');
+    
+    const now = Date.now();
+    let remainingMs = 0;
+    
+    if (timer.paused) {
+      remainingMs = timer.pauseRemaining;
+    } else if (timer.endTime) {
+      remainingMs = timer.endTime - now;
+    }
+    
+    if (remainingMs > 0) {
+      const minutes = Math.floor(remainingMs / 60000);
+      const seconds = Math.floor((remainingMs % 60000) / 1000);
+      remainingEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    } else {
+      remainingEl.textContent = '00:00';
+      if (!timer.paused && timer.endTime && timer.endTime <= now) {
+        statusEl.textContent = 'Expired';
+        statusEl.className = 'ml-2 px-2 py-1 rounded text-sm font-medium bg-red-100 text-red-800';
+      }
+    }
+  } else {
+    statusEl.textContent = 'Not Active';
+    statusEl.className = 'ml-2 px-2 py-1 rounded text-sm font-medium bg-gray-100 text-gray-800';
+    activeInfoEl.classList.add('hidden');
+    remainingEl.textContent = '00:00';
+  }
+}
+
+function updateStudentList(students) {
+  const tbody = el('studentTableBody');
+  if (!students || students.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-500">No active students</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = students.map(student => `
+    <tr class="hover:bg-gray-50">
+      <td class="p-3">${student.name}</td>
+      <td class="p-3">Pattern ${student.pattern}</td>
+      <td class="p-3">
+        <span class="px-2 py-1 rounded text-xs font-medium ${
+          student.status === 'started' ? 'bg-blue-100 text-blue-800' :
+          student.status === 'completed' ? 'bg-green-100 text-green-800' :
+          student.status === 'failed' ? 'bg-red-100 text-red-800' :
+          'bg-gray-100 text-gray-800'
+        }">
+          ${student.status}
+        </span>
+      </td>
+      <td class="p-3">
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div class="bg-emerald-600 h-2 rounded-full" style="width: ${student.progress || 0}%"></div>
+        </div>
+        <div class="text-xs text-gray-500 mt-1">${student.currentQuestion || 0}/${student.totalQuestions || 0}</div>
+      </td>
+      <td class="p-3">
+        ${student.completedPatterns ? 
+          student.completedPatterns.map(p => 
+            `<span class="inline-block px-2 py-1 mr-1 mb-1 text-xs bg-emerald-100 text-emerald-800 rounded">${p}</span>`
+          ).join('') : 
+          '<span class="text-gray-400 text-xs">None</span>'
+        }
+      </td>
+      <td class="p-3">
+        ${student.status === 'started' ? 
+          `<button onclick="adminEndExam('${student.name}')" class="text-xs text-red-600 hover:text-red-800">
+            <i data-lucide="x-circle" class="inline w-3 h-3 mr-1"></i> End
+          </button>` : 
+          `<span class="text-xs text-gray-400">-</span>`
+        }
+      </td>
+    </tr>
+  `).join('');
+  
+  lucide.createIcons();
+}
+
+async function startGlobalTimer() {
+  const minutes = parseInt(el('timerMinutes').value) || 0;
+  const seconds = parseInt(el('timerSeconds').value) || 0;
+  const totalSeconds = minutes * 60 + seconds;
+  
+  if (totalSeconds <= 0) {
+    alert("Please set a valid timer duration");
+    return;
+  }
+  
+  try {
+    const res = await fetch('/api/admin/timer/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ duration: totalSeconds })
+    });
+    
+    const data = await res.json();
+    if (res.ok) {
+      alert("Global timer started for all students!");
+      loadAdminDashboard();
+    } else {
+      alert(data.error || "Failed to start timer");
+    }
+  } catch (e) {
+    alert("Error starting timer");
+  }
+}
+
+async function pauseGlobalTimer() {
+  try {
+    const res = await fetch('/api/admin/timer/pause', { method: 'POST' });
+    const data = await res.json();
+    if (res.ok) {
+      loadAdminDashboard();
+    } else {
+      alert(data.error || "Failed to pause timer");
+    }
+  } catch (e) {
+    alert("Error pausing timer");
+  }
+}
+
+async function resumeGlobalTimer() {
+  try {
+    const res = await fetch('/api/admin/timer/resume', { method: 'POST' });
+    const data = await res.json();
+    if (res.ok) {
+      loadAdminDashboard();
+    } else {
+      alert(data.error || "Failed to resume timer");
+    }
+  } catch (e) {
+    alert("Error resuming timer");
+  }
+}
+
+async function stopGlobalTimer() {
+  try {
+    const res = await fetch('/api/admin/timer/stop', { method: 'POST' });
+    const data = await res.json();
+    if (res.ok) {
+      alert("Global timer stopped!");
+      loadAdminDashboard();
+    } else {
+      alert(data.error || "Failed to stop timer");
+    }
+  } catch (e) {
+    alert("Error stopping timer");
+  }
+}
+
+async function adminEndExam(studentName) {
+  if (!confirm(`Are you sure you want to end the exam for ${studentName}?`)) return;
+  
+  try {
+    const res = await fetch('/api/admin/end-exam', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ studentName })
+    });
+    
+    const data = await res.json();
+    if (res.ok) {
+      alert(`Exam ended for ${studentName}`);
+      loadAdminDashboard();
+    } else {
+      alert(data.error || "Failed to end exam");
+    }
+  } catch (e) {
+    alert("Error ending exam");
+  }
+}
+
+function startAdminPolling() {
+  if (adminPollingInterval) clearInterval(adminPollingInterval);
+  adminPollingInterval = setInterval(loadAdminDashboard, 3000);
 }
 
 // --- BACKEND API INTERACTION ---
@@ -230,10 +687,6 @@ async function checkAuth() {
             if (data.status === 'completed') {
                 showResultScreen(data.score, data.totalQuestions, true);
             } else if (data.status === 'started') {
-                 // Resume not fully implemented in this simple version without fetching state, 
-                 // but we can just show rules or start.
-                 // Ideally, we'd fetch the current question index.
-                 // For now, reset to rules.
                  el('login').classList.add('hidden');
                  el('rules').classList.remove('hidden');
             } else if (data.status === 'failed') {
@@ -243,13 +696,76 @@ async function checkAuth() {
     } catch (e) { console.error("Auth check failed", e); }
 }
 
+async function checkCompletedPatterns() {
+  try {
+    const res = await fetch('/api/completed-patterns');
+    const data = await res.json();
+    
+    if (res.ok && data.completedPatterns) {
+      completedPatterns = data.completedPatterns;
+      updatePatternUI();
+    }
+  } catch (e) {
+    console.error("Error checking completed patterns:", e);
+  }
+}
+
+function updatePatternUI() {
+  const patternSelect = el('patternSelect');
+  const completedInfo = el('completedPatternsInfo');
+  const completedList = el('completedPatternsList');
+  const patternWarning = el('patternWarning');
+  
+  if (completedPatterns.length > 0) {
+    completedInfo.classList.remove('hidden');
+    
+    // Update completed patterns list
+    completedList.innerHTML = completedPatterns.map(pattern => 
+      `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+        <i data-lucide="check" class="w-3 h-3 mr-1"></i> Pattern ${pattern}
+      </span>`
+    ).join('');
+    
+    // Update pattern select options
+    Array.from(patternSelect.options).forEach(option => {
+      if (option.value && completedPatterns.includes(option.value)) {
+        option.disabled = true;
+        option.textContent = `Pattern ${option.value} (Completed)`;
+        option.classList.add('text-gray-400');
+      } else if (option.value) {
+        option.disabled = false;
+        option.textContent = `Pattern ${option.value}`;
+        option.classList.remove('text-gray-400');
+      }
+    });
+  } else {
+    completedInfo.classList.add('hidden');
+  }
+  
+  // Recreate lucide icons
+  lucide.createIcons();
+}
+
 async function verifyLogin() {
     const name = el('nameInput').value.trim();
     const pattern = el('patternSelect').value;
     const password = el('passwordInput').value;
+    const patternWarning = el('patternWarning');
 
-    if (!name || !pattern || !password) return alert("Fill all details");
+    if (!name || !pattern || !password) {
+        patternWarning.textContent = "Please fill all fields";
+        patternWarning.classList.remove('hidden');
+        return;
+    }
     
+    // Check if pattern is already completed
+    if (completedPatterns.includes(pattern)) {
+        patternWarning.textContent = `Pattern ${pattern} is already completed. Please select a different pattern.`;
+        patternWarning.classList.remove('hidden');
+        return;
+    }
+    
+    patternWarning.classList.add('hidden');
     el('loader').classList.remove('hidden');
     el('login').classList.add('hidden');
 
@@ -268,14 +784,69 @@ async function verifyLogin() {
             studentPattern = pattern;
             el('rules').classList.remove('hidden');
         } else {
-            alert(data.error || "Login Failed");
+            patternWarning.textContent = data.error || "Login Failed";
+            patternWarning.classList.remove('hidden');
             el('login').classList.remove('hidden');
         }
     } catch (e) {
         el('loader').classList.add('hidden');
         el('login').classList.remove('hidden');
-        alert("Server Error");
+        patternWarning.textContent = "Server Error";
+        patternWarning.classList.remove('hidden');
     }
+}
+
+async function checkGlobalTimer() {
+  try {
+    const res = await fetch('/api/timer/status');
+    const data = await res.json();
+    
+    const shouldUpdate = data.active !== lastTimerState.active || 
+                         data.paused !== lastTimerState.paused ||
+                         (data.endTime && Math.abs((data.endTime - Date.now()) - (lastTimerState.endTime || 0)) > 1000);
+    
+    if (!shouldUpdate && lastTimerState.active === data.active && data.active === false) {
+      return;
+    }
+    
+    lastTimerState = { ...data };
+    
+    if (data.active) {
+      if (el('exam') && !el('exam').classList.contains('hidden')) {
+        el('globalTimerDisplay').classList.remove('hidden');
+        
+        const now = Date.now();
+        let remainingMs = 0;
+        
+        if (data.paused) {
+          remainingMs = data.pauseRemaining || 0;
+        } else if (data.endTime) {
+          remainingMs = data.endTime - now;
+        }
+        
+        if (remainingMs > 0) {
+          const minutes = Math.floor(remainingMs / 60000);
+          const seconds = Math.floor((remainingMs % 60000) / 1000);
+          el('globalTimer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          
+          if (data.paused) {
+            el('globalTimerDisplay').classList.remove('timer-running');
+          } else {
+            el('globalTimerDisplay').classList.add('timer-running');
+          }
+        } else {
+          el('globalTimer').textContent = "00:00";
+          el('globalTimerDisplay').classList.remove('timer-running');
+        }
+      }
+    } else {
+      if (!el('globalTimerDisplay').classList.contains('hidden')) {
+        el('globalTimerDisplay').classList.add('hidden');
+      }
+    }
+  } catch (e) {
+    // Silent fail for timer check
+  }
 }
 
 async function startExam() {
@@ -295,9 +866,16 @@ async function startExam() {
             
             renderQuestion();
             startMonitoring();
+            
+            if (studentTimerInterval) clearInterval(studentTimerInterval);
+            studentTimerInterval = setInterval(checkGlobalTimer, 1000);
+            checkGlobalTimer();
         } else {
             alert(data.error);
-            if (data.error.includes("completed")) showSection('home');
+            if (data.error.includes("completed")) {
+                checkCompletedPatterns();
+                showSection('test');
+            }
             if (data.error.includes("failed")) failTestUI();
         }
     } catch (e) { alert("Could not start exam"); }
@@ -305,6 +883,8 @@ async function startExam() {
 
 function renderQuestion() {
     const q = questions[currentIndex];
+    const isLastQuestion = currentIndex >= questions.length - 1;
+    
     el('questionBox').innerHTML = `
         <p class="font-semibold mb-3">Q${currentIndex+1}: ${q.q}</p>
         ${q.options.map(o => `
@@ -313,14 +893,49 @@ function renderQuestion() {
             </label>
         `).join("")}
     `;
+    
+    const nextButton = el('nextButton');
+    if (isLastQuestion) {
+        nextButton.textContent = 'Submit Exam';
+        nextButton.classList.remove('bg-emerald-600');
+        nextButton.classList.add('bg-purple-600');
+    } else {
+        nextButton.textContent = 'Next';
+        nextButton.classList.remove('bg-purple-600');
+        nextButton.classList.add('bg-emerald-600');
+    }
 }
 
-function nextQuestion() {
+async function checkIfCanSubmit() {
+    try {
+        const res = await fetch('/api/timer/can-submit');
+        const data = await res.json();
+        return data.canSubmit;
+    } catch (e) {
+        return true;
+    }
+}
+
+async function nextQuestion() {
     const sel = document.querySelector("input[name='ans']:checked");
     if (!sel) return alert("Please select an option");
     
     userAnswers.push(sel.value);
     currentIndex++;
+    
+    const isLastQuestion = currentIndex >= questions.length - 1;
+    
+    if (isLastQuestion) {
+        const canSubmit = await checkIfCanSubmit();
+        
+        if (!canSubmit) {
+            alert("Global timer is active. Please wait until the timer ends to submit your exam.");
+            currentIndex--;
+            userAnswers.pop();
+            renderQuestion();
+            return;
+        }
+    }
     
     if (currentIndex >= questions.length) {
         submitExam();
@@ -344,9 +959,20 @@ async function submitExam() {
         el('loader').classList.add('hidden');
         
         if (res.ok) {
-            finalResults = data.results; // For PDF
+            finalResults = data.results;
             showResultScreen(data.score, data.total);
             stopMonitoring();
+            
+            // Add pattern to completed patterns
+            if (!completedPatterns.includes(studentPattern)) {
+                completedPatterns.push(studentPattern);
+                updatePatternUI();
+            }
+            
+            if (studentTimerInterval) {
+                clearInterval(studentTimerInterval);
+                studentTimerInterval = null;
+            }
         } else {
             alert("Submission failed: " + data.error);
         }
@@ -361,12 +987,9 @@ function showResultScreen(score, total, minimal = false) {
     
     try { document.exitFullscreen(); } catch(e){}
     
-    el('resultText').textContent = `${studentName} — Score ${score}/${total}`;
+    el('resultText').textContent = `${studentName} — Pattern ${studentPattern} — Score ${score}/${total}`;
     
     if (minimal) {
-        // If reloading page, we might not have `finalResults` for PDF.
-        // Disable PDF or fetch specific PDF data endpoint if needed.
-        // For now, allow download only if just finished.
         if (!finalResults) document.querySelector("#result button").style.display = 'none';
         el('resultText').innerHTML += "<br><span class='text-xs text-gray-500'>(Reloaded - PDF unavailable)</span>";
     }
@@ -402,7 +1025,7 @@ function handleFullscreen() {
 
 function triggerFail(reason) {
     monitoringActive = false;
-    fetch('/api/fail', { method: 'POST' }); // Tell server
+    fetch('/api/fail', { method: 'POST' });
     failTestUI();
 }
 
@@ -412,6 +1035,11 @@ function failTestUI() {
     el('login').classList.add('hidden');
     el('failed').classList.remove('hidden');
     try { document.exitFullscreen(); } catch(e){}
+    
+    if (studentTimerInterval) {
+        clearInterval(studentTimerInterval);
+        studentTimerInterval = null;
+    }
 }
 
 async function secondChance() {
@@ -427,7 +1055,6 @@ async function secondChance() {
         if (res.ok) {
             el('failed').classList.add('hidden');
             el('rules').classList.remove('hidden');
-            // User must click "Start" again
         } else {
             el('retryMsg').textContent = "Invalid Code";
         }
@@ -470,7 +1097,7 @@ function downloadPDF() {
     pdf.save("Xamplore_Result.pdf");
 }
 
-// --- HANGMAN (Restored Minimal) ---
+// --- HANGMAN ---
 const HANGMAN_WORDS = ["javascript", "python", "react", "node", "vercel"];
 let hangman = { word:"", guessed:[], lives:7 };
 function initializeHangman() {
