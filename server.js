@@ -8,10 +8,10 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cookieParser('xamplore-super-secret-key-2024')); // Signed cookies
+app.use(cookieParser('xamplore-super-secret-key-2024'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- DATA (Moved from Frontend) ---
+// --- DATA ---
 
 const PASSWORDS = {
     A: "alpha123",
@@ -20,6 +20,10 @@ const PASSWORDS = {
 };
 
 const SECOND_PASS = "choice2ellen";
+const ADMIN_CREDENTIALS = {
+    name: "Ellen@SRCAS",
+    password: "srcasadmin123"
+};
 
 const QUESTION_BANK = {
     A: [
@@ -120,6 +124,23 @@ const QUESTION_BANK = {
     ],
 };
 
+// --- GLOBAL TIMER STATE ---
+let globalTimer = {
+    active: false,
+    endTime: null,
+    duration: 0,
+    paused: false,
+    pauseRemaining: 0,
+    startTime: null
+};
+
+// --- STUDENT SESSIONS IN MEMORY ---
+let studentSessions = new Map(); // name -> session data
+let timerHistory = [];
+
+// --- COMPLETED PATTERNS TRACKING ---
+let studentCompletedPatterns = new Map(); // name -> array of completed patterns
+
 // --- HELPERS ---
 function shuffle(array) {
     const arr = [...array];
@@ -130,9 +151,47 @@ function shuffle(array) {
     return arr;
 }
 
+function getAllStudentSessions() {
+    return Array.from(studentSessions.values());
+}
+
+function updateStudentProgress(name, pattern, status, currentQuestion, totalQuestions) {
+    if (!studentSessions.has(name)) {
+        studentSessions.set(name, {
+            name,
+            pattern,
+            status,
+            currentQuestion: currentQuestion || 0,
+            totalQuestions: totalQuestions || QUESTION_BANK[pattern]?.length || 30,
+            lastActive: Date.now(),
+            createdAt: Date.now(),
+            completedPatterns: studentCompletedPatterns.get(name) || []
+        });
+    } else {
+        const session = studentSessions.get(name);
+        session.status = status;
+        session.pattern = pattern;
+        session.currentQuestion = currentQuestion || session.currentQuestion;
+        session.lastActive = Date.now();
+        session.completedPatterns = studentCompletedPatterns.get(name) || [];
+        studentSessions.set(name, session);
+    }
+}
+
+function cleanupOldSessions() {
+    const sixHoursAgo = Date.now() - 21600000;
+    for (const [name, session] of studentSessions.entries()) {
+        if (session.lastActive < sixHoursAgo) {
+            studentSessions.delete(name);
+        }
+    }
+}
+
+setInterval(cleanupOldSessions, 600000);
+
 // --- API ROUTES ---
 
-// 1. LOGIN
+// 1. LOGIN (Modified to check completed patterns)
 app.post('/api/login', (req, res) => {
     const { name, pattern, password } = req.body;
 
@@ -144,21 +203,31 @@ app.post('/api/login', (req, res) => {
         return res.status(401).json({ error: "Invalid password for selected pattern" });
     }
 
+    // Check if this pattern is already completed by this student
+    const completedPatterns = studentCompletedPatterns.get(name) || [];
+    if (completedPatterns.includes(pattern)) {
+        return res.status(403).json({ 
+            error: `Pattern ${pattern} is already completed. Please select a different pattern.` 
+        });
+    }
+
     // Set signed cookie with session data
-    // Max Age: 2 hours
     const sessionData = {
         name,
         pattern,
         status: 'ready', // ready, started, completed, failed
         score: null,
-        startTime: null
+        startTime: null,
+        currentQuestion: 0
     };
 
     res.cookie('session', sessionData, {
         httpOnly: true,
         signed: true,
-        maxAge: 7200000
+        maxAge: 7200000 // 2 hours
     });
+
+    updateStudentProgress(name, pattern, 'ready', 0, QUESTION_BANK[pattern]?.length);
 
     res.json({ success: true, message: "Logged in" });
 });
@@ -169,141 +238,112 @@ app.get('/api/me', (req, res) => {
     if (!session) {
         return res.json({ loggedIn: false });
     }
+    
+    // Add completed patterns to response
+    const completedPatterns = studentCompletedPatterns.get(session.name) || [];
+    
+    if (session.status === 'started') {
+        updateStudentProgress(session.name, session.pattern, 'started', 
+                             session.currentQuestion || 0, 
+                             QUESTION_BANK[session.pattern]?.length);
+    }
+    
     return res.json({
         loggedIn: true,
         name: session.name,
         pattern: session.pattern,
         status: session.status,
         score: session.score,
-        totalQuestions: QUESTION_BANK[session.pattern].length
+        totalQuestions: QUESTION_BANK[session.pattern]?.length || 30,
+        currentQuestion: session.currentQuestion || 0,
+        completedPatterns: completedPatterns
     });
 });
 
-// 3. START EXAM
-app.post('/api/start', (req, res) => {
+// 3. GET COMPLETED PATTERNS (New endpoint)
+app.get('/api/completed-patterns', (req, res) => {
+    const session = req.signedCookies.session;
+    if (!session) {
+        return res.json({ completedPatterns: [] });
+    }
+    
+    const completedPatterns = studentCompletedPatterns.get(session.name) || [];
+    res.json({ completedPatterns });
+});
+
+// 4. START EXAM (Modified to check pattern completion)
+app.post('/api/start-v2', (req, res) => {
     const session = req.signedCookies.session;
     if (!session) return res.status(401).json({ error: "Not logged in" });
+
+    // Check if this pattern is already completed
+    const completedPatterns = studentCompletedPatterns.get(session.name) || [];
+    if (completedPatterns.includes(session.pattern)) {
+        return res.status(403).json({ 
+            error: `Pattern ${session.pattern} is already completed. Please select a different pattern.` 
+        });
+    }
 
     if (session.status === 'completed') {
         return res.status(403).json({ error: "Test already completed. You cannot retake it." });
     }
 
-    // If failed, block unless they used retry (logic handled in /api/retry)
     if (session.status === 'failed') {
         return res.status(403).json({ error: "Test failed. Please use second chance." });
     }
 
-    // Update status to 'started' if not already
-    verifyAndSetStatus(res, session, 'started');
-
-    // Get questions for the pattern
-    const patternQuestions = QUESTION_BANK[session.pattern];
-
-    // Send questions WITHOUT answers
-    // Randomize order for the client
-    const questionsToSend = shuffle(patternQuestions).map(q => ({
-        q: q.q,
-        options: shuffle(q.options),
-        // We don't send the answer!
-    }));
-
-    res.json({ questions: questionsToSend });
-});
-
-// 4. SUBMIT EXAM
-app.post('/api/submit', (req, res) => {
-    const session = req.signedCookies.session;
-    if (!session) return res.status(401).json({ error: "Not logged in" });
-
-    if (session.status === 'completed') {
-        return res.status(400).json({ error: "Already submitted." });
-    }
-
-    const { answers } = req.body; // Array of selected answers strings
-    const patternQuestions = QUESTION_BANK[session.pattern];
-
-    if (!answers || !Array.isArray(answers)) {
-        return res.status(400).json({ error: "Invalid answers format" });
-    }
-
-    // Calculate Score
-    // Note: Since client shuffled questions, we need to match them. 
-    // However, the client just sends an array of answers. 
-    // Wait, if the client shuffled them, the indices won't match the server's QUESTION_BANK order.
-    // OPTION 1: Send IDs with questions.
-    // OPTION 2: Trust the client sent the question text? No.
-    // FIX: The Server shuffle logic above was per-request. If I shuffle in /api/start, I lose the order unless I store the order in the session.
-    // For this simple example without DB, storing the specific question order in the cookie is the best "stateless" way.
-
-    // BUT: The cookie size is limited. Storing whole questions is bad.
-    // STRATEGY: Store the indices of the questions in the cookie when starting.
-
-    // Let's Refactor /api/start slightly inside.
-
-    // Actually, looking at the provided Frontend code, it expects:
-    // questions = shuffle([...QUESTION_BANK[pattern]]).
-    // implementation:
-    // It's stateless. If I send shuffled questions, I MUST know the order to grade them.
-    // I will store the `questionIndices` in the session cookie.
-});
-
-// REDO /api/start to handle indices
-app.post('/api/start-v2', (req, res) => {
-    const session = req.signedCookies.session;
-    if (!session) return res.status(401).json({ error: "Not logged in" });
-
-    if (session.status === 'completed') return res.status(403).json({ error: "Test completed." });
-    if (session.status === 'failed') return res.status(403).json({ error: "Test failed." });
-
     const fullBank = QUESTION_BANK[session.pattern];
+    if (!fullBank) {
+        return res.status(400).json({ error: "Invalid pattern" });
+    }
 
-    // Create an array of indices [0, 1, 2, ... length-1]
     const indices = Array.from({ length: fullBank.length }, (_, i) => i);
     const shuffledIndices = shuffle(indices);
 
-    // Store this order in the session
     session.questionOrder = shuffledIndices;
     session.status = 'started';
+    session.currentQuestion = 0;
+    session.startTime = Date.now();
 
     res.cookie('session', session, { httpOnly: true, signed: true, maxAge: 7200000 });
+
+    updateStudentProgress(session.name, session.pattern, 'started', 0, fullBank.length);
 
     const questionsToSend = shuffledIndices.map(i => {
         const q = fullBank[i];
         return {
             q: q.q,
-            options: shuffle(q.options), // Options answer checking verification is tricky if we don't know option order, but usually we just check if answer_string == correct_string. Since the user code sends the value string, options order doesn't matter for checking.
-            id: i // Send ID if useful, or just rely on order
+            options: shuffle(q.options),
+            id: i
         };
     });
 
     res.json({ questions: questionsToSend });
 });
 
-// REDO /api/submit
+// 5. SUBMIT EXAM (Modified to track completed pattern)
 app.post('/api/submit-v2', (req, res) => {
     const session = req.signedCookies.session;
     if (!session) return res.status(401).json({ error: "Not logged in" });
 
-    // Allow submission even if 'completed' to be idempotent? No, secure.
-    // But if they refresh result page, they call /api/me.
     if (session.status === 'completed') {
-        // If they assume they just finished, maybe return the score again from cookie?
-        return res.json({ score: session.score, total: QUESTION_BANK[session.pattern].length, alreadyCompleted: true });
+        return res.json({ score: session.score, total: QUESTION_BANK[session.pattern]?.length || 30, alreadyCompleted: true });
     }
 
-    const { answers } = req.body; // Array of objects { qIndex: 0, answer: 'const' } OR just array in order?
-    // The frontend sends array of strings. 
-    // We expect the frontend to send them IN THE SAME ORDER as received.
+    const { answers } = req.body;
 
     if (!session.questionOrder) {
         return res.status(400).json({ error: "Exam not started appropriately." });
     }
 
-    let score = 0;
     const fullBank = QUESTION_BANK[session.pattern];
-    const results = []; // To return correct answers for PDF
+    if (!fullBank) {
+        return res.status(400).json({ error: "Invalid pattern" });
+    }
 
-    // Iterate through the preserved order
+    let score = 0;
+    const results = [];
+
     session.questionOrder.forEach((originalIndex, i) => {
         const userAns = answers[i];
         const correctAns = fullBank[originalIndex].answer;
@@ -322,23 +362,30 @@ app.post('/api/submit-v2', (req, res) => {
     // Update Session
     session.status = 'completed';
     session.score = score;
-    // We don't store `results` in cookie (too big). We return it now. 
-    // If they reload, they can only see the score via /api/me, NOT the full breakdown (for security/size). 
-    // Or we allow local PDF generation here and now.
+    session.currentQuestion = fullBank.length;
 
     res.cookie('session', session, { httpOnly: true, signed: true, maxAge: 7200000 });
+
+    // Add pattern to completed patterns for this student
+    const completedPatterns = studentCompletedPatterns.get(session.name) || [];
+    if (!completedPatterns.includes(session.pattern)) {
+        completedPatterns.push(session.pattern);
+        studentCompletedPatterns.set(session.name, completedPatterns);
+    }
+
+    updateStudentProgress(session.name, session.pattern, 'completed', fullBank.length, fullBank.length);
 
     res.json({
         score,
         total: fullBank.length,
-        results, // Client needs this for PDF
+        results,
         name: session.name,
-        pattern: session.pattern
+        pattern: session.pattern,
+        completedPatterns: completedPatterns
     });
 });
 
-
-// 5. RETRY
+// 6. RETRY
 app.post('/api/retry', (req, res) => {
     const session = req.signedCookies.session;
     if (!session) return res.status(401).json({ error: "Not logged in" });
@@ -348,35 +395,288 @@ app.post('/api/retry', (req, res) => {
         return res.status(400).json({ error: "Invalid Second Chance Code" });
     }
 
-    // Reset status
-    session.status = 'ready'; // Or 'started'
+    // Reset status but keep completed patterns
+    session.status = 'ready';
     session.score = null;
-    session.questionOrder = null; // Will reshuffle on next start
+    session.questionOrder = null;
+    session.currentQuestion = 0;
 
     res.cookie('session', session, { httpOnly: true, signed: true, maxAge: 7200000 });
+
+    updateStudentProgress(session.name, session.pattern, 'ready', 0, QUESTION_BANK[session.pattern]?.length);
+
     res.json({ success: true, message: "Use the chance wisely." });
 });
 
-
-// 6. FAIL (Malpractice Trigger)
+// 7. FAIL (Malpractice Trigger)
 app.post('/api/fail', (req, res) => {
     const session = req.signedCookies.session;
     if (session) {
         session.status = 'failed';
         res.cookie('session', session, { httpOnly: true, signed: true, maxAge: 7200000 });
+        
+        updateStudentProgress(session.name, session.pattern, 'failed', 
+                             session.currentQuestion || 0, 
+                             QUESTION_BANK[session.pattern]?.length);
     }
     res.json({ success: true });
 });
 
-// Helper
-function verifyAndSetStatus(res, session, newStatus) {
-    session.status = newStatus;
+// 8. UPDATE QUESTION PROGRESS
+app.post('/api/update-progress', (req, res) => {
+    const session = req.signedCookies.session;
+    if (!session) return res.status(401).json({ error: "Not logged in" });
+
+    const { currentQuestion } = req.body;
+    session.currentQuestion = currentQuestion || 0;
+    
     res.cookie('session', session, { httpOnly: true, signed: true, maxAge: 7200000 });
+    
+    if (session.status === 'started') {
+        updateStudentProgress(session.name, session.pattern, 'started', 
+                             currentQuestion, 
+                             QUESTION_BANK[session.pattern]?.length);
+    }
+    
+    res.json({ success: true });
+});
+
+// 9. GET TIMER STATUS (For students)
+app.get('/api/timer/status', (req, res) => {
+    const now = Date.now();
+    
+    if (globalTimer.active && !globalTimer.paused && globalTimer.endTime && globalTimer.endTime > now) {
+        res.json({
+            active: true,
+            endTime: globalTimer.endTime,
+            paused: false,
+            remaining: globalTimer.endTime - now,
+            pauseRemaining: 0
+        });
+    } else if (globalTimer.active && globalTimer.paused) {
+        res.json({
+            active: true,
+            endTime: globalTimer.endTime,
+            paused: true,
+            remaining: 0,
+            pauseRemaining: globalTimer.pauseRemaining
+        });
+    } else if (globalTimer.active && globalTimer.endTime && globalTimer.endTime <= now) {
+        res.json({
+            active: true,
+            endTime: globalTimer.endTime,
+            paused: false,
+            remaining: 0,
+            pauseRemaining: 0
+        });
+    } else {
+        res.json({
+            active: false,
+            endTime: null,
+            paused: false,
+            remaining: 0,
+            pauseRemaining: 0
+        });
+    }
+});
+
+// 10. CHECK IF CAN SUBMIT (For final question)
+app.get('/api/timer/can-submit', (req, res) => {
+    const now = Date.now();
+    
+    if (globalTimer.active && !globalTimer.paused && globalTimer.endTime && globalTimer.endTime > now) {
+        res.json({ canSubmit: false, remaining: globalTimer.endTime - now });
+    } else {
+        res.json({ canSubmit: true, remaining: 0 });
+    }
+});
+
+// --- ADMIN ROUTES ---
+
+// 11. ADMIN LOGIN
+app.post('/api/admin/login', (req, res) => {
+    const { name, password } = req.body;
+    
+    if (name === ADMIN_CREDENTIALS.name && password === ADMIN_CREDENTIALS.password) {
+        res.cookie('admin', { loggedIn: true, name }, { 
+            httpOnly: true, 
+            signed: true, 
+            maxAge: 3600000 // 1 hour
+        });
+        res.json({ success: true });
+    } else {
+        res.status(401).json({ error: "Invalid admin credentials" });
+    }
+});
+
+// 12. CHECK ADMIN AUTH MIDDLEWARE
+function checkAdminAuth(req, res, next) {
+    const adminSession = req.signedCookies.admin;
+    if (!adminSession || !adminSession.loggedIn) {
+        return res.status(401).json({ error: "Admin authentication required" });
+    }
+    next();
 }
 
-// Routes Mapping
-app.post('/api/start', (req, res) => app._router.handle({ ...req, url: '/api/start-v2' }, res)); // Redirect logic internal
-// Just replace the above definition with the v2 one in final code.
+// 13. ADMIN GET STATISTICS
+app.get('/api/admin/stats', checkAdminAuth, (req, res) => {
+    const sessions = getAllStudentSessions();
+    
+    const stats = {
+        totalStudents: sessions.length,
+        activeExams: sessions.filter(s => s.status === 'started').length,
+        completedExams: sessions.filter(s => s.status === 'completed').length,
+        failedExams: sessions.filter(s => s.status === 'failed').length,
+        readyStudents: sessions.filter(s => s.status === 'ready').length
+    };
+    
+    res.json(stats);
+});
+
+// 14. ADMIN GET TIMER STATUS
+app.get('/api/admin/timer', checkAdminAuth, (req, res) => {
+    const response = {
+        ...globalTimer,
+        history: timerHistory.slice(-10)
+    };
+    res.json(response);
+});
+
+// 15. ADMIN START TIMER
+app.post('/api/admin/timer/start', checkAdminAuth, (req, res) => {
+    const { duration } = req.body;
+    
+    if (duration <= 0) {
+        return res.status(400).json({ error: "Invalid duration" });
+    }
+    
+    const startTime = Date.now();
+    const endTime = startTime + (duration * 1000);
+    
+    globalTimer = {
+        active: true,
+        endTime: endTime,
+        duration: duration,
+        paused: false,
+        pauseRemaining: 0,
+        startTime: startTime
+    };
+    
+    timerHistory.push({
+        action: 'start',
+        duration: duration,
+        startTime: startTime,
+        endTime: endTime,
+        timestamp: new Date().toISOString()
+    });
+    
+    if (timerHistory.length > 50) {
+        timerHistory = timerHistory.slice(-50);
+    }
+    
+    res.json({ success: true, timer: globalTimer });
+});
+
+// 16. ADMIN PAUSE TIMER
+app.post('/api/admin/timer/pause', checkAdminAuth, (req, res) => {
+    if (!globalTimer.active || globalTimer.paused) {
+        return res.status(400).json({ error: "Timer is not running" });
+    }
+    
+    const now = Date.now();
+    globalTimer.pauseRemaining = globalTimer.endTime - now;
+    globalTimer.paused = true;
+    
+    timerHistory.push({
+        action: 'pause',
+        pauseRemaining: globalTimer.pauseRemaining,
+        timestamp: new Date().toISOString()
+    });
+    
+    res.json({ success: true, timer: globalTimer });
+});
+
+// 17. ADMIN RESUME TIMER
+app.post('/api/admin/timer/resume', checkAdminAuth, (req, res) => {
+    if (!globalTimer.active || !globalTimer.paused) {
+        return res.status(400).json({ error: "Timer is not paused" });
+    }
+    
+    globalTimer.endTime = Date.now() + globalTimer.pauseRemaining;
+    globalTimer.paused = false;
+    globalTimer.pauseRemaining = 0;
+    
+    timerHistory.push({
+        action: 'resume',
+        endTime: globalTimer.endTime,
+        timestamp: new Date().toISOString()
+    });
+    
+    res.json({ success: true, timer: globalTimer });
+});
+
+// 18. ADMIN STOP TIMER
+app.post('/api/admin/timer/stop', checkAdminAuth, (req, res) => {
+    globalTimer = {
+        active: false,
+        endTime: null,
+        duration: 0,
+        paused: false,
+        pauseRemaining: 0,
+        startTime: null
+    };
+    
+    timerHistory.push({
+        action: 'stop',
+        timestamp: new Date().toISOString()
+    });
+    
+    res.json({ success: true });
+});
+
+// 19. ADMIN GET STUDENT LIST
+app.get('/api/admin/students', checkAdminAuth, (req, res) => {
+    const sessions = getAllStudentSessions();
+    
+    const studentsWithProgress = sessions.map(session => {
+        const progress = session.totalQuestions > 0 
+            ? Math.round((session.currentQuestion / session.totalQuestions) * 100) 
+            : 0;
+        
+        return {
+            ...session,
+            progress,
+            completedPatterns: studentCompletedPatterns.get(session.name) || [],
+            lastActiveFormatted: new Date(session.lastActive).toLocaleTimeString(),
+            createdFormatted: new Date(session.createdAt).toLocaleTimeString()
+        };
+    });
+    
+    studentsWithProgress.sort((a, b) => b.lastActive - a.lastActive);
+    
+    res.json(studentsWithProgress);
+});
+
+// 20. ADMIN END EXAM FOR STUDENT
+app.post('/api/admin/end-exam', checkAdminAuth, (req, res) => {
+    const { studentName } = req.body;
+    
+    if (studentSessions.has(studentName)) {
+        const session = studentSessions.get(studentName);
+        session.status = 'failed';
+        session.lastActive = Date.now();
+        studentSessions.set(studentName, session);
+        
+        res.json({ success: true, message: `Exam ended for ${studentName}` });
+    } else {
+        res.json({ success: true, message: `Student session not found in memory, but request processed` });
+    }
+});
+
+// Serve index.html for all other routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // Export for local
 if (require.main === module) {
