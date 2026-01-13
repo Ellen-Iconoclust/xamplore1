@@ -5,16 +5,14 @@
 <title>Xamplore – Secure Exam Platform</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Tailwind -->
+<!-- Tailwind Importing-->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- jsPDF -->
+<!-- jsPDF(For PDF Generation after test(Needs testing))-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- Lucide -->
+<!-- Lucide for Icons-->
 <script src="https://unpkg.com/lucide@latest"></script>
-
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
 
 <style>
@@ -35,7 +33,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 
 <body class="bg-white text-gray-800 min-h-screen flex flex-col">
 
-<!-- WELCOME POPUP -->
 <div id="welcomePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
   <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 relative">
     <button onclick="closeWelcomePopup()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
@@ -50,12 +47,11 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
     </p>
     <div class="text-sm text-gray-500">
       <i data-lucide="info" class="inline w-4 h-4 mr-1"></i>
-      Platform Version: <span class="font-bold">Xam1.0</span>
+      Platform Version: <span class="font-bold">Xam3.0</span>
     </div>
   </div>
 </div>
-
-<!-- NAV -->
+  
 <nav class="border-b shadow-sm sticky top-0 bg-white z-40">
   <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
     <div class="flex items-center gap-2 brand text-2xl font-extrabold text-emerald-600">
@@ -84,8 +80,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
     <button onclick="showSection('about')" class="block">About</button>
   </div>
 </nav>
-
-<!-- HOME -->
 <section id="home" class="py-20 text-center">
   <h1 class="text-4xl font-extrabold brand text-emerald-600">
     Smarter Exams
@@ -95,19 +89,16 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
     Xamplore is a secure online examination platform with strict timing controls to prevent cheating.
   </p>
 </section>
-
-<!-- TEST -->
 <section id="test" class="hidden py-16">
   <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-xl">
 
     <!-- Exam Window Status Display -->
     <div id="examWindowStatus" class="hidden mb-4 p-3 border rounded-lg text-center">
       <div id="examWindowContent">
-        <!-- Will be populated dynamically -->
       </div>
     </div>
 
-    <!-- Global Timer Display -->
+    <!-- Global Timer | Added:Xam2.0 -->
     <div id="globalTimerDisplay" class="hidden mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
       <div class="flex items-center justify-center gap-2">
         <i data-lucide="clock" class="text-yellow-600"></i>
@@ -117,7 +108,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       <p id="timerMessage" class="text-xs text-yellow-600 mt-1"></p>
     </div>
 
-    <!-- Loading State -->
     <div id="loader" class="hidden text-center py-10">
       <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-600 mx-auto"></div>
       <p class="mt-3 text-emerald-600 font-semibold">Connecting to Server...</p>
@@ -126,14 +116,13 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
     <div id="login">
       <h2 class="text-2xl font-bold mb-4 text-emerald-600">Exam Login</h2>
       
-      <!-- Completed Patterns Warning -->
       <div id="completedPatternsWarning" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
         <div class="flex items-center gap-2 text-sm text-red-600 mb-2">
           <i data-lucide="alert-circle" class="text-red-600"></i>
           <span class="font-semibold">Completed Patterns:</span>
         </div>
         <div id="completedPatternsList" class="flex flex-wrap gap-2">
-          <!-- Will be populated dynamically -->
+          
         </div>
         <p class="text-xs text-red-500 mt-2">You cannot retake completed patterns</p>
       </div>
@@ -246,7 +235,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   </div>
 </section>
 
-<!-- HANGMAN -->
+<!-- HANGMAN Game -->
 <section id="hangman" class="hidden py-16">
   <div class="max-w-4xl mx-auto px-4">
     <h2 class="text-3xl font-bold text-center text-emerald-600 mb-8">Tech Hangman</h2>
@@ -259,12 +248,10 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   </div>
 </section>
 
-<!-- ADMIN PAGE -->
 <section id="admin" class="hidden py-16">
   <div class="max-w-6xl mx-auto px-4">
     <h2 class="text-3xl font-bold text-center text-emerald-600 mb-8">Admin Dashboard</h2>
     
-    <!-- Admin Login -->
     <div id="adminLogin" class="bg-white p-6 rounded-xl shadow-lg border max-w-md mx-auto">
       <h3 class="text-xl font-bold text-gray-800 mb-4">Admin Authentication</h3>
       <input id="adminName" class="w-full p-2 mb-3 border rounded" placeholder="Admin Name" value="Ellen@SRCAS">
@@ -274,7 +261,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       </button>
     </div>
 
-    <!-- Admin Dashboard (Hidden Initially) -->
     <div id="adminDashboard" class="hidden bg-white p-6 rounded-xl shadow-lg border mt-6">
       <div class="flex justify-between items-center mb-6">
         <h3 class="text-xl font-bold text-gray-800">Exam Control Panel</h3>
@@ -283,7 +269,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         </button>
       </div>
 
-      <!-- Timer Control Section -->
+      <!-- Timer Control-->
       <div class="mb-8 p-4 bg-gray-50 rounded-lg">
         <h4 class="font-bold text-lg text-gray-700 mb-3 flex items-center gap-2">
           <i data-lucide="clock"></i> Exam Window Control
@@ -302,11 +288,10 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
             </div>
           </div>
           <div id="timerDetails" class="mt-2 text-sm text-gray-600">
-            <!-- Will be populated -->
+            
           </div>
         </div>
 
-        <!-- Set Exam Window -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Start In (Minutes)</label>
@@ -324,7 +309,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
           Set Exam Window
         </button>
 
-        <!-- Quick Timer Controls -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
           <button onclick="quickSetTimer(5)" class="bg-blue-100 text-blue-700 p-2 rounded hover:bg-blue-200">
             5 min
@@ -352,7 +336,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
           </button>
         </div>
 
-        <!-- Timer History -->
+     
         <div class="mt-6">
           <h5 class="font-bold text-gray-700 mb-2 flex items-center gap-2">
             <i data-lucide="history"></i> Timer History
@@ -363,7 +347,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         </div>
       </div>
 
-      <!-- Exam Statistics -->
+     
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
           <div class="flex items-center justify-between">
@@ -438,7 +422,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
               </tr>
             </thead>
             <tbody id="studentTableBody" class="divide-y">
-              <!-- Will be populated by JavaScript -->
+              
             </tbody>
           </table>
         </div>
@@ -447,7 +431,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   </div>
 </section>
 
-<!-- ABOUT -->
+
 <section id="about" class="hidden py-20">
     <div class="text-center text-gray-600">
         <h2 class="text-3xl font-bold text-emerald-600">About</h2>
@@ -459,14 +443,14 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 <script>
 lucide.createIcons();
 
-// Elements
+// Elements load using Tailwind
 const el = id => document.getElementById(id);
 
 // State
 let questions = []; 
 let currentIndex = 0;
-let userAnswers = []; // Array of strings (options)
-let finalResults = null; // For PDF
+let userAnswers = []; 
+let finalResults = null; 
 let studentName = "";
 let studentPattern = "";
 let adminAuthenticated = false;
@@ -474,18 +458,16 @@ let adminPollingInterval = null;
 let studentTimerInterval = null;
 let examWindowInterval = null;
 let lastTimerState = { active: false };
-let isWaitingForTimer = false; // Track if we're in waiting mode
-let examSubmitted = false; // Track if exam has been submitted
-let completedPatterns = []; // Track which patterns this student has completed
+let isWaitingForTimer = false; 
+let examSubmitted = false; 
+let completedPatterns = []; 
 
-// Init
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => el('welcomePopup').classList.remove('hidden'), 500);
   checkAuth();
 });
 function closeWelcomePopup() { el('welcomePopup').classList.add('hidden'); }
 
-// Nav
 function toggleMenu(){ el('mobileMenu').classList.toggle("hidden"); }
 function showSection(id){
   ["home","test","hangman","admin","about"].forEach(s => el(s).classList.add("hidden"));
@@ -510,9 +492,9 @@ function showSection(id){
   }
 }
 
-// Reset to login screen
+// Reset to Login
 function resetToLogin() {
-  // Reset all UI elements
+ 
   el('login').classList.remove('hidden');
   el('rules').classList.add('hidden');
   el('exam').classList.add('hidden');
@@ -523,13 +505,12 @@ function resetToLogin() {
   el('globalTimerDisplay').classList.add('hidden');
   el('examWindowStatus').classList.add('hidden');
   
-  // Reset form
+
   el('nameInput').value = '';
   el('patternSelect').value = '';
   el('passwordInput').value = '';
   el('patternWarning').classList.add('hidden');
-  
-  // Reset state
+
   questions = [];
   currentIndex = 0;
   userAnswers = [];
@@ -537,18 +518,16 @@ function resetToLogin() {
   isWaitingForTimer = false;
   examSubmitted = false;
   
-  // Clear intervals
   if (studentTimerInterval) {
     clearInterval(studentTimerInterval);
     studentTimerInterval = null;
   }
   
-  // Check completed patterns again
   checkCompletedPatterns();
   checkExamWindowStatus();
 }
 
-// --- EXAM WINDOW FUNCTIONS ---
+// EXAM WINDOW FUNCTIONS
 
 async function checkExamWindowStatus() {
   try {
@@ -631,7 +610,7 @@ function updateExamWindowDisplay(timerStatus) {
       globalTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
       timerMessage.textContent = "Exam window is open - you can start exams";
       
-      // Add timer running animation
+     
       globalDisplay.classList.add('timer-running');
     }
   } else {
@@ -640,7 +619,7 @@ function updateExamWindowDisplay(timerStatus) {
   }
 }
 
-// --- ADMIN FUNCTIONS ---
+// ADMIN FUNCTIONS
 
 async function adminLogin() {
   const name = el('adminName').value.trim();
@@ -997,7 +976,7 @@ function startAdminPolling() {
   adminPollingInterval = setInterval(loadAdminDashboard, 3000);
 }
 
-// --- BACKEND API INTERACTION ---
+//BACKEND API INTERACTION
 
 async function checkAuth() {
     try {
@@ -1019,7 +998,7 @@ async function checkAuth() {
                  showWaitingForTimer();
             }
             
-            // Update completed patterns
+           
             if (data.completedPatterns) {
                 completedPatterns = data.completedPatterns;
                 updateCompletedPatternsUI();
@@ -1050,14 +1029,14 @@ function updateCompletedPatternsUI() {
   if (completedPatterns.length > 0) {
     warning.classList.remove('hidden');
     
-    // Update completed patterns list
+   
     list.innerHTML = completedPatterns.map(pattern => 
       `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
         <i data-lucide="x" class="w-3 h-3 mr-1"></i> Pattern ${pattern}
       </span>`
     ).join('');
     
-    // Disable completed patterns in select
+ 
     Array.from(patternSelect.options).forEach(option => {
       if (option.value && completedPatterns.includes(option.value)) {
         option.disabled = true;
@@ -1084,7 +1063,7 @@ async function verifyLogin() {
         return;
     }
     
-    // Check if pattern is already completed
+    
     if (completedPatterns.includes(pattern)) {
         patternWarning.textContent = `Pattern ${pattern} is already completed. You cannot retake it.`;
         patternWarning.classList.remove('hidden');
@@ -1190,7 +1169,6 @@ async function handleLastQuestion() {
     
     userAnswers.push(sel.value);
     
-    // Check if we can submit
     const canSubmit = await checkIfCanSubmit();
     
     if (!canSubmit.canSubmit) {
@@ -1199,7 +1177,6 @@ async function handleLastQuestion() {
         return;
     }
     
-    // If we can submit, proceed with submission
     submitExam();
 }
 
@@ -1211,7 +1188,7 @@ async function nextQuestion() {
     currentIndex++;
     
     if (currentIndex >= questions.length) {
-        // Automatically check if we can submit when answering last question
+       
         const canSubmit = await checkIfCanSubmit();
         
         if (!canSubmit.canSubmit) {
@@ -1298,7 +1275,6 @@ function showWaitingForTimer() {
   // Start monitoring for waiting period too
   startMonitoring();
   
-  // Start checking timer
   if (studentTimerInterval) clearInterval(studentTimerInterval);
   studentTimerInterval = setInterval(checkWaitingTimer, 1000);
   checkWaitingTimer();
@@ -1310,13 +1286,12 @@ async function checkWaitingTimer() {
     const data = await res.json();
     
     if (res.ok && data.completed) {
-      // Timer ended, show results
+      
       finalResults = data.results;
       showResultScreen(data.score, data.total);
       stopMonitoring();
       isWaitingForTimer = false;
       
-      // Update completed patterns
       if (!completedPatterns.includes(studentPattern)) {
         completedPatterns.push(studentPattern);
         updateCompletedPatternsUI();
@@ -1327,7 +1302,7 @@ async function checkWaitingTimer() {
         studentTimerInterval = null;
       }
     } else if (res.ok && !data.completed) {
-      // Still waiting, update timer display
+   
       if (data.remaining) {
         const minutes = Math.floor(data.remaining / 60000);
         const seconds = Math.floor((data.remaining % 60000) / 1000);
@@ -1361,8 +1336,6 @@ function showResultScreen(score, total, minimal = false) {
     }
 }
 
-// --- SECURITY & RETRY ---
-
 let monitoringActive = false;
 
 function startMonitoring() {
@@ -1392,7 +1365,7 @@ function handleFullscreen() {
 }
 function handleBeforeUnload(e) {
     if (monitoringActive) {
-        // Even if they try to close, mark as failed
+        
         triggerFail("Window closed");
         e.preventDefault();
         e.returnValue = '';
@@ -1402,7 +1375,6 @@ function handleBeforeUnload(e) {
 function triggerFail(reason) {
     monitoringActive = false;
     
-    // Only send fail request if exam was submitted but timer didn't end
     if (examSubmitted && isWaitingForTimer) {
         fetch('/api/fail-waiting', { method: 'POST' });
     } else if (monitoringActive) {
@@ -1455,7 +1427,7 @@ async function secondChance() {
     }
 }
 
-// --- PDF ---
+
 function downloadPDF() {
     if (!finalResults) return alert("Results data not available");
     
