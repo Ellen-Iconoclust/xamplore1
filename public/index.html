@@ -27,6 +27,9 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   0%, 100% { background-color: #fef3c7; }
   50% { background-color: #fde68a; }
 }
+.exam-closed { background-color: #fee2e2; border-color: #fca5a5; }
+.exam-open { background-color: #d1fae5; border-color: #34d399; }
+.exam-waiting { background-color: #fef3c7; border-color: #fbbf24; }
 </style>
 </head>
 
@@ -57,7 +60,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
     <div class="flex items-center gap-2 brand text-2xl font-extrabold text-emerald-600">
       <i data-lucide="graduation-cap"></i> Xamplore
-      <span class="text-xs font-normal bg-emerald-100 text-emerald-700 px-2 py-1 rounded">v2.5</span>
+      <span class="text-xs font-normal bg-emerald-100 text-emerald-700 px-2 py-1 rounded">v3.0</span>
     </div>
 
     <div class="hidden md:flex gap-8 font-semibold">
@@ -89,8 +92,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   </h1>
   <p class="mt-3 text-xl font-semibold">Built for SRCAS Students</p>
   <p class="mt-6 max-w-xl mx-auto text-gray-600">
-    Xamplore is a secure online examination platform designed to
-    reduce malpractice and ensure fair evaluation.
+    Xamplore is a secure online examination platform with strict timing controls to prevent cheating.
   </p>
 </section>
 
@@ -98,14 +100,21 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 <section id="test" class="hidden py-16">
   <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-xl">
 
+    <!-- Exam Window Status Display -->
+    <div id="examWindowStatus" class="hidden mb-4 p-3 border rounded-lg text-center">
+      <div id="examWindowContent">
+        <!-- Will be populated dynamically -->
+      </div>
+    </div>
+
     <!-- Global Timer Display -->
     <div id="globalTimerDisplay" class="hidden mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
       <div class="flex items-center justify-center gap-2">
         <i data-lucide="clock" class="text-yellow-600"></i>
-        <span class="font-bold text-yellow-700">Global Timer Active:</span>
+        <span class="font-bold text-yellow-700">Exam Window:</span>
         <span id="globalTimer" class="font-mono text-xl font-bold text-yellow-800">--:--</span>
       </div>
-      <p id="timerMessage" class="text-xs text-yellow-600 mt-1">Final question locked until timer ends</p>
+      <p id="timerMessage" class="text-xs text-yellow-600 mt-1"></p>
     </div>
 
     <!-- Loading State -->
@@ -116,6 +125,18 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 
     <div id="login">
       <h2 class="text-2xl font-bold mb-4 text-emerald-600">Exam Login</h2>
+      
+      <!-- Completed Patterns Warning -->
+      <div id="completedPatternsWarning" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+        <div class="flex items-center gap-2 text-sm text-red-600 mb-2">
+          <i data-lucide="alert-circle" class="text-red-600"></i>
+          <span class="font-semibold">Completed Patterns:</span>
+        </div>
+        <div id="completedPatternsList" class="flex flex-wrap gap-2">
+          <!-- Will be populated dynamically -->
+        </div>
+        <p class="text-xs text-red-500 mt-2">You cannot retake completed patterns</p>
+      </div>
       
       <input id="nameInput" class="w-full p-2 mb-3 border rounded" placeholder="Your Name">
       <select id="patternSelect" class="w-full p-2 mb-3 border rounded">
@@ -139,7 +160,8 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         <li>No exiting fullscreen</li>
         <li>No screenshots or copy</li>
         <li>Violations end the test</li>
-        <li class="font-bold text-red-600">Timer must complete after submission to get results</li>
+        <li class="font-bold text-red-600">You can only submit when timer ends</li>
+        <li class="font-bold text-red-600">Cannot retake completed patterns</li>
       </ul>
       <button onclick="startExam()" class="mt-4 w-full bg-emerald-600 text-white p-2 rounded">
         I Agree & Start Exam
@@ -147,6 +169,12 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
     </div>
 
     <div id="exam" class="hidden">
+      <div class="mb-4 p-2 bg-blue-50 border border-blue-200 rounded text-center">
+        <p class="text-sm text-blue-700">
+          <i data-lucide="info" class="inline w-4 h-4 mr-1"></i>
+          You can answer questions now, but can only submit when timer ends
+        </p>
+      </div>
       <div id="questionBox"></div>
       <button id="nextButton" onclick="nextQuestion()" class="mt-4 w-full bg-emerald-600 text-white p-2 rounded">
         Next
@@ -158,18 +186,21 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         <i data-lucide="clock" class="w-16 h-16 mx-auto text-yellow-500"></i>
       </div>
       <h2 class="text-2xl font-bold text-yellow-600 mb-4">Waiting for Timer</h2>
-      <p class="text-gray-600 mb-4">Your exam has been submitted, but you must wait for the global timer to end.</p>
+      <p class="text-gray-600 mb-4">Your exam has been submitted, but you must wait for the timer to end to get results.</p>
       <p class="text-sm text-gray-500 mb-6">Do not close or switch tabs during this time, or your test will be marked as failed.</p>
       <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-4">
         <p class="font-semibold text-yellow-700">Time Remaining:</p>
         <div id="waitingTimer" class="text-3xl font-bold text-yellow-800 font-mono my-2">00:00</div>
-        <p class="text-xs text-yellow-600">PDF will be available after timer ends</p>
+        <p class="text-xs text-yellow-600">Results will be available after timer ends</p>
       </div>
       <p id="waitingStatus" class="text-sm text-gray-500"></p>
     </div>
 
     <div id="failed" class="hidden text-center">
-      <h2 class="text-xl font-bold text-red-600">Test Failed</h2>
+      <div class="mb-6">
+        <i data-lucide="x-circle" class="w-16 h-16 mx-auto text-red-500"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-red-600">Test Failed</h2>
       <p class="text-sm text-gray-600 mb-2">Malpractice detected or window focus lost.</p>
       <div class="relative">
       <input
@@ -195,12 +226,16 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       </div>
       <h2 class="text-2xl font-bold text-emerald-600">Test Completed Successfully!</h2>
       <p id="resultText" class="mt-3 text-lg font-semibold"></p>
+      <div class="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+        <p class="text-sm text-emerald-700 mb-2">Pattern Completed: <span class="font-bold" id="completedPatternDisplay"></span></p>
+        <p class="text-xs text-emerald-600">You cannot retake this pattern</p>
+      </div>
       <div class="mt-6 space-y-3">
         <button onclick="downloadPDF()" class="w-full bg-emerald-600 text-white p-2 rounded font-semibold">
           <i data-lucide="download" class="inline w-4 h-4 mr-2"></i> Download PDF Certificate
         </button>
         <button onclick="resetToLogin()" class="w-full bg-blue-600 text-white p-2 rounded">
-          <i data-lucide="rotate-ccw" class="inline w-4 h-4 mr-2"></i> Take Another Test
+          <i data-lucide="rotate-ccw" class="inline w-4 h-4 mr-2"></i> Take Another Test (Different Pattern)
         </button>
         <button onclick="showSection('home')" class="w-full bg-gray-600 text-white p-2 rounded">
           <i data-lucide="home" class="inline w-4 h-4 mr-2"></i> Return to Home
@@ -226,7 +261,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 
 <!-- ADMIN PAGE -->
 <section id="admin" class="hidden py-16">
-  <div class="max-w-4xl mx-auto px-4">
+  <div class="max-w-6xl mx-auto px-4">
     <h2 class="text-3xl font-bold text-center text-emerald-600 mb-8">Admin Dashboard</h2>
     
     <!-- Admin Login -->
@@ -251,7 +286,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       <!-- Timer Control Section -->
       <div class="mb-8 p-4 bg-gray-50 rounded-lg">
         <h4 class="font-bold text-lg text-gray-700 mb-3 flex items-center gap-2">
-          <i data-lucide="clock"></i> Global Timer Control
+          <i data-lucide="clock"></i> Exam Window Control
         </h4>
         
         <!-- Timer Status -->
@@ -266,23 +301,43 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
               <span id="activeTimerRemaining" class="ml-2 font-mono text-lg font-bold">00:00</span>
             </div>
           </div>
+          <div id="timerDetails" class="mt-2 text-sm text-gray-600">
+            <!-- Will be populated -->
+          </div>
         </div>
 
-        <!-- Timer Controls -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <!-- Set Exam Window -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Set Duration (Minutes)</label>
-            <input id="timerMinutes" type="number" min="1" max="120" value="10" class="w-full p-2 border rounded">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Start In (Minutes)</label>
+            <input id="startInMinutes" type="number" min="0" max="60" value="0" class="w-full p-2 border rounded">
+            <p class="text-xs text-gray-500 mt-1">0 = start immediately</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Set Duration (Seconds)</label>
-            <input id="timerSeconds" type="number" min="0" max="59" value="0" class="w-full p-2 border rounded">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Duration (Minutes)</label>
+            <input id="durationMinutes" type="number" min="1" max="120" value="30" class="w-full p-2 border rounded">
+            <p class="text-xs text-gray-500 mt-1">Exam window duration</p>
           </div>
-          <div class="flex items-end">
-            <button onclick="startGlobalTimer()" class="w-full bg-emerald-600 text-white p-2 rounded font-semibold">
-              Start Timer
-            </button>
-          </div>
+        </div>
+
+        <button onclick="setExamWindow()" class="w-full mb-4 bg-emerald-600 text-white p-2 rounded font-semibold">
+          Set Exam Window
+        </button>
+
+        <!-- Quick Timer Controls -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+          <button onclick="quickSetTimer(5)" class="bg-blue-100 text-blue-700 p-2 rounded hover:bg-blue-200">
+            5 min
+          </button>
+          <button onclick="quickSetTimer(10)" class="bg-blue-100 text-blue-700 p-2 rounded hover:bg-blue-200">
+            10 min
+          </button>
+          <button onclick="quickSetTimer(20)" class="bg-blue-100 text-blue-700 p-2 rounded hover:bg-blue-200">
+            20 min
+          </button>
+          <button onclick="quickSetTimer(30)" class="bg-blue-100 text-blue-700 p-2 rounded hover:bg-blue-200">
+            30 min
+          </button>
         </div>
 
         <div class="flex gap-2">
@@ -309,7 +364,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       </div>
 
       <!-- Exam Statistics -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
           <div class="flex items-center justify-between">
             <div>
@@ -337,6 +392,34 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
             <i data-lucide="check-circle" class="text-purple-500"></i>
           </div>
         </div>
+        <div class="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-yellow-600">Waiting</p>
+              <p id="waitingExams" class="text-2xl font-bold text-yellow-700">0</p>
+            </div>
+            <i data-lucide="clock" class="text-yellow-500"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Student Management -->
+      <div class="mb-6">
+        <h4 class="font-bold text-lg text-gray-700 mb-3">Student Management</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Student Name</label>
+            <input id="studentNameInput" class="w-full p-2 border rounded" placeholder="Enter student name">
+          </div>
+          <div class="flex items-end gap-2">
+            <button onclick="clearStudentCompleted()" class="flex-1 bg-red-100 text-red-700 p-2 rounded hover:bg-red-200">
+              Clear Completed
+            </button>
+            <button onclick="endStudentExam()" class="flex-1 bg-red-600 text-white p-2 rounded hover:bg-red-700">
+              End Exam
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Student List -->
@@ -350,6 +433,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
                 <th class="p-3 text-left">Pattern</th>
                 <th class="p-3 text-left">Status</th>
                 <th class="p-3 text-left">Progress</th>
+                <th class="p-3 text-left">Completed Patterns</th>
                 <th class="p-3 text-left">Actions</th>
               </tr>
             </thead>
@@ -367,8 +451,8 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 <section id="about" class="hidden py-20">
     <div class="text-center text-gray-600">
         <h2 class="text-3xl font-bold text-emerald-600">About</h2>
-        <p class="mt-4">Xamplore - Simple and Secure Exam Platform.</p>
-        <p class="text-sm text-gray-500 mt-2">Version 2.5 - Simplified timer system</p>
+        <p class="mt-4">Xamplore - Strict Timing Exam Platform.</p>
+        <p class="text-sm text-gray-500 mt-2">Version 3.0 - Prevents cheating with strict timing controls</p>
     </div>
 </section>
 
@@ -388,9 +472,11 @@ let studentPattern = "";
 let adminAuthenticated = false;
 let adminPollingInterval = null;
 let studentTimerInterval = null;
+let examWindowInterval = null;
 let lastTimerState = { active: false };
 let isWaitingForTimer = false; // Track if we're in waiting mode
 let examSubmitted = false; // Track if exam has been submitted
+let completedPatterns = []; // Track which patterns this student has completed
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
@@ -415,6 +501,13 @@ function showSection(id){
       adminPollingInterval = null;
     }
   }
+  if(id === 'test') {
+    checkCompletedPatterns();
+    checkExamWindowStatus();
+    if (!examWindowInterval) {
+      examWindowInterval = setInterval(checkExamWindowStatus, 1000);
+    }
+  }
 }
 
 // Reset to login screen
@@ -428,6 +521,7 @@ function resetToLogin() {
   el('result').classList.add('hidden');
   el('loader').classList.add('hidden');
   el('globalTimerDisplay').classList.add('hidden');
+  el('examWindowStatus').classList.add('hidden');
   
   // Reset form
   el('nameInput').value = '';
@@ -443,8 +537,107 @@ function resetToLogin() {
   isWaitingForTimer = false;
   examSubmitted = false;
   
-  // Clear cookies
-  document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  // Clear intervals
+  if (studentTimerInterval) {
+    clearInterval(studentTimerInterval);
+    studentTimerInterval = null;
+  }
+  
+  // Check completed patterns again
+  checkCompletedPatterns();
+  checkExamWindowStatus();
+}
+
+// --- EXAM WINDOW FUNCTIONS ---
+
+async function checkExamWindowStatus() {
+  try {
+    const res = await fetch('/api/timer/status');
+    if (res.ok) {
+      const timerStatus = await res.json();
+      updateExamWindowDisplay(timerStatus);
+    }
+  } catch (e) {
+    console.error("Error checking exam window:", e);
+  }
+}
+
+function updateExamWindowDisplay(timerStatus) {
+  const display = el('examWindowStatus');
+  const content = el('examWindowContent');
+  const globalDisplay = el('globalTimerDisplay');
+  const globalTimer = el('globalTimer');
+  const timerMessage = el('timerMessage');
+  
+  if (timerStatus.active) {
+    display.classList.remove('hidden');
+    globalDisplay.classList.remove('hidden');
+    
+    if (timerStatus.paused) {
+      content.innerHTML = `
+        <div class="flex items-center justify-center gap-2 text-yellow-600">
+          <i data-lucide="pause" class="w-4 h-4"></i>
+          <span class="font-medium">Exam Window Paused</span>
+        </div>
+      `;
+      display.className = 'mb-4 p-3 border rounded-lg text-center exam-waiting';
+      
+      globalTimer.textContent = "PAUSED";
+      timerMessage.textContent = "Exam window is paused";
+      
+    } else if (timerStatus.startTime && Date.now() < timerStatus.startTime) {
+      const timeLeft = timerStatus.startTime - Date.now();
+      const minutes = Math.floor(timeLeft / 60000);
+      const seconds = Math.floor((timeLeft % 60000) / 1000);
+      
+      content.innerHTML = `
+        <div class="flex items-center justify-center gap-2 text-yellow-600">
+          <i data-lucide="clock" class="w-4 h-4"></i>
+          <span class="font-medium">Exam starts in ${minutes}m ${seconds}s</span>
+        </div>
+      `;
+      display.className = 'mb-4 p-3 border rounded-lg text-center exam-waiting';
+      
+      globalTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      timerMessage.textContent = "Waiting for exam to start";
+      
+    } else if (timerStatus.endTime && Date.now() > timerStatus.endTime) {
+      content.innerHTML = `
+        <div class="flex items-center justify-center gap-2 text-red-600">
+          <i data-lucide="x-circle" class="w-4 h-4"></i>
+          <span class="font-medium">Exam Window Closed</span>
+        </div>
+        <p class="text-xs text-gray-500 mt-1">You can submit if you completed the exam</p>
+      `;
+      display.className = 'mb-4 p-3 border rounded-lg text-center exam-closed';
+      
+      globalTimer.textContent = "ENDED";
+      timerMessage.textContent = "Exam window has closed";
+      
+    } else {
+      const timeLeft = timerStatus.endTime - Date.now();
+      const minutes = Math.floor(timeLeft / 60000);
+      const seconds = Math.floor((timeLeft % 60000) / 1000);
+      
+      content.innerHTML = `
+        <div class="flex items-center justify-center gap-2 text-green-600">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          <span class="font-medium">Exam Window Open</span>
+        </div>
+        <p class="text-xs text-gray-500 mt-1">Ends in ${minutes}m ${seconds}s</p>
+      `;
+      display.className = 'mb-4 p-3 border rounded-lg text-center exam-open';
+      
+      globalTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      timerMessage.textContent = "Exam window is open - you can start exams";
+      
+      // Add timer running animation
+      globalDisplay.classList.add('timer-running');
+    }
+  } else {
+    display.classList.add('hidden');
+    globalDisplay.classList.add('hidden');
+  }
 }
 
 // --- ADMIN FUNCTIONS ---
@@ -507,6 +700,7 @@ async function loadAdminDashboard() {
     el('totalStudents').textContent = stats.totalStudents || 0;
     el('activeExams').textContent = stats.activeExams || 0;
     el('completedExams').textContent = stats.completedExams || 0;
+    el('waitingExams').textContent = stats.waitingExams || 0;
     
     updateTimerDisplay(timer);
     updateStudentList(students);
@@ -520,6 +714,7 @@ function updateTimerDisplay(timer) {
   const statusEl = el('currentTimerStatus');
   const activeInfoEl = el('activeTimerInfo');
   const remainingEl = el('activeTimerRemaining');
+  const detailsEl = el('timerDetails');
   
   if (timer.active) {
     statusEl.textContent = timer.paused ? 'Paused' : 'Running';
@@ -533,8 +728,30 @@ function updateTimerDisplay(timer) {
     
     if (timer.paused) {
       remainingMs = timer.pauseRemaining;
+      detailsEl.innerHTML = `<span class="text-yellow-600">Timer paused</span>`;
     } else if (timer.endTime) {
       remainingMs = timer.endTime - now;
+      
+      if (timer.startTime && now < timer.startTime) {
+        const startIn = timer.startTime - now;
+        const startMinutes = Math.floor(startIn / 60000);
+        const startSeconds = Math.floor((startIn % 60000) / 1000);
+        detailsEl.innerHTML = `
+          <div>Starts in: ${startMinutes}m ${startSeconds}s</div>
+          <div>Duration: ${Math.floor(timer.duration / 60)}m ${timer.duration % 60}s</div>
+        `;
+      } else if (timer.endTime > now) {
+        const totalDuration = timer.endTime - (timer.startTime || now);
+        const elapsed = now - (timer.startTime || now);
+        const progress = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
+        
+        detailsEl.innerHTML = `
+          <div>Progress: <span class="font-medium">${Math.round(progress)}%</span></div>
+          <div>Ends in: ${Math.floor(remainingMs / 60000)}m ${Math.floor((remainingMs % 60000) / 1000)}s</div>
+        `;
+      } else {
+        detailsEl.innerHTML = `<span class="text-red-600">Exam window closed</span>`;
+      }
     }
     
     if (remainingMs > 0) {
@@ -553,19 +770,20 @@ function updateTimerDisplay(timer) {
     statusEl.className = 'ml-2 px-2 py-1 rounded text-sm font-medium bg-gray-100 text-gray-800';
     activeInfoEl.classList.add('hidden');
     remainingEl.textContent = '00:00';
+    detailsEl.innerHTML = '<span class="text-gray-500">No exam window set</span>';
   }
 }
 
 function updateStudentList(students) {
   const tbody = el('studentTableBody');
   if (!students || students.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-500">No active students</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-500">No active students</td></tr>';
     return;
   }
   
   tbody.innerHTML = students.map(student => `
     <tr class="hover:bg-gray-50">
-      <td class="p-3">${student.name}</td>
+      <td class="p-3 font-medium">${student.name}</td>
       <td class="p-3">Pattern ${student.pattern}</td>
       <td class="p-3">
         <span class="px-2 py-1 rounded text-xs font-medium ${
@@ -585,12 +803,22 @@ function updateStudentList(students) {
         <div class="text-xs text-gray-500 mt-1">${student.currentQuestion || 0}/${student.totalQuestions || 0}</div>
       </td>
       <td class="p-3">
-        ${student.status === 'started' || student.status === 'waiting' ? 
-          `<button onclick="adminEndExam('${student.name}')" class="text-xs text-red-600 hover:text-red-800">
-            <i data-lucide="x-circle" class="inline w-3 h-3 mr-1"></i> End
-          </button>` : 
-          `<span class="text-xs text-gray-400">-</span>`
+        ${student.completedPatterns && student.completedPatterns.length > 0 ? 
+          student.completedPatterns.map(p => 
+            `<span class="inline-block px-2 py-1 mr-1 mb-1 text-xs bg-emerald-100 text-emerald-800 rounded">${p}</span>`
+          ).join('') : 
+          '<span class="text-gray-400 text-xs">None</span>'
         }
+      </td>
+      <td class="p-3">
+        <div class="flex flex-col gap-1">
+          <button onclick="adminEndSpecificExam('${student.name}')" class="text-xs text-red-600 hover:text-red-800">
+            <i data-lucide="x-circle" class="inline w-3 h-3 mr-1"></i> End Exam
+          </button>
+          <button onclick="adminClearStudentCompleted('${student.name}')" class="text-xs text-blue-600 hover:text-blue-800">
+            <i data-lucide="refresh-cw" class="inline w-3 h-3 mr-1"></i> Clear Completed
+          </button>
+        </div>
       </td>
     </tr>
   `).join('');
@@ -598,15 +826,43 @@ function updateStudentList(students) {
   lucide.createIcons();
 }
 
-async function startGlobalTimer() {
-  const minutes = parseInt(el('timerMinutes').value) || 0;
-  const seconds = parseInt(el('timerSeconds').value) || 0;
-  const totalSeconds = minutes * 60 + seconds;
+async function setExamWindow() {
+  const startInMinutes = parseInt(el('startInMinutes').value) || 0;
+  const durationMinutes = parseInt(el('durationMinutes').value) || 30;
   
-  if (totalSeconds <= 0) {
-    alert("Please set a valid timer duration");
+  if (durationMinutes <= 0) {
+    alert("Please set a valid duration");
     return;
   }
+  
+  try {
+    const res = await fetch('/api/admin/timer/set', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ startInMinutes, durationMinutes })
+    });
+    
+    const data = await res.json();
+    if (res.ok) {
+      alert(`Exam window set! ${data.message}`);
+      loadAdminDashboard();
+    } else {
+      alert(data.error || "Failed to set timer");
+    }
+  } catch (e) {
+    alert("Error setting exam window");
+  }
+}
+
+function quickSetTimer(minutes) {
+  el('startInMinutes').value = 0;
+  el('durationMinutes').value = minutes;
+  setExamWindow();
+}
+
+async function startGlobalTimer() {
+  const duration = parseInt(el('durationMinutes').value) || 30;
+  const totalSeconds = duration * 60;
   
   try {
     const res = await fetch('/api/admin/timer/start', {
@@ -617,7 +873,7 @@ async function startGlobalTimer() {
     
     const data = await res.json();
     if (res.ok) {
-      alert("Global timer started for all students!");
+      alert("Timer started!");
       loadAdminDashboard();
     } else {
       alert(data.error || "Failed to start timer");
@@ -660,7 +916,7 @@ async function stopGlobalTimer() {
     const res = await fetch('/api/admin/timer/stop', { method: 'POST' });
     const data = await res.json();
     if (res.ok) {
-      alert("Global timer stopped!");
+      alert("Timer stopped!");
       loadAdminDashboard();
     } else {
       alert(data.error || "Failed to stop timer");
@@ -670,7 +926,7 @@ async function stopGlobalTimer() {
   }
 }
 
-async function adminEndExam(studentName) {
+async function adminEndSpecificExam(studentName) {
   if (!confirm(`Are you sure you want to end the exam for ${studentName}?`)) return;
   
   try {
@@ -690,6 +946,50 @@ async function adminEndExam(studentName) {
   } catch (e) {
     alert("Error ending exam");
   }
+}
+
+async function adminClearStudentCompleted(studentName) {
+  if (!confirm(`Clear completed patterns for ${studentName}? This will allow them to retake tests.`)) return;
+  
+  try {
+    const res = await fetch('/api/admin/clear-completed', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ studentName })
+    });
+    
+    const data = await res.json();
+    if (res.ok) {
+      alert(`Cleared completed patterns for ${studentName}`);
+      loadAdminDashboard();
+    } else {
+      alert(data.error || "Failed to clear completed patterns");
+    }
+  } catch (e) {
+    alert("Error clearing completed patterns");
+  }
+}
+
+async function endStudentExam() {
+  const studentName = el('studentNameInput').value.trim();
+  if (!studentName) {
+    alert("Please enter a student name");
+    return;
+  }
+  
+  await adminEndSpecificExam(studentName);
+  el('studentNameInput').value = '';
+}
+
+async function clearStudentCompleted() {
+  const studentName = el('studentNameInput').value.trim();
+  if (!studentName) {
+    alert("Please enter a student name");
+    return;
+  }
+  
+  await adminClearStudentCompleted(studentName);
+  el('studentNameInput').value = '';
 }
 
 function startAdminPolling() {
@@ -716,11 +1016,60 @@ async function checkAuth() {
             } else if (data.status === 'failed') {
                  failTestUI();
             } else if (data.status === 'waiting') {
-                 // User is in waiting mode (submitted but timer not ended)
                  showWaitingForTimer();
+            }
+            
+            // Update completed patterns
+            if (data.completedPatterns) {
+                completedPatterns = data.completedPatterns;
+                updateCompletedPatternsUI();
             }
         }
     } catch (e) { console.error("Auth check failed", e); }
+}
+
+async function checkCompletedPatterns() {
+  try {
+    const res = await fetch('/api/completed-patterns');
+    const data = await res.json();
+    
+    if (res.ok && data.completedPatterns) {
+      completedPatterns = data.completedPatterns;
+      updateCompletedPatternsUI();
+    }
+  } catch (e) {
+    console.error("Error checking completed patterns:", e);
+  }
+}
+
+function updateCompletedPatternsUI() {
+  const warning = el('completedPatternsWarning');
+  const list = el('completedPatternsList');
+  const patternSelect = el('patternSelect');
+  
+  if (completedPatterns.length > 0) {
+    warning.classList.remove('hidden');
+    
+    // Update completed patterns list
+    list.innerHTML = completedPatterns.map(pattern => 
+      `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+        <i data-lucide="x" class="w-3 h-3 mr-1"></i> Pattern ${pattern}
+      </span>`
+    ).join('');
+    
+    // Disable completed patterns in select
+    Array.from(patternSelect.options).forEach(option => {
+      if (option.value && completedPatterns.includes(option.value)) {
+        option.disabled = true;
+        option.textContent = `Pattern ${option.value} (Completed)`;
+        option.classList.add('text-gray-400');
+      }
+    });
+    
+    lucide.createIcons();
+  } else {
+    warning.classList.add('hidden');
+  }
 }
 
 async function verifyLogin() {
@@ -731,6 +1080,13 @@ async function verifyLogin() {
 
     if (!name || !pattern || !password) {
         patternWarning.textContent = "Please fill all fields";
+        patternWarning.classList.remove('hidden');
+        return;
+    }
+    
+    // Check if pattern is already completed
+    if (completedPatterns.includes(pattern)) {
+        patternWarning.textContent = `Pattern ${pattern} is already completed. You cannot retake it.`;
         patternWarning.classList.remove('hidden');
         return;
     }
@@ -766,128 +1122,6 @@ async function verifyLogin() {
     }
 }
 
-async function checkGlobalTimer() {
-  try {
-    const res = await fetch('/api/timer/status');
-    const data = await res.json();
-    
-    const shouldUpdate = data.active !== lastTimerState.active || 
-                         data.paused !== lastTimerState.paused ||
-                         (data.endTime && Math.abs((data.endTime - Date.now()) - (lastTimerState.endTime || 0)) > 1000);
-    
-    if (!shouldUpdate && lastTimerState.active === data.active && data.active === false) {
-      return;
-    }
-    
-    lastTimerState = { ...data };
-    
-    if (data.active) {
-      // Always show timer display if active
-      el('globalTimerDisplay').classList.remove('hidden');
-      
-      const now = Date.now();
-      let remainingMs = 0;
-      
-      if (data.paused) {
-        remainingMs = data.pauseRemaining || 0;
-        el('timerMessage').textContent = "Timer is paused";
-      } else if (data.endTime) {
-        remainingMs = data.endTime - now;
-        if (remainingMs > 0) {
-          el('timerMessage').textContent = isWaitingForTimer ? 
-            "Waiting for timer to end to get results" : 
-            "Final question locked until timer ends";
-        } else {
-          el('timerMessage').textContent = "Timer has ended";
-        }
-      }
-      
-      if (remainingMs > 0) {
-        const minutes = Math.floor(remainingMs / 60000);
-        const seconds = Math.floor((remainingMs % 60000) / 1000);
-        el('globalTimer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        
-        // Update waiting timer if in waiting mode
-        if (isWaitingForTimer) {
-          el('waitingTimer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-          if (remainingMs <= 1000) {
-            // Timer just ended, check for results
-            checkForResults();
-          }
-        }
-        
-        if (data.paused) {
-          el('globalTimerDisplay').classList.remove('timer-running');
-        } else {
-          el('globalTimerDisplay').classList.add('timer-running');
-        }
-      } else {
-        el('globalTimer').textContent = "00:00";
-        el('globalTimerDisplay').classList.remove('timer-running');
-        
-        // If timer ended and we're waiting, check for results
-        if (isWaitingForTimer && !data.paused) {
-          checkForResults();
-        }
-      }
-    } else {
-      // Timer not active
-      if (!el('globalTimerDisplay').classList.contains('hidden')) {
-        el('globalTimerDisplay').classList.add('hidden');
-      }
-      
-      // If we're waiting and timer ended, check for results
-      if (isWaitingForTimer) {
-        checkForResults();
-      }
-    }
-  } catch (e) {
-    console.error("Timer check error:", e);
-  }
-}
-
-async function checkForResults() {
-  if (!isWaitingForTimer) return;
-  
-  try {
-    const res = await fetch('/api/check-results');
-    const data = await res.json();
-    
-    if (res.ok && data.completed) {
-      // Timer ended, show results
-      finalResults = data.results;
-      showResultScreen(data.score, data.total);
-      stopMonitoring();
-      isWaitingForTimer = false;
-    } else if (res.ok && !data.completed) {
-      // Still waiting
-      el('waitingStatus').textContent = "Still waiting for timer to end...";
-    }
-  } catch (e) {
-    console.error("Error checking results:", e);
-  }
-}
-
-function showWaitingForTimer() {
-  el('login').classList.add('hidden');
-  el('rules').classList.add('hidden');
-  el('exam').classList.add('hidden');
-  el('failed').classList.add('hidden');
-  el('result').classList.add('hidden');
-  el('waitingForTimer').classList.remove('hidden');
-  
-  isWaitingForTimer = true;
-  examSubmitted = true;
-  
-  // Start monitoring for waiting period too
-  startMonitoring();
-  
-  // Start checking timer
-  if (studentTimerInterval) clearInterval(studentTimerInterval);
-  studentTimerInterval = setInterval(checkGlobalTimer, 1000);
-  checkGlobalTimer();
-}
-
 async function startExam() {
     try {
         const res = await fetch('/api/start-v2', { method: 'POST' });
@@ -907,13 +1141,17 @@ async function startExam() {
             startMonitoring();
             
             if (studentTimerInterval) clearInterval(studentTimerInterval);
-            studentTimerInterval = setInterval(checkGlobalTimer, 1000);
-            checkGlobalTimer();
+            studentTimerInterval = setInterval(checkExamWindowStatus, 1000);
+            checkExamWindowStatus();
         } else {
             alert(data.error);
             if (data.error.includes("failed")) failTestUI();
             if (data.error.includes("waiting")) {
                 showWaitingForTimer();
+            }
+            if (data.error.includes("completed")) {
+                checkCompletedPatterns();
+                resetToLogin();
             }
         }
     } catch (e) { alert("Could not start exam"); }
@@ -952,11 +1190,11 @@ async function handleLastQuestion() {
     
     userAnswers.push(sel.value);
     
-    // For the last question, check if we can submit
+    // Check if we can submit
     const canSubmit = await checkIfCanSubmit();
     
-    if (!canSubmit) {
-        alert("Global timer is active. Please wait until the timer ends to submit your exam.");
+    if (!canSubmit.canSubmit) {
+        alert(`Cannot submit yet. ${canSubmit.message}`);
         userAnswers.pop(); // Remove the last answer
         return;
     }
@@ -973,6 +1211,17 @@ async function nextQuestion() {
     currentIndex++;
     
     if (currentIndex >= questions.length) {
+        // Automatically check if we can submit when answering last question
+        const canSubmit = await checkIfCanSubmit();
+        
+        if (!canSubmit.canSubmit) {
+            alert(`Cannot submit yet. ${canSubmit.message}`);
+            currentIndex--; // Go back to last question
+            userAnswers.pop(); // Remove the last answer
+            renderQuestion();
+            return;
+        }
+        
         submitExam();
     } else {
         renderQuestion();
@@ -983,9 +1232,9 @@ async function checkIfCanSubmit() {
     try {
         const res = await fetch('/api/timer/can-submit');
         const data = await res.json();
-        return data.canSubmit;
+        return data;
     } catch (e) {
-        return true;
+        return { canSubmit: true, message: "Error checking submit status" };
     }
 }
 
@@ -1006,18 +1255,20 @@ async function submitExam() {
         if (res.ok) {
             examSubmitted = true;
             
-            // Check if timer is still active
-            const timerRes = await fetch('/api/timer/status');
-            const timerData = await timerRes.json();
-            
-            if (timerData.active && !timerData.paused && timerData.endTime && timerData.endTime > Date.now()) {
-                // Timer is active, go to waiting mode
+            if (data.waiting) {
+                // Timer is still active, go to waiting mode
                 showWaitingForTimer();
             } else {
-                // Timer not active or already ended, show results immediately
+                // Timer ended or not active, show results immediately
                 finalResults = data.results;
                 showResultScreen(data.score, data.total);
                 stopMonitoring();
+                
+                // Update completed patterns
+                if (!completedPatterns.includes(studentPattern)) {
+                    completedPatterns.push(studentPattern);
+                    updateCompletedPatternsUI();
+                }
                 
                 if (studentTimerInterval) {
                     clearInterval(studentTimerInterval);
@@ -1033,6 +1284,62 @@ async function submitExam() {
     }
 }
 
+function showWaitingForTimer() {
+  el('login').classList.add('hidden');
+  el('rules').classList.add('hidden');
+  el('exam').classList.add('hidden');
+  el('failed').classList.add('hidden');
+  el('result').classList.add('hidden');
+  el('waitingForTimer').classList.remove('hidden');
+  
+  isWaitingForTimer = true;
+  examSubmitted = true;
+  
+  // Start monitoring for waiting period too
+  startMonitoring();
+  
+  // Start checking timer
+  if (studentTimerInterval) clearInterval(studentTimerInterval);
+  studentTimerInterval = setInterval(checkWaitingTimer, 1000);
+  checkWaitingTimer();
+}
+
+async function checkWaitingTimer() {
+  try {
+    const res = await fetch('/api/check-results');
+    const data = await res.json();
+    
+    if (res.ok && data.completed) {
+      // Timer ended, show results
+      finalResults = data.results;
+      showResultScreen(data.score, data.total);
+      stopMonitoring();
+      isWaitingForTimer = false;
+      
+      // Update completed patterns
+      if (!completedPatterns.includes(studentPattern)) {
+        completedPatterns.push(studentPattern);
+        updateCompletedPatternsUI();
+      }
+      
+      if (studentTimerInterval) {
+        clearInterval(studentTimerInterval);
+        studentTimerInterval = null;
+      }
+    } else if (res.ok && !data.completed) {
+      // Still waiting, update timer display
+      if (data.remaining) {
+        const minutes = Math.floor(data.remaining / 60000);
+        const seconds = Math.floor((data.remaining % 60000) / 1000);
+        el('waitingTimer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }
+      el('waitingStatus').textContent = data.message || "Waiting for timer to end...";
+    }
+  } catch (e) {
+    console.error("Error checking waiting timer:", e);
+  }
+}
+
 function showResultScreen(score, total, minimal = false) {
     el('login').classList.add('hidden');
     el('rules').classList.add('hidden');
@@ -1041,10 +1348,12 @@ function showResultScreen(score, total, minimal = false) {
     el('failed').classList.add('hidden');
     el('result').classList.remove('hidden');
     el('globalTimerDisplay').classList.add('hidden');
+    el('examWindowStatus').classList.add('hidden');
     
     try { document.exitFullscreen(); } catch(e){}
     
     el('resultText').textContent = `${studentName} — Pattern ${studentPattern} — Score ${score}/${total}`;
+    el('completedPatternDisplay').textContent = studentPattern;
     
     if (minimal) {
         if (!finalResults) document.querySelector("#result button").style.display = 'none';
@@ -1111,6 +1420,7 @@ function failTestUI() {
     el('result').classList.add('hidden');
     el('failed').classList.remove('hidden');
     el('globalTimerDisplay').classList.add('hidden');
+    el('examWindowStatus').classList.add('hidden');
     
     try { document.exitFullscreen(); } catch(e){}
     
@@ -1133,6 +1443,7 @@ async function secondChance() {
             body: JSON.stringify({ code })
         });
         
+        const data = await res.json();
         if (res.ok) {
             el('failed').classList.add('hidden');
             el('rules').classList.remove('hidden');
