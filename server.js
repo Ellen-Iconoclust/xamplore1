@@ -351,7 +351,7 @@ app.post('/api/start-v2', (req, res) => {
     res.json({ questions: questionsToSend });
 });
 
-// 5. SUBMIT EXAM (Modified to handle timer wait)
+// 5. SUBMIT EXAM (Modified to handle timer wait and track completion)
 app.post('/api/submit-v2', (req, res) => {
     const session = req.signedCookies.session;
     if (!session) return res.status(401).json({ error: "Not logged in" });
@@ -426,7 +426,7 @@ app.post('/api/submit-v2', (req, res) => {
 
         res.cookie('session', session, { httpOnly: true, signed: true, maxAge: 7200000 });
 
-        // Add pattern to completed patterns for this student
+        // IMPORTANT: Add pattern to completed patterns for this student
         const completedPatterns = studentCompletedPatterns.get(session.name) || [];
         if (!completedPatterns.includes(session.pattern)) {
             completedPatterns.push(session.pattern);
@@ -471,7 +471,7 @@ app.get('/api/check-results', (req, res) => {
 
         res.cookie('session', session, { httpOnly: true, signed: true, maxAge: 7200000 });
 
-        // Add pattern to completed patterns
+        // IMPORTANT: Add pattern to completed patterns
         const completedPatterns = studentCompletedPatterns.get(session.name) || [];
         if (!completedPatterns.includes(session.pattern)) {
             completedPatterns.push(session.pattern);
@@ -628,13 +628,15 @@ app.get('/api/timer/status', (req, res) => {
     }
 });
 
-// 12. CHECK IF CAN SUBMIT (For final question)
+// 12. CHECK IF CAN SUBMIT (For final question) - FIXED
 app.get('/api/timer/can-submit', (req, res) => {
     const now = Date.now();
     
+    // If timer is active and not expired, cannot submit
     if (globalTimer.active && !globalTimer.paused && globalTimer.endTime && globalTimer.endTime > now) {
         res.json({ canSubmit: false, remaining: globalTimer.endTime - now });
     } else {
+        // Timer not active, expired, or paused - can submit
         res.json({ canSubmit: true, remaining: 0 });
     }
 });
