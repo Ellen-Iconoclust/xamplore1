@@ -6,12 +6,12 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+
 app.use(bodyParser.json());
 app.use(cookieParser('xamplore-super-secret-key-2024'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- DATA ---
+
 
 const PASSWORDS = {
     A: "alpha123",
@@ -127,24 +127,20 @@ const QUESTION_BANK = {
 // --- GLOBAL TIMER STATE ---
 let globalTimer = {
     active: false,
-    startTime: null,      // When timer starts
-    endTime: null,        // When timer ends
+    startTime: null,      
+    endTime: null,        
     duration: 0,
     paused: false,
     pauseRemaining: 0
 };
 
-// --- STUDENT SESSIONS IN MEMORY ---
-let studentSessions = new Map(); // name -> session data
+let studentSessions = new Map(); 
 let timerHistory = [];
 
-// --- COMPLETED PATTERNS TRACKING ---
-let studentCompletedPatterns = new Map(); // name -> array of completed patterns
+let studentCompletedPatterns = new Map(); 
 
-// --- PENDING SUBMISSIONS (for timer wait) ---
-let pendingSubmissions = new Map(); // name -> { pattern, answers, timestamp, results }
+let pendingSubmissions = new Map(); 
 
-// --- HELPERS ---
 function shuffle(array) {
     const arr = [...array];
     for (let i = arr.length - 1; i > 0; i--) {
@@ -189,7 +185,6 @@ function cleanupOldSessions() {
         }
     }
     
-    // Also clean up old pending submissions
     for (const [name, submission] of pendingSubmissions.entries()) {
         if (Date.now() - submission.timestamp > 3600000) { // 1 hour
             pendingSubmissions.delete(name);
@@ -199,7 +194,6 @@ function cleanupOldSessions() {
 
 setInterval(cleanupOldSessions, 600000);
 
-// Check if exam can be started (timer must be active)
 function canStartExam() {
     const now = Date.now();
     
@@ -228,7 +222,6 @@ function canStartExam() {
     return { canStart: true, reason: "Exam window is open." };
 }
 
-// Check if exam can be submitted (must be within timer window)
 function canSubmitExam() {
     const now = Date.now();
     
@@ -248,11 +241,10 @@ function canSubmitExam() {
         return { canSubmit: true, reason: "Timer ended, can submit." };
     }
     
-    // Can only submit if timer is running and we're in the window
     return { canSubmit: true, reason: "Can submit within exam window." };
 }
 
-// Get timer status for display
+
 function getTimerStatus() {
     const now = Date.now();
     
@@ -330,9 +322,6 @@ function getTimerStatus() {
     };
 }
 
-// --- API ROUTES ---
-
-// 1. LOGIN (Check pattern completion)
 app.post('/api/login', (req, res) => {
     const { name, pattern, password } = req.body;
 
@@ -344,7 +333,6 @@ app.post('/api/login', (req, res) => {
         return res.status(401).json({ error: "Invalid password for selected pattern" });
     }
 
-    // Check if this pattern is already completed by this student
     const completedPatterns = studentCompletedPatterns.get(name) || [];
     if (completedPatterns.includes(pattern)) {
         return res.status(403).json({ 
@@ -352,22 +340,19 @@ app.post('/api/login', (req, res) => {
         });
     }
 
-    // Check if student has a pending submission
+
     if (pendingSubmissions.has(name)) {
         return res.status(403).json({ 
             error: `You have a pending submission. Please wait for the timer to end.` 
         });
     }
 
-    // Check exam window status
     const timerStatus = getTimerStatus();
     if (!timerStatus.canStart) {
         return res.status(403).json({ 
             error: `Cannot start exam now. ${timerStatus.message}` 
         });
     }
-
-    // Set signed cookie with session data
     const sessionData = {
         name,
         pattern,
@@ -393,14 +378,14 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-// 2. CHECK STATUS (For page reloads)
+//CHECK STATUS
 app.get('/api/me', (req, res) => {
     const session = req.signedCookies.session;
     if (!session) {
         return res.json({ loggedIn: false });
     }
     
-    // Add completed patterns to response
+    
     const completedPatterns = studentCompletedPatterns.get(session.name) || [];
     
     if (session.status === 'started') {
@@ -428,7 +413,7 @@ app.get('/api/me', (req, res) => {
     });
 });
 
-// 3. GET COMPLETED PATTERNS
+
 app.get('/api/completed-patterns', (req, res) => {
     const session = req.signedCookies.session;
     if (!session) {
@@ -439,17 +424,15 @@ app.get('/api/completed-patterns', (req, res) => {
     res.json({ completedPatterns });
 });
 
-// 4. GET TIMER STATUS
 app.get('/api/timer/status', (req, res) => {
     res.json(getTimerStatus());
 });
 
-// 5. START EXAM (Strict timing check)
 app.post('/api/start-v2', (req, res) => {
     const session = req.signedCookies.session;
     if (!session) return res.status(401).json({ error: "Not logged in" });
 
-    // Check if exam window is open
+   
     const timerStatus = getTimerStatus();
     if (!timerStatus.canStart) {
         return res.status(403).json({ 
@@ -457,7 +440,6 @@ app.post('/api/start-v2', (req, res) => {
         });
     }
 
-    // Check if this pattern is already completed
     const completedPatterns = studentCompletedPatterns.get(session.name) || [];
     if (completedPatterns.includes(session.pattern)) {
         return res.status(403).json({ 
@@ -465,7 +447,6 @@ app.post('/api/start-v2', (req, res) => {
         });
     }
 
-    // Check if student has a pending submission
     if (pendingSubmissions.has(session.name)) {
         return res.status(403).json({ 
             error: `You have a pending submission. Please wait for the timer to end. Status: waiting` 
@@ -513,7 +494,6 @@ app.post('/api/start-v2', (req, res) => {
     });
 });
 
-// 6. SUBMIT EXAM (Strict timing check)
 app.post('/api/submit-v2', (req, res) => {
     const session = req.signedCookies.session;
     if (!session) return res.status(401).json({ error: "Not logged in" });
@@ -555,12 +535,10 @@ app.post('/api/submit-v2', (req, res) => {
         });
     });
 
-    // Check if we can submit (timer must be ended or within window)
     const timerStatus = getTimerStatus();
     const now = Date.now();
     
     if (globalTimer.active && !globalTimer.paused && globalTimer.endTime && globalTimer.endTime > now) {
-        // Timer is still running, store as pending
         pendingSubmissions.set(session.name, {
             pattern: session.pattern,
             answers: answers,
@@ -586,7 +564,7 @@ app.post('/api/submit-v2', (req, res) => {
             timerEndsAt: globalTimer.endTime
         });
     } else {
-        // Timer ended or not active, complete immediately
+      
         session.status = 'completed';
         session.score = score;
         session.currentQuestion = fullBank.length;
@@ -594,7 +572,6 @@ app.post('/api/submit-v2', (req, res) => {
 
         res.cookie('session', session, { httpOnly: true, signed: true, maxAge: 7200000 });
 
-        // Add pattern to completed patterns
         const completedPatterns = studentCompletedPatterns.get(session.name) || [];
         if (!completedPatterns.includes(session.pattern)) {
             completedPatterns.push(session.pattern);
@@ -615,15 +592,14 @@ app.post('/api/submit-v2', (req, res) => {
     }
 });
 
-// 7. CHECK RESULTS (for waiting students)
+
 app.get('/api/check-results', (req, res) => {
     const session = req.signedCookies.session;
     if (!session) return res.status(401).json({ error: "Not logged in" });
 
-    // Check if timer has ended
     const now = Date.now();
     if (globalTimer.active && !globalTimer.paused && globalTimer.endTime && globalTimer.endTime > now) {
-        // Timer still running
+
         return res.json({ 
             completed: false, 
             remaining: globalTimer.endTime - now,
@@ -631,11 +607,9 @@ app.get('/api/check-results', (req, res) => {
         });
     }
 
-    // Timer ended or not active, check for pending submission
     if (pendingSubmissions.has(session.name)) {
         const submission = pendingSubmissions.get(session.name);
         
-        // Complete the exam
         session.status = 'completed';
         session.score = submission.score;
         session.currentQuestion = QUESTION_BANK[session.pattern]?.length || 30;
@@ -643,7 +617,6 @@ app.get('/api/check-results', (req, res) => {
 
         res.cookie('session', session, { httpOnly: true, signed: true, maxAge: 7200000 });
 
-        // Add pattern to completed patterns
         const completedPatterns = studentCompletedPatterns.get(session.name) || [];
         if (!completedPatterns.includes(session.pattern)) {
             completedPatterns.push(session.pattern);
@@ -654,7 +627,6 @@ app.get('/api/check-results', (req, res) => {
                              QUESTION_BANK[session.pattern]?.length, 
                              QUESTION_BANK[session.pattern]?.length);
 
-        // Remove from pending
         pendingSubmissions.delete(session.name);
 
         return res.json({
@@ -667,7 +639,7 @@ app.get('/api/check-results', (req, res) => {
             completedPatterns: completedPatterns
         });
     } else if (session.status === 'completed') {
-        // Already completed
+
         const fullBank = QUESTION_BANK[session.pattern];
         return res.json({
             completed: true,
@@ -683,7 +655,6 @@ app.get('/api/check-results', (req, res) => {
     }
 });
 
-// 8. RETRY (Second chance for failed exams)
 app.post('/api/retry', (req, res) => {
     const session = req.signedCookies.session;
     if (!session) return res.status(401).json({ error: "Not logged in" });
@@ -693,12 +664,10 @@ app.post('/api/retry', (req, res) => {
         return res.status(400).json({ error: "Invalid Second Chance Code" });
     }
 
-    // Remove any pending submission
     if (pendingSubmissions.has(session.name)) {
         pendingSubmissions.delete(session.name);
     }
 
-    // Check if exam window is open
     const timerStatus = getTimerStatus();
     if (!timerStatus.canStart) {
         return res.status(403).json({ 
@@ -706,7 +675,6 @@ app.post('/api/retry', (req, res) => {
         });
     }
 
-    // Reset status
     session.status = 'ready';
     session.score = null;
     session.questionOrder = null;
@@ -724,7 +692,6 @@ app.post('/api/retry', (req, res) => {
     });
 });
 
-// 9. FAIL (Malpractice Trigger during exam)
 app.post('/api/fail', (req, res) => {
     const session = req.signedCookies.session;
     if (session) {
@@ -738,14 +705,12 @@ app.post('/api/fail', (req, res) => {
     res.json({ success: true });
 });
 
-// 10. FAIL WAITING (Malpractice during waiting period)
 app.post('/api/fail-waiting', (req, res) => {
     const session = req.signedCookies.session;
     if (session) {
         session.status = 'failed';
         res.cookie('session', session, { httpOnly: true, signed: true, maxAge: 7200000 });
-        
-        // Remove pending submission if exists
+    
         if (pendingSubmissions.has(session.name)) {
             pendingSubmissions.delete(session.name);
         }
@@ -757,7 +722,6 @@ app.post('/api/fail-waiting', (req, res) => {
     res.json({ success: true });
 });
 
-// 11. UPDATE QUESTION PROGRESS
 app.post('/api/update-progress', (req, res) => {
     const session = req.signedCookies.session;
     if (!session) return res.status(401).json({ error: "Not logged in" });
@@ -776,11 +740,9 @@ app.post('/api/update-progress', (req, res) => {
     res.json({ success: true });
 });
 
-// 12. CHECK IF CAN SUBMIT (For final question)
 app.get('/api/timer/can-submit', (req, res) => {
     const timerStatus = getTimerStatus();
-    
-    // Students can only submit when timer has ended
+
     if (globalTimer.active && !globalTimer.paused && globalTimer.endTime) {
         const now = Date.now();
         if (globalTimer.endTime > now) {
@@ -800,9 +762,6 @@ app.get('/api/timer/can-submit', (req, res) => {
     });
 });
 
-// --- ADMIN ROUTES ---
-
-// 13. ADMIN LOGIN
 app.post('/api/admin/login', (req, res) => {
     const { name, password } = req.body;
     
@@ -818,7 +777,6 @@ app.post('/api/admin/login', (req, res) => {
     }
 });
 
-// 14. CHECK ADMIN AUTH MIDDLEWARE
 function checkAdminAuth(req, res, next) {
     const adminSession = req.signedCookies.admin;
     if (!adminSession || !adminSession.loggedIn) {
@@ -827,7 +785,6 @@ function checkAdminAuth(req, res, next) {
     next();
 }
 
-// 15. ADMIN GET STATISTICS
 app.get('/api/admin/stats', checkAdminAuth, (req, res) => {
     const sessions = getAllStudentSessions();
     
@@ -846,7 +803,6 @@ app.get('/api/admin/stats', checkAdminAuth, (req, res) => {
     res.json(stats);
 });
 
-// 16. ADMIN GET TIMER STATUS
 app.get('/api/admin/timer', checkAdminAuth, (req, res) => {
     const response = {
         ...globalTimer,
@@ -856,7 +812,6 @@ app.get('/api/admin/timer', checkAdminAuth, (req, res) => {
     res.json(response);
 });
 
-// 17. ADMIN SET TIMER (Set exact start and end times)
 app.post('/api/admin/timer/set', checkAdminAuth, (req, res) => {
     const { startInMinutes, durationMinutes } = req.body;
     
@@ -898,7 +853,6 @@ app.post('/api/admin/timer/set', checkAdminAuth, (req, res) => {
     });
 });
 
-// 18. ADMIN START TIMER IMMEDIATELY
 app.post('/api/admin/timer/start', checkAdminAuth, (req, res) => {
     const { duration } = req.body;
     
@@ -929,8 +883,7 @@ app.post('/api/admin/timer/start', checkAdminAuth, (req, res) => {
     if (timerHistory.length > 50) {
         timerHistory = timerHistory.slice(-50);
     }
-    
-    // Check if any waiting students can now get results
+
     checkPendingSubmissions();
     
     res.json({ 
@@ -940,7 +893,6 @@ app.post('/api/admin/timer/start', checkAdminAuth, (req, res) => {
     });
 });
 
-// 19. ADMIN PAUSE TIMER
 app.post('/api/admin/timer/pause', checkAdminAuth, (req, res) => {
     if (!globalTimer.active || globalTimer.paused) {
         return res.status(400).json({ error: "Timer is not running" });
@@ -963,7 +915,6 @@ app.post('/api/admin/timer/pause', checkAdminAuth, (req, res) => {
     });
 });
 
-// 20. ADMIN RESUME TIMER
 app.post('/api/admin/timer/resume', checkAdminAuth, (req, res) => {
     if (!globalTimer.active || !globalTimer.paused) {
         return res.status(400).json({ error: "Timer is not paused" });
@@ -986,7 +937,6 @@ app.post('/api/admin/timer/resume', checkAdminAuth, (req, res) => {
     });
 });
 
-// 21. ADMIN STOP TIMER
 app.post('/api/admin/timer/stop', checkAdminAuth, (req, res) => {
     globalTimer = {
         active: false,
@@ -1001,8 +951,7 @@ app.post('/api/admin/timer/stop', checkAdminAuth, (req, res) => {
         action: 'stop',
         timestamp: new Date().toISOString()
     });
-    
-    // Check if any waiting students can now get results
+   
     checkPendingSubmissions();
     
     res.json({ 
@@ -1012,7 +961,6 @@ app.post('/api/admin/timer/stop', checkAdminAuth, (req, res) => {
     });
 });
 
-// Helper to check pending submissions when timer ends
 function checkPendingSubmissions() {
     const now = Date.now();
     if (!globalTimer.active || (globalTimer.endTime && globalTimer.endTime <= now)) {
@@ -1026,21 +974,18 @@ function checkPendingSubmissions() {
                 session.currentQuestion = QUESTION_BANK[session.pattern]?.length || 30;
                 studentSessions.set(name, session);
             }
-            
-            // Add to completed patterns
+  
             const completedPatterns = studentCompletedPatterns.get(name) || [];
             if (!completedPatterns.includes(submission.pattern)) {
                 completedPatterns.push(submission.pattern);
                 studentCompletedPatterns.set(name, completedPatterns);
             }
         }
-        
-        // Clear pending submissions after processing
+   
         pendingSubmissions.clear();
     }
 }
 
-// 22. ADMIN GET STUDENT LIST
 app.get('/api/admin/students', checkAdminAuth, (req, res) => {
     const sessions = getAllStudentSessions();
     
@@ -1063,7 +1008,6 @@ app.get('/api/admin/students', checkAdminAuth, (req, res) => {
     res.json(studentsWithProgress);
 });
 
-// 23. ADMIN END EXAM FOR STUDENT
 app.post('/api/admin/end-exam', checkAdminAuth, (req, res) => {
     const { studentName } = req.body;
     
@@ -1072,8 +1016,7 @@ app.post('/api/admin/end-exam', checkAdminAuth, (req, res) => {
         session.status = 'failed';
         session.lastActive = Date.now();
         studentSessions.set(studentName, session);
-        
-        // Remove any pending submission
+    
         if (pendingSubmissions.has(studentName)) {
             pendingSubmissions.delete(studentName);
         }
@@ -1084,7 +1027,6 @@ app.post('/api/admin/end-exam', checkAdminAuth, (req, res) => {
     }
 });
 
-// 24. ADMIN CLEAR COMPLETED PATTERNS (For resetting students)
 app.post('/api/admin/clear-completed', checkAdminAuth, (req, res) => {
     const { studentName } = req.body;
     
@@ -1096,12 +1038,10 @@ app.post('/api/admin/clear-completed', checkAdminAuth, (req, res) => {
     }
 });
 
-// Serve index.html for all other routes
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Export for local
 if (require.main === module) {
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
