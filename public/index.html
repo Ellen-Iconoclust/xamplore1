@@ -33,21 +33,43 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 
 <body class="bg-white text-gray-800 min-h-screen flex flex-col">
 
+<!-- Updated Welcome Popup - Smaller with better close button -->
 <div id="welcomePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 relative">
-    <button onclick="closeWelcomePopup()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-      <i data-lucide="x"></i>
-    </button>
-    <div class="flex items-center gap-2 mb-4">
-      <i data-lucide="graduation-cap" class="text-emerald-600"></i>
-      <h3 class="text-xl font-bold text-emerald-600">Welcome to Xamplore!</h3>
-    </div>
-    <p class="text-gray-600 mb-4">
-      Ready to test your knowledge? Head over to the <span class="font-semibold text-emerald-600">Test</span> section to take exams.
-    </p>
-    <div class="text-sm text-gray-500">
-      <i data-lucide="info" class="inline w-4 h-4 mr-1"></i>
-      Platform Version: <span class="font-bold">Xam3.0</span>
+  <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden">
+    <div class="flex flex-col md:flex-row">
+      <!-- Text Content -->
+      <div class="p-6 flex-1 relative">
+        <button onclick="closeWelcomePopup()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 bg-white rounded-full p-1 shadow">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <div class="flex items-center gap-3 mb-4">
+          <i data-lucide="graduation-cap" class="text-emerald-600 w-7 h-7"></i>
+          <h3 class="text-xl font-bold text-emerald-600">Welcome to Xamplore!</h3>
+        </div>
+        <div class="mb-4">
+          <p class="font-semibold text-gray-800 mb-2"> Hi! I'm <span class="text-emerald-600 font-bold">Xavi the Fox</span></p>
+          <p class="text-gray-600 text-sm mb-3">
+            Your exam controller! I'm here to guide you through secure and fair online examinations.
+          </p>
+          <p class="text-gray-600 text-sm">
+            Ready to test your knowledge? Head to the <span class="font-semibold text-emerald-600">Test</span> section to begin!
+          </p>
+        </div>
+        <div class="mt-4 text-xs text-gray-500">
+          <i data-lucide="info" class="inline w-3 h-3 mr-1"></i>
+          Platform Version: <span class="font-bold">Xam3.0</span>
+        </div>
+      </div>
+      
+      <!-- Xavi Mascot Image -->
+      <div class="md:w-2/5 bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center p-4">
+        <div class="text-center">
+          <div class="bg-white p-3 rounded-xl shadow mb-3 inline-block">
+            <img src="xavi-pop.png" alt="Xavi the Fox - Xamplore Mascot" class="w-32 h-auto rounded-lg">
+          </div>
+          <p class="text-xs text-gray-600 font-medium">Xavi the Fox<br><span class="text-xs text-gray-500">Exam Controller</span></p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -80,15 +102,137 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
     <button onclick="showSection('about')" class="block">About</button>
   </div>
 </nav>
-<section id="home" class="py-20 text-center">
-  <h1 class="text-4xl font-extrabold brand text-emerald-600">
-    Smarter Exams
-  </h1>
-  <p class="mt-3 text-xl font-semibold">Built for SRCAS Students</p>
-  <p class="mt-6 max-w-xl mx-auto text-gray-600">
-    Xamplore is a secure online examination platform with strict timing controls to prevent cheating.
-  </p>
+
+<!-- Enhanced Home Page -->
+<section id="home" class="py-12 md:py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-5xl font-extrabold brand text-emerald-600 mb-4">
+        Smarter Exams. Fairer Assessment.
+      </h1>
+      <p class="text-xl md:text-2xl font-semibold text-gray-700 mb-6">Built for SRCAS Students</p>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
+        Xamplore is a secure online examination platform with advanced anti-cheating measures and strict timing controls.
+      </p>
+      <button onclick="showSection('test')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300">
+        Start Your Exam Journey
+      </button>
+    </div>
+
+    <!-- Features Section -->
+    <div class="mb-16">
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Why Choose Xamplore?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="bg-emerald-100 p-3 rounded-lg">
+              <i data-lucide="shield" class="text-emerald-600 w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800">Secure & Fair</h3>
+          </div>
+          <p class="text-gray-600">Advanced anti-cheating measures including tab switching detection and real-time monitoring ensure every exam is fair.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="bg-emerald-100 p-3 rounded-lg">
+              <i data-lucide="clock" class="text-emerald-600 w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800">Time Control</h3>
+          </div>
+          <p class="text-gray-600">Flexible exam windows with precise timing controls. Admin-controlled schedules for organized examination sessions.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="bg-emerald-100 p-3 rounded-lg">
+              <i data-lucide="bar-chart" class="text-emerald-600 w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800">Smart Analytics</h3>
+          </div>
+          <p class="text-gray-600">Comprehensive admin dashboard with real-time student tracking and detailed performance analytics.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-2xl p-8 md:p-12 mb-16">
+      <div class="flex flex-col md:flex-row items-center">
+        <div class="md:w-2/3 mb-8 md:mb-0 md:pr-12">
+          <h2 class="text-3xl font-bold text-gray-800 mb-6">Our Mission & Vision</h2>
+          <p class="text-gray-700 mb-4">
+            Xamplore was created to address online education challenges during the digital transformation era. We maintain academic integrity while providing flexibility for remote learning.
+          </p>
+          <p class="text-gray-700">
+            Our vision is to create a world where online examinations are as credible and secure as traditional in-person tests.
+          </p>
+        </div>
+        <div class="md:w-1/3">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="flex items-center gap-3 mb-4">
+              <i data-lucide="target" class="text-emerald-600 w-8 h-8"></i>
+              <h3 class="text-xl font-bold text-gray-800">Key Objectives</h3>
+            </div>
+            <ul class="space-y-3">
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+                <span>Prevent academic dishonesty</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+                <span>Provide equal opportunity</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+                <span>Simplify exam administration</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="mb-16">
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Platform Highlights</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="text-center p-6 bg-white rounded-xl shadow border border-gray-200">
+          <div class="text-3xl font-bold text-emerald-600 mb-2">3+</div>
+          <p class="text-gray-600 font-medium">Exam Patterns</p>
+        </div>
+        <div class="text-center p-6 bg-white rounded-xl shadow border border-gray-200">
+          <div class="text-3xl font-bold text-emerald-600 mb-2">100%</div>
+          <p class="text-gray-600 font-medium">Secure Platform</p>
+        </div>
+        <div class="text-center p-6 bg-white rounded-xl shadow border border-gray-200">
+          <div class="text-3xl font-bold text-emerald-600 mb-2">24/7</div>
+          <p class="text-gray-600 font-medium">Availability</p>
+        </div>
+        <div class="text-center p-6 bg-white rounded-xl shadow border border-gray-200">
+          <div class="text-3xl font-bold text-emerald-600 mb-2">0</div>
+          <p class="text-gray-600 font-medium">Cheating Tolerance</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="text-center bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl p-10 text-white">
+      <h2 class="text-3xl font-bold mb-4">Ready to Experience Secure Exams?</h2>
+      <p class="text-lg mb-6 max-w-2xl mx-auto">Join SRCAS students who trust Xamplore for their online assessments.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button onclick="showSection('test')" class="bg-white text-emerald-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300">
+          Start Your Exam
+        </button>
+        <button onclick="showSection('about')" class="bg-transparent border-2 border-white hover:bg-white/10 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
+          Learn More
+        </button>
+      </div>
+    </div>
+  </div>
 </section>
+
+<!-- Test Section (Updated with Xavi image in rules) -->
 <section id="test" class="hidden py-16">
   <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-xl">
 
@@ -142,24 +286,65 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       <p id="patternWarning" class="text-red-500 text-xs mt-2 hidden"></p>
     </div>
 
+    <!-- Updated Rules Section with Xavi Image -->
     <div id="rules" class="hidden">
       <h2 class="text-xl font-bold text-emerald-600 mb-3">Rules & Regulations</h2>
-      <ul class="list-disc pl-5 text-sm space-y-2">
-        <li>No tab switching</li>
-        <li>No exiting fullscreen</li>
-        <li>No screenshots or copy</li>
-        <li>Violations end the test</li>
-        <li class="font-bold text-red-600">You can only submit when timer ends</li>
-        <li class="font-bold text-red-600">Cannot retake completed patterns</li>
+      <p class="text-sm text-gray-600 mb-4">Read these rules carefully before proceeding.</p>
+      
+      <ul class="list-disc pl-5 text-sm space-y-2 mb-6">
+        <li class="flex items-start gap-2">
+          <i data-lucide="monitor-off" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
+          <span><strong>No tab switching</strong> - System detects browser tab switches</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i data-lucide="minimize" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
+          <span><strong>No exiting fullscreen</strong> - Remain in fullscreen mode</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i data-lucide="copy" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
+          <span><strong>No screenshots or copy-paste</strong></span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i data-lucide="alert-triangle" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
+          <span><strong>Violations end the test</strong></span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i data-lucide="clock" class="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0"></i>
+          <span><strong>Timed submission only</strong></span>
+        </li>
+        <li class="flex items-start gap-2">
+          <i data-lucide="lock" class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0"></i>
+          <span><strong>No retakes on completed patterns</strong></span>
+        </li>
       </ul>
-      <button onclick="startExam()" class="mt-4 w-full bg-emerald-600 text-white p-2 rounded">
-        I Agree & Start Exam
+      
+      <!-- Xavi Rules Image -->
+      <div class="bg-gradient-to-r from-emerald-50 to-emerald-100 p-4 rounded-lg border border-emerald-200 mb-6 text-center">
+        <div class="mb-3">
+          <img src="xavi-rules.png" alt="Xavi - Rules Guardian" class="w-32 h-auto mx-auto rounded-lg">
+        </div>
+        <p class="text-sm font-medium text-emerald-700 mb-1">Remember the rules!</p>
+        <p class="text-xs text-emerald-600">- Xavi the Fox</p>
+      </div>
+      
+      <div class="bg-yellow-50 border border-yellow-200 p-3 rounded-lg mb-4">
+        <div class="flex items-start gap-2">
+          <i data-lucide="alert-circle" class="text-yellow-600 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+          <div>
+            <p class="text-sm font-semibold text-yellow-700">Important Notice</p>
+            <p class="text-xs text-yellow-600">By clicking "I Agree", you confirm you have read and understood all rules.</p>
+          </div>
+        </div>
+      </div>
+      
+      <button onclick="startExam()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white p-3 rounded-lg font-semibold shadow transition duration-300">
+        <i data-lucide="check-circle" class="inline w-5 h-5 mr-2"></i> I Agree & Start Exam
       </button>
     </div>
 
     <div id="exam" class="hidden">
-      <div class="mb-4 p-2 bg-blue-50 border border-blue-200 rounded text-center">
-        <p class="text-sm text-blue-700">
+      <div class="mb-4 p-2 bg-emerald-50 border border-emerald-200 rounded text-center">
+        <p class="text-sm text-emerald-700">
           <i data-lucide="info" class="inline w-4 h-4 mr-1"></i>
           You can answer questions now, but can only submit when timer ends
         </p>
@@ -176,7 +361,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       </div>
       <h2 class="text-2xl font-bold text-yellow-600 mb-4">Waiting for Timer</h2>
       <p class="text-gray-600 mb-4">Your exam has been submitted, but you must wait for the timer to end to get results.</p>
-      <p class="text-sm text-gray-500 mb-6">Do not close or switch tabs during this time, or your test will be marked as failed.</p>
+      <p class="text-sm text-gray-500 mb-6">Do not close or switch tabs during this time.</p>
       <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-4">
         <p class="font-semibold text-yellow-700">Time Remaining:</p>
         <div id="waitingTimer" class="text-3xl font-bold text-yellow-800 font-mono my-2">00:00</div>
@@ -223,7 +408,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         <button onclick="downloadPDF()" class="w-full bg-emerald-600 text-white p-2 rounded font-semibold">
           <i data-lucide="download" class="inline w-4 h-4 mr-2"></i> Download PDF Certificate
         </button>
-        <button onclick="resetToLogin()" class="w-full bg-blue-600 text-white p-2 rounded">
+        <button onclick="resetToLogin()" class="w-full bg-emerald-500 text-white p-2 rounded">
           <i data-lucide="rotate-ccw" class="inline w-4 h-4 mr-2"></i> Take Another Test (Different Pattern)
         </button>
         <button onclick="showSection('home')" class="w-full bg-gray-600 text-white p-2 rounded">
@@ -248,6 +433,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   </div>
 </section>
 
+<!-- Enhanced Admin Section -->
 <section id="admin" class="hidden py-16">
   <div class="max-w-6xl mx-auto px-4">
     <h2 class="text-3xl font-bold text-center text-emerald-600 mb-8">Admin Dashboard</h2>
@@ -276,14 +462,14 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         </h4>
         
         <!-- Timer Status -->
-        <div id="timerStatus" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded">
+        <div id="timerStatus" class="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded">
           <div class="flex items-center justify-between">
             <div>
-              <span class="font-semibold text-blue-700">Status:</span>
+              <span class="font-semibold text-emerald-700">Status:</span>
               <span id="currentTimerStatus" class="ml-2 px-2 py-1 rounded text-sm font-medium bg-gray-100">Not Active</span>
             </div>
             <div id="activeTimerInfo" class="hidden">
-              <span class="font-semibold text-blue-700">Remaining:</span>
+              <span class="font-semibold text-emerald-700">Remaining:</span>
               <span id="activeTimerRemaining" class="ml-2 font-mono text-lg font-bold">00:00</span>
             </div>
           </div>
@@ -310,16 +496,16 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         </button>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
-          <button onclick="quickSetTimer(5)" class="bg-blue-100 text-blue-700 p-2 rounded hover:bg-blue-200">
+          <button onclick="quickSetTimer(5)" class="bg-emerald-100 text-emerald-700 p-2 rounded hover:bg-emerald-200">
             5 min
           </button>
-          <button onclick="quickSetTimer(10)" class="bg-blue-100 text-blue-700 p-2 rounded hover:bg-blue-200">
+          <button onclick="quickSetTimer(10)" class="bg-emerald-100 text-emerald-700 p-2 rounded hover:bg-emerald-200">
             10 min
           </button>
-          <button onclick="quickSetTimer(20)" class="bg-blue-100 text-blue-700 p-2 rounded hover:bg-blue-200">
+          <button onclick="quickSetTimer(20)" class="bg-emerald-100 text-emerald-700 p-2 rounded hover:bg-emerald-200">
             20 min
           </button>
-          <button onclick="quickSetTimer(30)" class="bg-blue-100 text-blue-700 p-2 rounded hover:bg-blue-200">
+          <button onclick="quickSetTimer(30)" class="bg-emerald-100 text-emerald-700 p-2 rounded hover:bg-emerald-200">
             30 min
           </button>
         </div>
@@ -328,7 +514,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
           <button onclick="pauseGlobalTimer()" class="flex-1 bg-yellow-500 text-white p-2 rounded">
             <i data-lucide="pause" class="inline w-4 h-4 mr-1"></i> Pause
           </button>
-          <button onclick="resumeGlobalTimer()" class="flex-1 bg-blue-500 text-white p-2 rounded">
+          <button onclick="resumeGlobalTimer()" class="flex-1 bg-emerald-500 text-white p-2 rounded">
             <i data-lucide="play" class="inline w-4 h-4 mr-1"></i> Resume
           </button>
           <button onclick="stopGlobalTimer()" class="flex-1 bg-red-600 text-white p-2 rounded">
@@ -336,7 +522,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
           </button>
         </div>
 
-     
         <div class="mt-6">
           <h5 class="font-bold text-gray-700 mb-2 flex items-center gap-2">
             <i data-lucide="history"></i> Timer History
@@ -358,31 +543,31 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
             <i data-lucide="users" class="text-emerald-500"></i>
           </div>
         </div>
-        <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <div class="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-blue-600">Active Exams</p>
-              <p id="activeExams" class="text-2xl font-bold text-blue-700">0</p>
+              <p class="text-sm text-emerald-600">Active Exams</p>
+              <p id="activeExams" class="text-2xl font-bold text-emerald-700">0</p>
             </div>
-            <i data-lucide="activity" class="text-blue-500"></i>
+            <i data-lucide="activity" class="text-emerald-500"></i>
           </div>
         </div>
-        <div class="p-4 bg-purple-50 rounded-lg border border-purple-200">
+        <div class="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-purple-600">Completed</p>
-              <p id="completedExams" class="text-2xl font-bold text-purple-700">0</p>
+              <p class="text-sm text-emerald-600">Completed</p>
+              <p id="completedExams" class="text-2xl font-bold text-emerald-700">0</p>
             </div>
-            <i data-lucide="check-circle" class="text-purple-500"></i>
+            <i data-lucide="check-circle" class="text-emerald-500"></i>
           </div>
         </div>
-        <div class="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+        <div class="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-yellow-600">Waiting</p>
-              <p id="waitingExams" class="text-2xl font-bold text-yellow-700">0</p>
+              <p class="text-sm text-emerald-600">Waiting</p>
+              <p id="waitingExams" class="text-2xl font-bold text-emerald-700">0</p>
             </div>
-            <i data-lucide="clock" class="text-yellow-500"></i>
+            <i data-lucide="clock" class="text-emerald-500"></i>
           </div>
         </div>
       </div>
@@ -432,12 +617,273 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 </section>
 
 
-<section id="about" class="hidden py-20">
-    <div class="text-center text-gray-600">
-        <h2 class="text-3xl font-bold text-emerald-600">About</h2>
-        <p class="mt-4">Xamplore - Strict Timing Exam Platform.</p>
-        <p class="text-sm text-gray-500 mt-2">Version 3.0 - Prevents cheating with strict timing controls</p>
+<!-- Enhanced About Page -->
+<section id="about" class="hidden py-12 md:py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-emerald-600 mb-4">About Xamplore</h2>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto">Revolutionizing Online Examination Systems with Security and Innovation</p>
     </div>
+
+    <!-- What is Xamplore -->
+    <div class="mb-16">
+      <div class="flex flex-col md:flex-row items-center gap-8 mb-12">
+        <div class="md:w-1/2">
+          <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 p-8 rounded-2xl border border-emerald-200">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">What is Xamplore?</h3>
+            <p class="text-gray-700 mb-4">
+              Xamplore is a secure online examination platform designed for educational institutions. It transforms traditional exams into digital, controlled environments.
+            </p>
+            <p class="text-gray-700">
+              It incorporates anti-cheating mechanisms, real-time monitoring, and strict timing controls for fair assessment.
+            </p>
+          </div>
+        </div>
+        <div class="md:w-1/2">
+          <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="bg-emerald-100 p-3 rounded-lg">
+                <i data-lucide="shield" class="text-emerald-600 w-8 h-8"></i>
+              </div>
+              <div>
+                <h4 class="text-xl font-bold text-gray-800">Core Philosophy</h4>
+                <p class="text-sm text-gray-600">Equal Opportunity • Academic Integrity</p>
+              </div>
+            </div>
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+                <div>
+                  <p class="font-medium text-gray-800">Secure Assessment Environment</p>
+                  <p class="text-sm text-gray-600">Prevents cheating through security layers</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+                <div>
+                  <p class="font-medium text-gray-800">Remote Examination</p>
+                  <p class="text-sm text-gray-600">Enables exams from anywhere</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <i data-lucide="check-circle" class="text-emerald-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+                <div>
+                  <p class="font-medium text-gray-800">Real-time Analytics</p>
+                  <p class="text-sm text-gray-600">Provides instant feedback</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- How It's Made -->
+      <div class="mb-16">
+        <h3 class="text-3xl font-bold text-center text-gray-800 mb-12">How Xamplore Works</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div class="bg-white p-6 rounded-xl shadow border border-gray-200 text-center">
+            <div class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="user" class="text-emerald-600 w-8 h-8"></i>
+            </div>
+            <h4 class="font-bold text-lg text-gray-800 mb-2">1. Student Login</h4>
+            <p class="text-gray-600 text-sm">Authenticate with credentials</p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-xl shadow border border-gray-200 text-center">
+            <div class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="shield" class="text-emerald-600 w-8 h-8"></i>
+            </div>
+            <h4 class="font-bold text-lg text-gray-800 mb-2">2. Security Check</h4>
+            <p class="text-gray-600 text-sm">System enforces security measures</p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-xl shadow border border-gray-200 text-center">
+            <div class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="clock" class="text-emerald-600 w-8 h-8"></i>
+            </div>
+            <h4 class="font-bold text-lg text-gray-800 mb-2">3. Timed Examination</h4>
+            <p class="text-gray-600 text-sm">Answer questions within time limits</p>
+          </div>
+          
+          <div class="bg-white p-6 rounded-xl shadow border border-gray-200 text-center">
+            <div class="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="bar-chart" class="text-emerald-600 w-8 h-8"></i>
+            </div>
+            <h4 class="font-bold text-lg text-gray-800 mb-2">4. Results & Analytics</h4>
+            <p class="text-gray-600 text-sm">Instant scoring with certificates</p>
+          </div>
+        </div>
+        
+        <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl p-8 text-white">
+          <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="md:w-2/3">
+              <h4 class="text-2xl font-bold mb-4">Advanced Anti-Cheating Technology</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                  <span>Tab Switching Detection</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                  <span>Fullscreen Enforcement</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                  <span>Copy-Paste Prevention</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                  <span>Screen Capture Blocking</span>
+                </div>
+              </div>
+            </div>
+            <div class="md:w-1/3 text-center">
+              <div class="bg-white/20 p-4 rounded-xl inline-block">
+                <i data-lucide="shield-check" class="w-16 h-16"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technology Stack -->
+      <div class="mb-16">
+        <h3 class="text-3xl font-bold text-center text-gray-800 mb-12">Technology Behind Xamplore</h3>
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h4 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i data-lucide="code" class="text-emerald-600"></i> Frontend
+              </h4>
+              <ul class="space-y-2">
+                <li class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                  <span>HTML5 & CSS3</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                  <span>JavaScript (ES6+)</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                  <span>Tailwind CSS</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i data-lucide="server" class="text-emerald-600"></i> Backend
+              </h4>
+              <ul class="space-y-2">
+                <li class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                  <span>Node.js</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                  <span>Express.js</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                  <span>RESTful APIs</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i data-lucide="shield" class="text-emerald-600"></i> Security
+              </h4>
+              <ul class="space-y-2">
+                <li class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                  <span>Tab Switching Detection</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                  <span>Browser Focus Monitoring</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                  <span>Fullscreen Enforcement</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team & Vision -->
+      <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-10">
+        <div class="text-center mb-8">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Our Vision for Online Education</h3>
+          <p class="text-gray-700 max-w-3xl mx-auto">
+            Xamplore represents a shift in online assessment. We believe technology should enhance education, not compromise it.
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+            <h4 class="text-xl font-bold text-gray-800 mb-4">For Students</h4>
+            <ul class="space-y-3">
+              <li class="flex items-start gap-2">
+                <i data-lucide="star" class="text-yellow-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+                <span>Fair assessment of knowledge</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="star" class="text-yellow-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+                <span>Flexibility for remote exams</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="star" class="text-yellow-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+                <span>Immediate feedback</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+            <h4 class="text-xl font-bold text-gray-800 mb-4">For Institutions</h4>
+            <ul class="space-y-3">
+              <li class="flex items-start gap-2">
+                <i data-lucide="building" class="text-emerald-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+                <span>Reduced administrative work</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="building" class="text-emerald-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+                <span>Comprehensive analytics</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="building" class="text-emerald-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+                <span>Maintained academic standards</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Version Info -->
+    <div class="text-center mt-12 pt-8 border-t border-gray-200">
+      <p class="text-gray-600">Xamplore - Strict Timing Exam Platform</p>
+      <p class="text-sm text-gray-500 mt-2">Version 3.0 • Developed for SRCAS</p>
+      <div class="flex items-center justify-center gap-4 mt-4 text-sm text-gray-500">
+        <span class="flex items-center gap-1">
+          <i data-lucide="code" class="w-4 h-4"></i>
+          Modern Web Technologies
+        </span>
+        <span class="flex items-center gap-1">
+          <i data-lucide="shield" class="w-4 h-4"></i>
+          100% Secure
+        </span>
+        <span class="flex items-center gap-1">
+          <i data-lucide="users" class="w-4 h-4"></i>
+          Trusted Platform
+        </span>
+      </div>
+    </div>
+  </div>
 </section>
 
 <script>
@@ -766,8 +1212,8 @@ function updateStudentList(students) {
       <td class="p-3">Pattern ${student.pattern}</td>
       <td class="p-3">
         <span class="px-2 py-1 rounded text-xs font-medium ${
-          student.status === 'started' ? 'bg-blue-100 text-blue-800' :
-          student.status === 'completed' ? 'bg-green-100 text-green-800' :
+          student.status === 'started' ? 'bg-emerald-100 text-emerald-800' :
+          student.status === 'completed' ? 'bg-emerald-100 text-emerald-800' :
           student.status === 'failed' ? 'bg-red-100 text-red-800' :
           student.status === 'waiting' ? 'bg-yellow-100 text-yellow-800' :
           'bg-gray-100 text-gray-800'
@@ -794,7 +1240,7 @@ function updateStudentList(students) {
           <button onclick="adminEndSpecificExam('${student.name}')" class="text-xs text-red-600 hover:text-red-800">
             <i data-lucide="x-circle" class="inline w-3 h-3 mr-1"></i> End Exam
           </button>
-          <button onclick="adminClearStudentCompleted('${student.name}')" class="text-xs text-blue-600 hover:text-blue-800">
+          <button onclick="adminClearStudentCompleted('${student.name}')" class="text-xs text-emerald-600 hover:text-emerald-800">
             <i data-lucide="refresh-cw" class="inline w-3 h-3 mr-1"></i> Clear Completed
           </button>
         </div>
@@ -1153,11 +1599,11 @@ function renderQuestion() {
     if (isLastQuestion) {
         nextButton.textContent = 'Submit Exam';
         nextButton.classList.remove('bg-emerald-600');
-        nextButton.classList.add('bg-purple-600');
+        nextButton.classList.add('bg-emerald-700');
         nextButton.onclick = handleLastQuestion;
     } else {
         nextButton.textContent = 'Next';
-        nextButton.classList.remove('bg-purple-600');
+        nextButton.classList.remove('bg-emerald-700');
         nextButton.classList.add('bg-emerald-600');
         nextButton.onclick = nextQuestion;
     }
