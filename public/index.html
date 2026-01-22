@@ -1212,8 +1212,8 @@ function updateStudentList(students) {
       <td class="p-3">Pattern ${student.pattern}</td>
       <td class="p-3">
         <span class="px-2 py-1 rounded text-xs font-medium ${
-          student.status === 'started' ? 'bg-emerald-100 text-emerald-800' :
-          student.status === 'completed' ? 'bg-emerald-100 text-emerald-800' :
+          student.status === 'started' ? 'bg-blue-100 text-blue-800' :
+          student.status === 'completed' ? 'bg-green-100 text-green-800' :
           student.status === 'failed' ? 'bg-red-100 text-red-800' :
           student.status === 'waiting' ? 'bg-yellow-100 text-yellow-800' :
           'bg-gray-100 text-gray-800'
@@ -1240,7 +1240,7 @@ function updateStudentList(students) {
           <button onclick="adminEndSpecificExam('${student.name}')" class="text-xs text-red-600 hover:text-red-800">
             <i data-lucide="x-circle" class="inline w-3 h-3 mr-1"></i> End Exam
           </button>
-          <button onclick="adminClearStudentCompleted('${student.name}')" class="text-xs text-emerald-600 hover:text-emerald-800">
+          <button onclick="adminClearStudentCompleted('${student.name}')" class="text-xs text-blue-600 hover:text-blue-800">
             <i data-lucide="refresh-cw" class="inline w-3 h-3 mr-1"></i> Clear Completed
           </button>
         </div>
@@ -1599,11 +1599,11 @@ function renderQuestion() {
     if (isLastQuestion) {
         nextButton.textContent = 'Submit Exam';
         nextButton.classList.remove('bg-emerald-600');
-        nextButton.classList.add('bg-emerald-700');
+        nextButton.classList.add('bg-purple-600');
         nextButton.onclick = handleLastQuestion;
     } else {
         nextButton.textContent = 'Next';
-        nextButton.classList.remove('bg-emerald-700');
+        nextButton.classList.remove('bg-purple-600');
         nextButton.classList.add('bg-emerald-600');
         nextButton.onclick = nextQuestion;
     }
