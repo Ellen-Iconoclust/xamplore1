@@ -19,10 +19,10 @@ const PASSWORDS = {
     C: "gamma123"
 };
 
-const SECOND_PASS = "choice2ellen";
+const SECOND_PASS = "9344972023";
 const ADMIN_CREDENTIALS = {
     name: "Ellen@SRCAS",
-    password: "9344972023"
+    password: "srcasadmin123"
 };
 
 const QUESTION_BANK = {
