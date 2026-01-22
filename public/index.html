@@ -34,16 +34,12 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 <body class="bg-white text-gray-800 min-h-screen flex flex-col">
 
 <!-- Updated Welcome Popup - Smaller with better close button -->
-<!-- Welcome Popup - Slightly taller with bigger text -->
+<!-- Welcome Popup with extended image and Got it button -->
 <div id="welcomePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden">
-    <div class="flex">
+  <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden relative">
+    <div class="flex items-stretch">
       <!-- Text Content -->
       <div class="p-5 md:p-6 flex-1">
-        <button onclick="closeWelcomePopup()" class="float-right text-gray-400 hover:text-gray-600 mb-3">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-        
         <div class="flex items-center gap-2 mb-4">
           <i data-lucide="graduation-cap" class="text-emerald-600 w-6 h-6"></i>
           <h3 class="text-lg font-bold text-emerald-600">Welcome to Xamplore!</h3>
@@ -55,19 +51,28 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
           <p class="text-sm text-gray-600">Head to <span class="font-semibold text-emerald-600">Test</span> section to begin!</p>
         </div>
         
-        <div class="text-sm text-gray-500 mt-5">
-          <i data-lucide="info" class="inline w-4 h-4 mr-1"></i>
+        <!-- Got it Button -->
+        <button onclick="closeWelcomePopup()" class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-4 rounded-lg transition duration-300">
+          Got it!
+        </button>
+        
+        <div class="text-xs text-gray-500 mt-4 text-center">
+          <i data-lucide="info" class="inline w-3 h-3 mr-1"></i>
           Platform Version: <span class="font-bold">Xam3.0</span>
         </div>
       </div>
       
-      <!-- Image - Slightly bigger -->
-      <div class="w-28 flex-shrink-0 flex items-center justify-center bg-white border-l border-gray-100">
-        <img 
-          src="xavi1-pop.png" 
-          alt="Xavi the Fox" 
-          class="w-24 h-24 object-contain"
-        >
+      <!-- Image Container with extended image -->
+      <div class="w-32 md:w-40 flex-shrink-0 relative flex items-center justify-center">
+        <!-- The image extends beyond the container -->
+        <div class="relative h-full flex items-center justify-center">
+          <img 
+            src="xavi1-pop.png" 
+            alt="Xavi the Fox" 
+            class="w-40 h-40 md:w-52 md:h-52 object-contain absolute right-0"
+            style="transform: translateX(20%);"
+          >
+        </div>
       </div>
     </div>
   </div>
