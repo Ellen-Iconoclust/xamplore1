@@ -22,7 +22,7 @@ const PASSWORDS = {
 const SECOND_PASS = "choice2ellen";
 const ADMIN_CREDENTIALS = {
     name: "Ellen@SRCAS",
-    password: "srcasadmin123"
+    password: "9344972023"
 };
 
 const QUESTION_BANK = {
