@@ -19,7 +19,7 @@ const PASSWORDS = {
     C: "gamma123"
 };
 
-const SECOND_PASS = "9344972023";
+const SECOND_PASS = "93449";
 const ADMIN_CREDENTIALS = {
     name: "Ellen@SRCAS",
     password: "srcasadmin123"
