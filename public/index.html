@@ -34,38 +34,39 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 <body class="bg-white text-gray-800 min-h-screen flex flex-col">
 
 <!-- Updated Welcome Popup - Smaller with better close button -->
-<!-- Welcome Popup with auto image sizing -->
-<div id="welcomePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3">
+<!-- Welcome Popup - Slightly taller with bigger text -->
+<div id="welcomePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
   <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden">
     <div class="flex">
       <!-- Text Content -->
-      <div class="p-4 md:p-6 flex-1">
-        <button onclick="closeWelcomePopup()" class="float-right text-gray-400 hover:text-gray-600 mb-2">
-          <i data-lucide="x" class="w-4 h-4"></i>
+      <div class="p-5 md:p-6 flex-1">
+        <button onclick="closeWelcomePopup()" class="float-right text-gray-400 hover:text-gray-600 mb-3">
+          <i data-lucide="x" class="w-5 h-5"></i>
         </button>
         
-        <div class="flex items-center gap-2 mb-3">
-          <i data-lucide="graduation-cap" class="text-emerald-600 w-5 h-5"></i>
-          <h3 class="text-base font-bold text-emerald-600">Welcome to Xamplore!</h3>
+        <div class="flex items-center gap-2 mb-4">
+          <i data-lucide="graduation-cap" class="text-emerald-600 w-6 h-6"></i>
+          <h3 class="text-lg font-bold text-emerald-600">Welcome to Xamplore!</h3>
         </div>
         
-        <div class="mb-3">
-          <p class="font-semibold text-gray-800 text-sm mb-1">Hi! I'm <span class="text-emerald-600">Xavi the Fox</span></p>
-          <p class="text-xs text-gray-600">Your exam controller for secure online tests.</p>
-          <p class="text-xs text-gray-600 mt-1">Head to <span class="font-semibold text-emerald-600">Test</span> section!</p>
+        <div class="mb-4">
+          <p class="font-semibold text-gray-800 text-base mb-2">Hi! I'm <span class="text-emerald-600">Xavi the Fox</span></p>
+          <p class="text-sm text-gray-600 mb-2">Your exam controller for secure online examinations.</p>
+          <p class="text-sm text-gray-600">Head to <span class="font-semibold text-emerald-600">Test</span> section to begin!</p>
         </div>
         
-        <div class="text-xs text-gray-400 mt-4">
-          Version Xam3.0
+        <div class="text-sm text-gray-500 mt-5">
+          <i data-lucide="info" class="inline w-4 h-4 mr-1"></i>
+          Platform Version: <span class="font-bold">Xam3.0</span>
         </div>
       </div>
       
-      <!-- Image - Auto size based on container -->
-      <div class="w-24 flex-shrink-0 flex items-center justify-center bg-white">
+      <!-- Image - Slightly bigger -->
+      <div class="w-28 flex-shrink-0 flex items-center justify-center bg-white border-l border-gray-100">
         <img 
           src="xavi1-pop.png" 
-          alt="Xavi" 
-          class="w-full h-full object-contain p-2"
+          alt="Xavi the Fox" 
+          class="w-24 h-24 object-contain"
         >
       </div>
     </div>
