@@ -34,10 +34,10 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 <body class="bg-white text-gray-800 min-h-screen flex flex-col">
 
 <!-- Updated Welcome Popup - Smaller with better close button -->
-<!-- Welcome Popup with properly sized image -->
+<!-- Welcome Popup with slightly bigger full-height image -->
 <div id="welcomePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-visible">
-    <div class="flex items-stretch min-h-64 md:min-h-72"> <!-- Added min height -->
+  <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden">
+    <div class="flex items-stretch min-h-64">
       <!-- Text Content -->
       <div class="p-5 md:p-6 flex-1 flex flex-col justify-center">
         <div class="flex items-center gap-2 mb-4">
@@ -62,14 +62,14 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         </div>
       </div>
       
-      <!-- Big Image - Partially extending -->
-      <div class="w-40 md:w-48 flex-shrink-0 relative flex items-center justify-center">
-        <div class="relative h-full w-full flex items-center justify-center">
+      <!-- Slightly bigger full-height image extending out -->
+      <div class="w-44 md:w-52 relative overflow-visible"> <!-- Increased from w-40 md:w-48 -->
+        <div class="absolute inset-0 flex items-center justify-center">
           <img 
             src="xavi1-pop.png" 
             alt="Xavi the Fox" 
-            class="h-full w-auto object-contain"
-            style="max-height: 180px; margin-right: -20px;" <!-- Extends out by 20px -->
+            class="h-full w-auto object-contain relative"
+            style="right: -18px; filter: drop-shadow(-5px 0 12px rgba(0, 0, 0, 0.12));" <!-- Slightly more extension and shadow -->
           >
         </div>
       </div>
