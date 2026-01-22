@@ -34,12 +34,12 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 <body class="bg-white text-gray-800 min-h-screen flex flex-col">
 
 <!-- Updated Welcome Popup - Smaller with better close button -->
-<!-- Welcome Popup with BIG image -->
+<!-- Welcome Popup with properly sized image -->
 <div id="welcomePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-visible relative">
-    <div class="flex items-stretch">
+  <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-visible">
+    <div class="flex items-stretch min-h-64 md:min-h-72"> <!-- Added min height -->
       <!-- Text Content -->
-      <div class="p-5 md:p-6 flex-1">
+      <div class="p-5 md:p-6 flex-1 flex flex-col justify-center">
         <div class="flex items-center gap-2 mb-4">
           <i data-lucide="graduation-cap" class="text-emerald-600 w-6 h-6"></i>
           <h3 class="text-lg font-bold text-emerald-600">Welcome to Xamplore!</h3>
@@ -51,7 +51,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
           <p class="text-sm text-gray-600">Head to <span class="font-semibold text-emerald-600">Test</span> section to begin!</p>
         </div>
         
-        <!-- Smaller Got it Button -->
+        <!-- Got it Button -->
         <button onclick="closeWelcomePopup()" class="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-6 rounded-lg transition duration-300 text-sm">
           Got it!
         </button>
@@ -62,14 +62,14 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         </div>
       </div>
       
-      <!-- BIG Image that extends out -->
-      <div class="w-0 md:w-0 flex-shrink-0 relative">
-        <div class="absolute -right-8 md:-right-12 top-1/2 transform -translate-y-1/2">
+      <!-- Big Image - Partially extending -->
+      <div class="w-40 md:w-48 flex-shrink-0 relative flex items-center justify-center">
+        <div class="relative h-full w-full flex items-center justify-center">
           <img 
             src="xavi1-pop.png" 
             alt="Xavi the Fox" 
-            class="w-48 h-48 md:w-64 md:h-64 object-contain"
-            style="filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.15));"
+            class="h-full w-auto object-contain"
+            style="max-height: 180px; margin-right: -20px;" <!-- Extends out by 20px -->
           >
         </div>
       </div>
