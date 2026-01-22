@@ -380,8 +380,9 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       <input
         id="secondPass"
         type="password"
-        autocomplete="new-password"
         autocomplete="off"
+        readonly
+        onfocus="this.removeAttribute('readonly')"
         class="w-full p-2 mt-3 border rounded"
         placeholder="Second Chance Code"
       />
