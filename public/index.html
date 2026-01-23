@@ -127,6 +127,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
     <div class="hidden md:flex gap-8 font-semibold">
       <button onclick="showSection('home')">Home</button>
       <button onclick="showSection('test')">Test</button>
+      <button onclick="showSection('courses')">Courses</button>
       <button onclick="showSection('hangman')">Hangman</button>
       <button onclick="showSection('admin')">Admin</button>
       <button onclick="showSection('about')">About</button>
@@ -140,6 +141,7 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   <div id="mobileMenu" class="hidden md:hidden px-6 pb-4 space-y-3 font-semibold">
     <button onclick="showSection('home')" class="block">Home</button>
     <button onclick="showSection('test')" class="block">Test</button>
+    <button onclick="showSection('courses')" class="block">Courses</button>
     <button onclick="showSection('hangman')" class="block">Hangman</button>
     <button onclick="showSection('admin')" class="block">Admin</button>
     <button onclick="showSection('about')" class="block">About</button>
@@ -550,6 +552,108 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         <div id="hangmanWordDisplay" class="text-2xl font-mono mb-4"></div>
         <div id="letterButtons" class="flex flex-wrap gap-2 justify-center"></div>
         <button onclick="initializeHangman()" class="mt-4 bg-emerald-600 text-white px-4 py-2 rounded">Start Game</button>
+    </div>
+  </div>
+</section>
+
+  <!-- Enhanced Courses Section -->
+<section id="courses" class="hidden py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-extrabold brand text-emerald-600 mb-4">
+        Programming Resource Hub
+      </h2>
+      <p class="text-xl text-gray-600 mb-6">Curated tutorials & learning resources for SRCAS students</p>
+      <div class="flex flex-wrap justify-center gap-3 mb-8">
+        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">C/C++</span>
+        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">Python</span>
+        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">Java</span>
+        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">JavaScript</span>
+        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">HTML/CSS</span>
+        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">Frameworks</span>
+      </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="mb-8">
+      <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="flex-1">
+            <div class="relative">
+              <i data-lucide="search" class="absolute left-3 top-3 text-gray-400 w-5 h-5"></i>
+              <input type="text" id="courseSearch" placeholder="Search tutorials by language, topic, or instructor..." 
+                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+            </div>
+          </div>
+          <select id="languageFilter" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500">
+            <option value="">All Languages</option>
+            <option value="c">C Programming</option>
+            <option value="cpp">C++</option>
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="javascript">JavaScript</option>
+            <option value="web">HTML/CSS/Tailwind</option>
+            <option value="frameworks">Frameworks</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tutorials Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      <!-- Tutorial cards will be dynamically inserted here -->
+    </div>
+
+    <!-- Language Sections -->
+    <div id="languageSections">
+      <!-- Each language section will be dynamically generated -->
+    </div>
+
+    <!-- Featured Websites Section -->
+    <div class="mb-16">
+      <h3 class="text-3xl font-bold text-gray-800 mb-8 text-center">Essential Learning Platforms</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <a href="https://freecodecamp.org" target="_blank" class="group">
+          <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 text-center h-full">
+            <div class="mb-4">
+              <i data-lucide="code" class="w-12 h-12 text-emerald-600 mx-auto"></i>
+            </div>
+            <h4 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-emerald-600">freeCodeCamp</h4>
+            <p class="text-sm text-gray-600">Free interactive coding tutorials and projects</p>
+          </div>
+        </a>
+
+        <a href="https://developer.mozilla.org" target="_blank" class="group">
+          <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 text-center h-full">
+            <div class="mb-4">
+              <i data-lucide="book-open" class="w-12 h-12 text-emerald-600 mx-auto"></i>
+            </div>
+            <h4 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-emerald-600">MDN Web Docs</h4>
+            <p class="text-sm text-gray-600">Complete web development documentation</p>
+          </div>
+        </a>
+
+        <a href="https://w3schools.com" target="_blank" class="group">
+          <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 text-center h-full">
+            <div class="mb-4">
+              <i data-lucide="graduation-cap" class="w-12 h-12 text-emerald-600 mx-auto"></i>
+            </div>
+            <h4 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-emerald-600">W3Schools</h4>
+            <p class="text-sm text-gray-600">Web tutorials with interactive examples</p>
+          </div>
+        </a>
+
+        <a href="https://leetcode.com" target="_blank" class="group">
+          <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 text-center h-full">
+            <div class="mb-4">
+              <i data-lucide="brain" class="w-12 h-12 text-emerald-600 mx-auto"></i>
+            </div>
+            <h4 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-emerald-600">LeetCode</h4>
+            <p class="text-sm text-gray-600">Coding interview preparation platform</p>
+          </div>
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -1065,10 +1169,11 @@ function closeWelcomePopup() { el('welcomePopup').classList.add('hidden'); }
 
 function toggleMenu(){ el('mobileMenu').classList.toggle("hidden"); }
 function showSection(id){
-  ["home","test","hangman","admin","about"].forEach(s => el(s).classList.add("hidden"));
+  ["home","test","courses","hangman","admin","about"].forEach(s => el(s).classList.add("hidden"));
   el(id).classList.remove("hidden");
   el('mobileMenu').classList.add("hidden");
   if(id === 'hangman') initializeHangman();
+  if(id === 'courses') initializeCourses();
   if(id === 'admin' && adminAuthenticated) {
     loadAdminDashboard();
     startAdminPolling();
@@ -2332,6 +2437,1027 @@ function updateHangmanUI() {
 window.guess = function(l) {
     hangman.guessed.push(l);
     updateHangmanUI();
+}
+
+  // Courses Data and Functions
+const coursesData = {
+  c: [
+    {
+      title: "C Programming For Beginners - Full Course",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/KJgsSFOSQv0",
+      description: "Master C programming from scratch with hands-on exercises and practical examples.",
+      rating: "4.9",
+      duration: "4 hours",
+      level: "Beginner",
+      tags: ["c", "beginner", "complete-course"]
+    },
+    {
+      title: "C Programming Tutorial for Beginners",
+      instructor: "Programming with Mosh",
+      url: "https://youtu.be/KJgsSFOSQv0",
+      description: "Learn C fundamentals with clear explanations and real-world programming concepts.",
+      rating: "4.8",
+      duration: "3.5 hours",
+      level: "Beginner",
+      tags: ["c", "basics", "tutorial"]
+    },
+    {
+      title: "Pointers in C / C++ [Full Course]",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/zuegQmMdy8M",
+      description: "Complete guide to understanding pointers, memory allocation, and advanced C concepts.",
+      rating: "4.9",
+      duration: "3 hours",
+      level: "Intermediate",
+      tags: ["c", "pointers", "memory-management"]
+    },
+    {
+      title: "Data Structures in C",
+      instructor: "CodeWithHarry",
+      url: "https://youtu.be/B31LgI4Y4DQ",
+      description: "Implement linked lists, stacks, queues, trees, and graphs in C with practical examples.",
+      rating: "4.7",
+      duration: "10 hours",
+      level: "Intermediate",
+      tags: ["c", "data-structures", "algorithms"]
+    },
+    {
+      title: "C Programming: File Handling",
+      instructor: "Neso Academy",
+      url: "https://youtu.be/7Y7fuTzFdKI",
+      description: "Learn file operations, reading/writing files, and file manipulation techniques in C.",
+      rating: "4.6",
+      duration: "2 hours",
+      level: "Intermediate",
+      tags: ["c", "file-handling", "io"]
+    },
+    {
+      title: "Dynamic Memory Allocation in C",
+      instructor: "Jenny's Lectures",
+      url: "https://youtu.be/8jLOx1hD3_o",
+      description: "Understand malloc, calloc, realloc, and free with memory management best practices.",
+      rating: "4.7",
+      duration: "1.5 hours",
+      level: "Intermediate",
+      tags: ["c", "memory", "dynamic-allocation"]
+    },
+    {
+      title: "C Programming Projects for Beginners",
+      instructor: "Tech With Tim",
+      url: "https://youtu.be/87SH2Cn0s9A",
+      description: "Build practical projects including calculator, student database, and game development.",
+      rating: "4.8",
+      duration: "6 hours",
+      level: "Beginner",
+      tags: ["c", "projects", "practice"]
+    },
+    {
+      title: "Advanced C Programming Techniques",
+      instructor: "Jacob Sorber",
+      url: "https://youtu.be/Qp3WatLL_Hc",
+      description: "Explore advanced topics: bit manipulation, function pointers, and optimization.",
+      rating: "4.9",
+      duration: "5 hours",
+      level: "Advanced",
+      tags: ["c", "advanced", "optimization"]
+    },
+    {
+      title: "C Programming for Embedded Systems",
+      instructor: "Fastbit Embedded",
+      url: "https://youtu.be/YGJQRHFXh8w",
+      description: "Learn C programming specifically for microcontroller and embedded system development.",
+      rating: "4.8",
+      duration: "8 hours",
+      level: "Advanced",
+      tags: ["c", "embedded", "microcontrollers"]
+    },
+    {
+      title: "Complete C Programming Course with Exercises",
+      instructor: "Apna College",
+      url: "https://youtu.be/7Dh73z3icd8",
+      description: "Comprehensive course with coding exercises, assignments, and interview questions.",
+      rating: "4.9",
+      duration: "12 hours",
+      level: "All Levels",
+      tags: ["c", "complete", "exercises"]
+    }
+  ],
+  
+  cpp: [
+    {
+      title: "C++ Programming Course - Beginner to Advanced",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/vLnPwxZdW4Y",
+      description: "Complete C++ tutorial covering from basics to STL and OOP concepts.",
+      rating: "4.9",
+      duration: "31 hours",
+      level: "All Levels",
+      tags: ["cpp", "complete", "stl"]
+    },
+    {
+      title: "C++ Tutorial for Beginners - Full Course",
+      instructor: "CodeBeauty",
+      url: "https://youtu.be/GQp1zzTwrIg",
+      description: "Learn C++ with clear explanations and practical coding examples for absolute beginners.",
+      rating: "4.8",
+      duration: "10 hours",
+      level: "Beginner",
+      tags: ["cpp", "beginner", "tutorial"]
+    },
+    {
+      title: "Object Oriented Programming in C++",
+      instructor: "Caleb Curry",
+      url: "https://youtu.be/wN0x9eZLix4",
+      description: "Master classes, objects, inheritance, polymorphism, and encapsulation in C++.",
+      rating: "4.8",
+      duration: "6 hours",
+      level: "Intermediate",
+      tags: ["cpp", "oop", "classes"]
+    },
+    {
+      title: "C++ STL Tutorial",
+      instructor: "CppNuts",
+      url: "https://youtu.be/8jLOx1hD3_o",
+      description: "Complete Standard Template Library tutorial with containers, algorithms, and iterators.",
+      rating: "4.9",
+      duration: "8 hours",
+      level: "Intermediate",
+      tags: ["cpp", "stl", "containers"]
+    },
+    {
+      title: "C++ Game Programming Tutorial",
+      instructor: "Javidx9",
+      url: "https://youtu.be/uxnzXgLXN6A",
+      description: "Learn game development using C++ with graphics, physics, and game mechanics.",
+      rating: "4.9",
+      duration: "12 hours",
+      level: "Intermediate",
+      tags: ["cpp", "gamedev", "graphics"]
+    },
+    {
+      title: "Modern C++ Programming (C++11/14/17)",
+      instructor: "Bo Qian",
+      url: "https://youtu.be/1tKJz6aDZaI",
+      description: "Learn modern C++ features including auto, lambdas, smart pointers, and move semantics.",
+      rating: "4.8",
+      duration: "7 hours",
+      level: "Advanced",
+      tags: ["cpp", "modern", "c++11"]
+    },
+    {
+      title: "Data Structures and Algorithms in C++",
+      instructor: "Abdul Bari",
+      url: "https://youtu.be/AT14lCXuMKI",
+      description: "Implement and analyze algorithms and data structures using C++.",
+      rating: "4.9",
+      duration: "20 hours",
+      level: "Intermediate",
+      tags: ["cpp", "algorithms", "dsa"]
+    },
+    {
+      title: "C++ Multithreading and Concurrency",
+      instructor: "The Cherno",
+      url: "https://youtu.be/LL8wkskDlbs",
+      description: "Learn thread management, synchronization, and concurrent programming in C++.",
+      rating: "4.8",
+      duration: "5 hours",
+      level: "Advanced",
+      tags: ["cpp", "multithreading", "concurrency"]
+    },
+    {
+      title: "C++ Design Patterns",
+      instructor: "Derek Banas",
+      url: "https://youtu.be/L5_vyWbB0lU",
+      description: "Learn creational, structural, and behavioral design patterns implementation in C++.",
+      rating: "4.7",
+      duration: "4 hours",
+      level: "Advanced",
+      tags: ["cpp", "design-patterns", "architecture"]
+    },
+    {
+      title: "C++ Projects: Build 10 Applications",
+      instructor: "ProgrammingKnowledge",
+      url: "https://youtu.be/_bYFu9mBnr4",
+      description: "Build practical applications including calculator, banking system, and games.",
+      rating: "4.8",
+      duration: "15 hours",
+      level: "Intermediate",
+      tags: ["cpp", "projects", "applications"]
+    }
+  ],
+  
+  python: [
+    {
+      title: "Python for Everybody - Full University Course",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/8DvywoWv6fI",
+      description: "Comprehensive Python course covering basics to web scraping and databases.",
+      rating: "4.9",
+      duration: "15 hours",
+      level: "Beginner",
+      tags: ["python", "complete", "university"]
+    },
+    {
+      title: "Python Tutorial - Python Full Course for Beginners",
+      instructor: "Programming with Mosh",
+      url: "https://youtu.be/_uQrJ0TkZlc",
+      description: "Python fundamentals with practical exercises and real-world applications.",
+      rating: "4.9",
+      duration: "6 hours",
+      level: "Beginner",
+      tags: ["python", "beginners", "fundamentals"]
+    },
+    {
+      title: "Python Data Science and Machine Learning",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/LHBE6Q9XlzI",
+      description: "Learn NumPy, Pandas, Matplotlib, Scikit-learn for data analysis and ML.",
+      rating: "4.9",
+      duration: "12 hours",
+      level: "Intermediate",
+      tags: ["python", "data-science", "machine-learning"]
+    },
+    {
+      title: "Python Django Full Course for Beginners",
+      instructor: "CodeWithHarry",
+      url: "https://youtu.be/JxzZxdht-XY",
+      description: "Build web applications using Django framework with database integration.",
+      rating: "4.8",
+      duration: "8 hours",
+      level: "Intermediate",
+      tags: ["python", "django", "web"]
+    },
+    {
+      title: "Python Automation Tutorial",
+      instructor: "Tech With Tim",
+      url: "https://youtu.be/PXMJ6FS7llk",
+      description: "Automate tasks with Python including web scraping, file handling, and GUI automation.",
+      rating: "4.8",
+      duration: "6 hours",
+      level: "Intermediate",
+      tags: ["python", "automation", "scripts"]
+    },
+    {
+      title: "Python Game Development with PyGame",
+      instructor: "Tech With Tim",
+      url: "https://youtu.be/jO6qQDNa2UY",
+      description: "Create games using PyGame library with graphics, sounds, and game physics.",
+      rating: "4.7",
+      duration: "5 hours",
+      level: "Intermediate",
+      tags: ["python", "gamedev", "pygame"]
+    },
+    {
+      title: "Python Web Scraping Tutorial",
+      instructor: "Corey Schafer",
+      url: "https://youtu.be/ng2o98k983k",
+      description: "Learn BeautifulSoup and Scrapy for extracting data from websites.",
+      rating: "4.8",
+      duration: "3 hours",
+      level: "Intermediate",
+      tags: ["python", "web-scraping", "beautifulsoup"]
+    },
+    {
+      title: "Python GUI Development with Tkinter",
+      instructor: "Codemy.com",
+      url: "https://youtu.be/yQSEXcf6s2I",
+      description: "Build desktop applications with graphical user interfaces using Tkinter.",
+      rating: "4.7",
+      duration: "7 hours",
+      level: "Intermediate",
+      tags: ["python", "gui", "tkinter"]
+    },
+    {
+      title: "Advanced Python Programming",
+      instructor: "CS Dojo",
+      url: "https://youtu.be/0K_eZGS5NsU",
+      description: "Learn decorators, generators, context managers, and metaprogramming.",
+      rating: "4.8",
+      duration: "4 hours",
+      level: "Advanced",
+      tags: ["python", "advanced", "decorators"]
+    },
+    {
+      title: "Python Flask Full Course",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/Qr4QMBUPxWo",
+      description: "Build web applications and REST APIs using Flask microframework.",
+      rating: "4.9",
+      duration: "5 hours",
+      level: "Intermediate",
+      tags: ["python", "flask", "api"]
+    }
+  ],
+  
+  java: [
+    {
+      title: "Java Programming for Beginners - Full Course",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/A74TOX803D0",
+      description: "Complete Java tutorial covering fundamentals, OOP, and data structures.",
+      rating: "4.9",
+      duration: "12 hours",
+      level: "Beginner",
+      tags: ["java", "beginners", "complete"]
+    },
+    {
+      title: "Java Tutorial for Complete Beginners",
+      instructor: "Cave of Programming",
+      url: "https://youtu.be/WPuDt6Sf5ao",
+      description: "Learn Java from scratch with hands-on coding exercises and projects.",
+      rating: "4.8",
+      duration: "16 hours",
+      level: "Beginner",
+      tags: ["java", "tutorial", "basics"]
+    },
+    {
+      title: "Java Spring Boot Full Course",
+      instructor: "Amigoscode",
+      url: "https://youtu.be/9SGDpanrc8U",
+      description: "Build REST APIs and microservices using Spring Boot framework.",
+      rating: "4.9",
+      duration: "7 hours",
+      level: "Intermediate",
+      tags: ["java", "spring-boot", "api"]
+    },
+    {
+      title: "Java Data Structures and Algorithms",
+      instructor: "Dinesh Varyani",
+      url: "https://youtu.be/RBSGKlAvoiM",
+      description: "Implement and analyze algorithms and data structures in Java.",
+      rating: "4.8",
+      duration: "10 hours",
+      level: "Intermediate",
+      tags: ["java", "algorithms", "data-structures"]
+    },
+    {
+      title: "Java GUI Development with Swing",
+      instructor: "Bro Code",
+      url: "https://youtu.be/Kmgo00avvEw",
+      description: "Create desktop applications with graphical interfaces using Java Swing.",
+      rating: "4.7",
+      duration: "5 hours",
+      level: "Intermediate",
+      tags: ["java", "gui", "swing"]
+    },
+    {
+      title: "Java Multithreading Tutorial",
+      instructor: "Defog Tech",
+      url: "https://youtu.be/TCd8QIS-2KI",
+      description: "Learn concurrent programming, thread synchronization, and executors.",
+      rating: "4.8",
+      duration: "4 hours",
+      level: "Advanced",
+      tags: ["java", "multithreading", "concurrency"]
+    },
+    {
+      title: "Java Design Patterns",
+      instructor: "Derek Banas",
+      url: "https://youtu.be/vNHpsC5ng_E",
+      description: "Implement common design patterns in Java with practical examples.",
+      rating: "4.7",
+      duration: "4 hours",
+      level: "Advanced",
+      tags: ["java", "design-patterns", "architecture"]
+    },
+    {
+      title: "Java Database Connectivity (JDBC)",
+      instructor: "Telusko",
+      url: "https://youtu.be/LZYCKGm7d5Q",
+      description: "Connect Java applications to databases using JDBC with MySQL.",
+      rating: "4.8",
+      duration: "3 hours",
+      level: "Intermediate",
+      tags: ["java", "jdbc", "database"]
+    },
+    {
+      title: "Java Android App Development",
+      instructor: "Slidenerd",
+      url: "https://youtu.be/QAbQgLGKd3Y",
+      description: "Build Android applications using Java and Android Studio.",
+      rating: "4.8",
+      duration: "15 hours",
+      level: "Intermediate",
+      tags: ["java", "android", "mobile"]
+    },
+    {
+      title: "Java Microservices with Spring Cloud",
+      instructor: "Java Brains",
+      url: "https://youtu.be/mPPhcU7oWDU",
+      description: "Build microservices architecture using Spring Cloud and Netflix OSS.",
+      rating: "4.9",
+      duration: "8 hours",
+      level: "Advanced",
+      tags: ["java", "microservices", "spring-cloud"]
+    }
+  ],
+  
+  javascript: [
+    {
+      title: "JavaScript Full Course for Beginners",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/PkZNo7MFNFg",
+      description: "Complete JavaScript tutorial covering ES6+ features and DOM manipulation.",
+      rating: "4.9",
+      duration: "8 hours",
+      level: "Beginner",
+      tags: ["javascript", "beginners", "es6"]
+    },
+    {
+      title: "JavaScript Tutorial for Beginners",
+      instructor: "Programming with Mosh",
+      url: "https://youtu.be/W6NZfCO5SIk",
+      description: "Master JavaScript fundamentals with practical coding exercises.",
+      rating: "4.9",
+      duration: "4 hours",
+      level: "Beginner",
+      tags: ["javascript", "tutorial", "fundamentals"]
+    },
+    {
+      title: "Modern JavaScript From The Beginning",
+      instructor: "Traversy Media",
+      url: "https://youtu.be/8dWL3wF_OMw",
+      description: "Learn JavaScript with projects including weather app and task tracker.",
+      rating: "4.9",
+      duration: "22 hours",
+      level: "All Levels",
+      tags: ["javascript", "modern", "projects"]
+    },
+    {
+      title: "JavaScript DOM Manipulation",
+      instructor: "Web Dev Simplified",
+      url: "https://youtu.be/5fb2aPlgoys",
+      description: "Master DOM manipulation, event handling, and dynamic content creation.",
+      rating: "4.8",
+      duration: "3 hours",
+      level: "Intermediate",
+      tags: ["javascript", "dom", "web"]
+    },
+    {
+      title: "JavaScript Algorithms and Data Structures",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/8hly31xKli0",
+      description: "Learn algorithms, data structures, and problem-solving in JavaScript.",
+      rating: "4.9",
+      duration: "9 hours",
+      level: "Intermediate",
+      tags: ["javascript", "algorithms", "dsa"]
+    },
+    {
+      title: "Async JavaScript and Promises",
+      instructor: "Colt Steele",
+      url: "https://youtu.be/PoRJizFvM7s",
+      description: "Master asynchronous programming, callbacks, promises, and async/await.",
+      rating: "4.9",
+      duration: "5 hours",
+      level: "Intermediate",
+      tags: ["javascript", "async", "promises"]
+    },
+    {
+      title: "JavaScript Design Patterns",
+      instructor: "Derek Banas",
+      url: "https://youtu.be/tv-_1er1mWI",
+      description: "Learn and implement design patterns in JavaScript applications.",
+      rating: "4.8",
+      duration: "4 hours",
+      level: "Advanced",
+      tags: ["javascript", "design-patterns", "architecture"]
+    },
+    {
+      title: "Node.js Tutorial for Beginners",
+      instructor: "Mosh Hamedani",
+      url: "https://youtu.be/TlB_eWDSMt4",
+      description: "Build server-side applications with Node.js and Express framework.",
+      rating: "4.9",
+      duration: "3 hours",
+      level: "Intermediate",
+      tags: ["javascript", "nodejs", "backend"]
+    },
+    {
+      title: "JavaScript Testing with Jest",
+      instructor: "Web Dev Simplified",
+      url: "https://youtu.be/7r4xVDI2vho",
+      description: "Learn unit testing, integration testing, and test-driven development.",
+      rating: "4.8",
+      duration: "2 hours",
+      level: "Intermediate",
+      tags: ["javascript", "testing", "jest"]
+    },
+    {
+      title: "JavaScript Game Development",
+      instructor: "Chris Courses",
+      url: "https://youtu.be/eI9idPTT0c4",
+      description: "Create games using JavaScript with Canvas API and game physics.",
+      rating: "4.8",
+      duration: "6 hours",
+      level: "Intermediate",
+      tags: ["javascript", "gamedev", "canvas"]
+    }
+  ],
+  
+  web: [
+    {
+      title: "HTML & CSS Full Course - Beginner to Pro",
+      instructor: "SuperSimpleDev",
+      url: "https://youtu.be/G3e-cpL7ofc",
+      description: "Complete web development course covering HTML5 and CSS3 with projects.",
+      rating: "4.9",
+      duration: "7 hours",
+      level: "Beginner",
+      tags: ["html", "css", "web"]
+    },
+    {
+      title: "Tailwind CSS Full Course for Beginners",
+      instructor: "Web Dev Simplified",
+      url: "https://youtu.be/dFgzHOX84xQ",
+      description: "Master utility-first CSS framework with responsive design projects.",
+      rating: "4.9",
+      duration: "4 hours",
+      level: "Beginner",
+      tags: ["tailwind", "css", "framework"]
+    },
+    {
+      title: "Responsive Web Design Tutorial",
+      instructor: "Kevin Powell",
+      url: "https://youtu.be/srvUrASNj0s",
+      description: "Learn responsive design techniques, flexbox, grid, and media queries.",
+      rating: "4.9",
+      duration: "6 hours",
+      level: "Intermediate",
+      tags: ["css", "responsive", "web-design"]
+    },
+    {
+      title: "CSS Grid Complete Guide",
+      instructor: "Wes Bos",
+      url: "https://youtu.be/T-slCsOrLcc",
+      description: "Master CSS Grid layout system with real-world examples.",
+      rating: "4.9",
+      duration: "4 hours",
+      level: "Intermediate",
+      tags: ["css", "grid", "layout"]
+    },
+    {
+      title: "Flexbox Complete Tutorial",
+      instructor: "Wes Bos",
+      url: "https://youtu.be/JJSoEo8JSnc",
+      description: "Learn Flexbox for creating flexible and responsive layouts.",
+      rating: "4.9",
+      duration: "3 hours",
+      level: "Intermediate",
+      tags: ["css", "flexbox", "layout"]
+    },
+    {
+      title: "Advanced CSS Animations",
+      instructor: "DesignCourse",
+      url: "https://youtu.be/YszONjKpgg4",
+      description: "Create smooth animations, transitions, and keyframe animations.",
+      rating: "4.8",
+      duration: "3 hours",
+      level: "Advanced",
+      tags: ["css", "animations", "transitions"]
+    },
+    {
+      title: "Sass/SCSS Complete Tutorial",
+      instructor: "The Net Ninja",
+      url: "https://youtu.be/roywYSEPSvc",
+      description: "Learn CSS preprocessor with variables, mixins, and functions.",
+      rating: "4.8",
+      duration: "5 hours",
+      level: "Intermediate",
+      tags: ["css", "sass", "scss"]
+    },
+    {
+      title: "CSS Architecture - BEM Methodology",
+      instructor: "Kevin Powell",
+      url: "https://youtu.be/SLjHSVwXYq4",
+      description: "Learn scalable and maintainable CSS with BEM naming convention.",
+      rating: "4.8",
+      duration: "2 hours",
+      level: "Intermediate",
+      tags: ["css", "bem", "architecture"]
+    },
+    {
+      title: "Frontend Web Development Bootcamp",
+      instructor: "Colt Steele",
+      url: "https://youtu.be/zJSY8tbf_ys",
+      description: "Complete frontend development with HTML, CSS, JavaScript, and React.",
+      rating: "4.9",
+      duration: "40 hours",
+      level: "All Levels",
+      tags: ["html", "css", "javascript", "react"]
+    },
+    {
+      title: "Accessible Web Design",
+      instructor: "Web Dev Simplified",
+      url: "https://youtu.be/16a0b1n7uuc",
+      description: "Learn web accessibility standards and techniques for inclusive design.",
+      rating: "4.8",
+      duration: "3 hours",
+      level: "Intermediate",
+      tags: ["html", "accessibility", "web"]
+    }
+  ],
+  
+  frameworks: [
+    {
+      title: "React JS Full Course for Beginners",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/bMknfKXIFA8",
+      description: "Complete React tutorial with hooks, context API, and modern practices.",
+      rating: "4.9",
+      duration: "10 hours",
+      level: "Beginner",
+      tags: ["react", "javascript", "frontend"]
+    },
+    {
+      title: "Vue.js Course for Beginners",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/FXpIoQ_rT_c",
+      description: "Learn Vue.js framework with components, directives, and Vue Router.",
+      rating: "4.9",
+      duration: "5 hours",
+      level: "Beginner",
+      tags: ["vue", "javascript", "framework"]
+    },
+    {
+      title: "Angular Full Course",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/3qBXWUpoPHo",
+      description: "Complete Angular tutorial with TypeScript, services, and routing.",
+      rating: "4.9",
+      duration: "8 hours",
+      level: "Intermediate",
+      tags: ["angular", "typescript", "framework"]
+    },
+    {
+      title: "Next.js Tutorial for Beginners",
+      instructor: "Sonny Sangha",
+      url: "https://youtu.be/__mSgDEOyv8",
+      description: "Learn React framework with server-side rendering and static generation.",
+      rating: "4.9",
+      duration: "6 hours",
+      level: "Intermediate",
+      tags: ["nextjs", "react", "ssr"]
+    },
+    {
+      title: "Express.js Crash Course",
+      instructor: "Traversy Media",
+      url: "https://youtu.be/L72fhGm1tfE",
+      description: "Build REST APIs and web applications with Express.js framework.",
+      rating: "4.9",
+      duration: "2 hours",
+      level: "Intermediate",
+      tags: ["express", "nodejs", "backend"]
+    },
+    {
+      title: "Django Full Course for Beginners",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/F5mRW0jo-U4",
+      description: "Build web applications with Django, Django REST framework, and authentication.",
+      rating: "4.9",
+      duration: "6 hours",
+      level: "Intermediate",
+      tags: ["django", "python", "backend"]
+    },
+    {
+      title: "Spring Boot Full Course",
+      instructor: "Amigoscode",
+      url: "https://youtu.be/9SGDpanrc8U",
+      description: "Build REST APIs and microservices using Spring Boot and Spring Security.",
+      rating: "4.9",
+      duration: "7 hours",
+      level: "Intermediate",
+      tags: ["spring-boot", "java", "backend"]
+    },
+    {
+      title: "Flutter Tutorial for Beginners",
+      instructor: "freeCodeCamp",
+      url: "https://youtu.be/VPvVD8t02U8",
+      description: "Build cross-platform mobile apps with Flutter and Dart programming.",
+      rating: "4.9",
+      duration: "8 hours",
+      level: "Beginner",
+      tags: ["flutter", "dart", "mobile"]
+    },
+    {
+      title: "Bootstrap 5 Tutorial",
+      instructor: "Traversy Media",
+      url: "https://youtu.be/Jyvffr3aCp0",
+      description: "Learn responsive web design using Bootstrap 5 framework.",
+      rating: "4.8",
+      duration: "3 hours",
+      level: "Beginner",
+      tags: ["bootstrap", "css", "responsive"]
+    },
+    {
+      title: "Redux Toolkit Tutorial",
+      instructor: "Codevolution",
+      url: "https://youtu.be/0awA5Uw6SJE",
+      description: "Master state management in React applications using Redux Toolkit.",
+      rating: "4.8",
+      duration: "4 hours",
+      level: "Intermediate",
+      tags: ["redux", "react", "state-management"]
+    }
+  ]
+};
+
+// Function to initialize courses section
+function initializeCourses() {
+  renderAllCourses();
+  setupSearch();
+  setupFilter();
+}
+
+// Function to render all courses
+function renderAllCourses() {
+  const container = document.querySelector('#courses .grid');
+  const languageSections = document.getElementById('languageSections');
+  
+  if (!container || !languageSections) return;
+  
+  // Clear previous content
+  container.innerHTML = '';
+  languageSections.innerHTML = '';
+  
+  // Language names mapping
+  const languageNames = {
+    'c': 'C Programming',
+    'cpp': 'C++ Programming',
+    'python': 'Python Programming',
+    'java': 'Java Programming',
+    'javascript': 'JavaScript',
+    'web': 'Web Development (HTML/CSS/Tailwind)',
+    'frameworks': 'Frameworks & Libraries'
+  };
+  
+  // Generate featured cards (first 6 from each category)
+  let featuredCourses = [];
+  Object.keys(coursesData).forEach(lang => {
+    featuredCourses.push(...coursesData[lang].slice(0, 2));
+  });
+  
+  // Shuffle and take 6
+  featuredCourses = shuffleArray(featuredCourses).slice(0, 6);
+  
+  // Render featured courses
+  featuredCourses.forEach(course => {
+    const card = createCourseCard(course);
+    container.appendChild(card);
+  });
+  
+  // Render language sections
+  Object.keys(coursesData).forEach(lang => {
+    const section = createLanguageSection(lang, languageNames[lang], coursesData[lang]);
+    languageSections.appendChild(section);
+  });
+  
+  // Refresh icons
+  setTimeout(() => lucide.createIcons(), 100);
+}
+
+// Function to create course card
+function createCourseCard(course) {
+  const card = document.createElement('div');
+  card.className = 'bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 overflow-hidden group';
+  
+  card.innerHTML = `
+    <div class="p-6">
+      <div class="flex justify-between items-start mb-4">
+        <div class="flex-1">
+          <h3 class="font-bold text-lg text-gray-800 mb-2 group-hover:text-emerald-600 line-clamp-2">${course.title}</h3>
+          <p class="text-sm text-emerald-600 font-medium mb-1">${course.instructor}</p>
+        </div>
+        <div class="flex items-center bg-emerald-50 text-emerald-700 px-2 py-1 rounded">
+          <i data-lucide="star" class="w-4 h-4 mr-1"></i>
+          <span class="text-sm font-semibold">${course.rating}</span>
+        </div>
+      </div>
+      
+      <p class="text-sm text-gray-600 mb-4 line-clamp-3">${course.description}</p>
+      
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">${course.level}</span>
+        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">${course.duration}</span>
+        ${course.tags.slice(0, 2).map(tag => 
+          `<span class="px-2 py-1 bg-emerald-50 text-emerald-700 text-xs rounded">${tag}</span>`
+        ).join('')}
+      </div>
+      
+      <div class="flex justify-between items-center">
+        <a href="${course.url}" target="_blank" 
+          class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-lg text-sm font-semibold text-center transition duration-300 flex items-center justify-center gap-2">
+          <i data-lucide="play-circle" class="w-4 h-4"></i>
+          Watch Tutorial
+        </a>
+      </div>
+    </div>
+  `;
+  
+  return card;
+}
+
+// Function to create language section
+function createLanguageSection(langKey, langName, courses) {
+  const section = document.createElement('div');
+  section.className = 'mb-16';
+  section.id = `${langKey}-section`;
+  
+  section.innerHTML = `
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <div class="bg-emerald-100 p-2 rounded-lg">
+          <i data-lucide="code" class="text-emerald-600 w-6 h-6"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800">${langName}</h3>
+        <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium">
+          ${courses.length} tutorials
+        </span>
+      </div>
+      <button onclick="toggleSection('${langKey}')" class="text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1">
+        <i data-lucide="chevron-down" class="w-5 h-5" id="icon-${langKey}"></i>
+        <span>Expand</span>
+      </button>
+    </div>
+    
+    <div id="content-${langKey}" class="hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        ${courses.slice(0, 10).map((course, index) => `
+          <div class="bg-white p-6 rounded-xl shadow border border-gray-200 hover:shadow-md transition-shadow duration-300">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <h4 class="font-bold text-gray-800 mb-1">${index + 1}. ${course.title}</h4>
+                <p class="text-sm text-emerald-600 mb-2">By ${course.instructor}</p>
+              </div>
+              <span class="text-xs px-2 py-1 rounded-full ${getLevelColor(course.level)}">${course.level}</span>
+            </div>
+            <p class="text-sm text-gray-600 mb-4">${course.description}</p>
+            <div class="flex justify-between items-center">
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-gray-500">${course.duration}</span>
+                <span class="flex items-center text-sm">
+                  <i data-lucide="star" class="w-3 h-3 text-yellow-500 mr-1"></i>
+                  ${course.rating}
+                </span>
+              </div>
+              <a href="${course.url}" target="_blank" 
+                class="text-emerald-600 hover:text-emerald-700 font-medium text-sm flex items-center gap-1">
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+                Watch Now
+              </a>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div class="bg-emerald-50 p-6 rounded-xl border border-emerald-200">
+        <h4 class="font-bold text-lg text-emerald-800 mb-3">Recommended Learning Path for ${langName}</h4>
+        <ol class="space-y-2 text-sm text-emerald-700">
+          <li class="flex items-center gap-2">
+            <span class="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
+            Start with basics: syntax, variables, data types
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
+            Learn control structures: loops and conditionals
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
+            Master functions/methods and scope
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">4</span>
+            Practice with mini-projects and exercises
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">5</span>
+            Build complete applications and portfolio projects
+          </li>
+        </ol>
+      </div>
+    </div>
+  `;
+  
+  return section;
+}
+
+// Helper function to shuffle array
+function shuffleArray(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+// Helper function for level color
+function getLevelColor(level) {
+  switch(level.toLowerCase()) {
+    case 'beginner': return 'bg-green-100 text-green-800';
+    case 'intermediate': return 'bg-yellow-100 text-yellow-800';
+    case 'advanced': return 'bg-red-100 text-red-800';
+    default: return 'bg-blue-100 text-blue-800';
+  }
+}
+
+// Toggle section visibility
+function toggleSection(langKey) {
+  const content = document.getElementById(`content-${langKey}`);
+  const icon = document.getElementById(`icon-${langKey}`);
+  
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    icon.setAttribute('data-lucide', 'chevron-up');
+    icon.parentElement.querySelector('span').textContent = 'Collapse';
+  } else {
+    content.classList.add('hidden');
+    icon.setAttribute('data-lucide', 'chevron-down');
+    icon.parentElement.querySelector('span').textContent = 'Expand';
+  }
+  lucide.createIcons();
+}
+
+// Setup search functionality
+function setupSearch() {
+  const searchInput = document.getElementById('courseSearch');
+  if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      filterCourses(searchTerm);
+    });
+  }
+}
+
+// Setup filter functionality
+function setupFilter() {
+  const filterSelect = document.getElementById('languageFilter');
+  if (filterSelect) {
+    filterSelect.addEventListener('change', function(e) {
+      filterCourses('', e.target.value);
+    });
+  }
+}
+
+// Filter courses based on search and filter
+function filterCourses(searchTerm, filter = '') {
+  const sections = document.querySelectorAll('#languageSections > div');
+  let visibleCount = 0;
+  
+  sections.forEach(section => {
+    const langKey = section.id.replace('-section', '');
+    const shouldShow = (!filter || filter === langKey) && 
+                      (!searchTerm || langKey.includes(searchTerm) || 
+                       section.querySelector('h3').textContent.toLowerCase().includes(searchTerm));
+    
+    if (shouldShow) {
+      section.classList.remove('hidden');
+      visibleCount++;
+      
+      // If search term exists, also filter individual courses within section
+      if (searchTerm) {
+        const courses = section.querySelectorAll('.bg-white.p-6');
+        courses.forEach(course => {
+          const title = course.querySelector('h4').textContent.toLowerCase();
+          const desc = course.querySelector('p').textContent.toLowerCase();
+          const instructor = course.querySelector('.text-emerald-600').textContent.toLowerCase();
+          
+          if (title.includes(searchTerm) || desc.includes(searchTerm) || instructor.includes(searchTerm)) {
+            course.classList.remove('hidden');
+          } else {
+            course.classList.add('hidden');
+          }
+        });
+      } else {
+        // Show all courses in visible section
+        section.querySelectorAll('.bg-white.p-6').forEach(course => {
+          course.classList.remove('hidden');
+        });
+      }
+    } else {
+      section.classList.add('hidden');
+    }
+  });
+  
+  // Show message if no results
+  const message = document.getElementById('noResultsMessage');
+  if (visibleCount === 0) {
+    if (!message) {
+      const msg = document.createElement('div');
+      msg.id = 'noResultsMessage';
+      msg.className = 'text-center py-10';
+      msg.innerHTML = `
+        <i data-lucide="search-x" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
+        <h3 class="text-xl font-bold text-gray-600 mb-2">No tutorials found</h3>
+        <p class="text-gray-500">Try a different search term or select another language filter</p>
+      `;
+      document.querySelector('#languageSections').parentElement.insertBefore(msg, document.querySelector('#languageSections'));
+      lucide.createIcons();
+    }
+  } else if (message) {
+    message.remove();
+  }
 }
 </script>
   <!-- Footer Section -->
