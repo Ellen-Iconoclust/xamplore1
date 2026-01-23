@@ -1,17 +1,1 @@
-User-agent: *
-Allow: /
-Sitemap: https://coderonins.vercel.app/sitemap.xml
 
-# Disallow AI crawlers that might cause confusion
-User-agent: GPTBot
-Disallow: /
-
-User-agent: ChatGPT-User
-Disallow: /
-
-# Allow legitimate search engines
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
