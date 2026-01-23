@@ -28,6 +28,46 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
 .exam-closed { background-color: #fee2e2; border-color: #fca5a5; }
 .exam-open { background-color: #d1fae5; border-color: #34d399; }
 .exam-waiting { background-color: #fef3c7; border-color: #fbbf24; }
+
+  /* Add to your existing style section */
+/* Animated Gradient Circle */
+@keyframes gradient-pulse {
+  0%, 100% {
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 40%, transparent 70%);
+    transform: scale(1);
+  }
+  50% {
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.15) 40%, transparent 70%);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes gradient-rotate {
+  0% {
+    background: linear-gradient(45deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.15));
+  }
+  25% {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.15));
+  }
+  50% {
+    background: linear-gradient(225deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.15), rgba(16, 185, 129, 0.2));
+  }
+  75% {
+    background: linear-gradient(315deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.15));
+  }
+  100% {
+    background: linear-gradient(45deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.15));
+  }
+}
+
+.animate-gradient-pulse {
+  animation: gradient-pulse 8s ease-in-out infinite;
+}
+
+/* Alternative option - rotating gradient (choose one) */
+.animate-gradient-rotate {
+  animation: gradient-rotate 20s linear infinite;
+}
 </style>
 </head>
 
@@ -195,6 +235,76 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         </div>
       </div>
     </div>
+
+    <!-- Add this section after the "Our Mission & Vision" section -->
+<!-- Meet Xavi Section -->
+<div class="mb-16">
+  <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Meet Your Exam Companion</h2>
+  <div class="flex flex-col md:flex-row items-center gap-8">
+    <!-- Text Content -->
+    <div class="md:w-1/2">
+      <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="bg-emerald-100 p-3 rounded-lg">
+            <i data-lucide="sparkles" class="text-emerald-600 w-8 h-8"></i>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold text-gray-800">Xavi the Fox</h3>
+            <p class="text-sm text-gray-600">Your Trusted Exam Guardian</p>
+          </div>
+        </div>
+        <p class="text-gray-700 mb-4">
+          Xavi isn't just a mascot—he's your personal guide through the Xamplore examination journey. With keen observation skills and a passion for fairness, Xavi ensures every exam is conducted with integrity.
+        </p>
+        <ul class="space-y-4 mb-6">
+          <li class="flex items-start gap-3">
+            <i data-lucide="shield" class="text-emerald-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+            <div>
+              <p class="font-medium text-gray-800">Security Sentinel</p>
+              <p class="text-sm text-gray-600">Monitors exam sessions for fairness</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <i data-lucide="clock" class="text-emerald-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+            <div>
+              <p class="font-medium text-gray-800">Timekeeper</p>
+              <p class="text-sm text-gray-600">Helps you manage exam time effectively</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3">
+            <i data-lucide="help-circle" class="text-emerald-500 w-5 h-5 mt-0.5 flex-shrink-0"></i>
+            <div>
+              <p class="font-medium text-gray-800">Guidance Assistant</p>
+              <p class="text-sm text-gray-600">Appears throughout your exam journey</p>
+            </div>
+          </li>
+        </ul>
+        <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+          <p class="text-sm text-emerald-700 italic">
+            <i data-lucide="quote" class="inline w-4 h-4 mr-1"></i>
+            "A fair exam is a true test of knowledge. I'm here to make sure everyone gets an equal opportunity to shine!"
+          </p>
+          <p class="text-xs text-emerald-600 mt-2 text-right">- Xavi the Fox</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Xavi Image with Animated Green Circle -->
+    <div class="md:w-1/2 relative flex justify-center items-center min-h-96">
+      <!-- Animated Gradient Circle (bigger than the image) -->
+      <div class="absolute w-80 h-80 md:w-96 md:h-96 rounded-full animate-gradient-pulse"></div>
+      
+      <!-- Image Container -->
+      <div class="relative z-10">
+        <img 
+          src="xavi-intro.png" 
+          alt="Xavi the Fox - Your Exam Companion"
+          class="w-64 h-auto md:w-80 drop-shadow-2xl"
+        >
+      </div>
+    </div>
+  </div>
+</div>
 
     <!-- Stats Section -->
     <div class="mb-16">
