@@ -2489,18 +2489,142 @@ function downloadPDF() {
 }
 
 // --- HANGMAN ---
-// --- HANGMAN --- (Updated Version)
 const HANGMAN_WORDS = [
+    // Programming Languages (15)
     { word: "javascript", hint: "A popular programming language for web development" },
     { word: "python", hint: "A high-level programming language known for readability" },
-    { word: "react", hint: "A JavaScript library for building user interfaces" },
-    { word: "node", hint: "A JavaScript runtime built on Chrome's V8 engine" },
-    { word: "vercel", hint: "A cloud platform for static sites and serverless functions" },
-    { word: "tailwind", hint: "A utility-first CSS framework" },
-    { word: "typescript", hint: "A typed superset of JavaScript" },
-    { word: "mongodb", hint: "A NoSQL database program" },
-    { word: "express", hint: "A web application framework for Node.js" },
-    { word: "docker", hint: "A platform for developing, shipping, and running applications" }
+    { word: "typescript", hint: "A typed superset of JavaScript that compiles to plain JavaScript" },
+    { word: "java", hint: "Object-oriented programming language used for Android development" },
+    { word: "kotlin", hint: "Modern programming language for Android development" },
+    { word: "swift", hint: "Apple's programming language for iOS and macOS" },
+    { word: "golang", hint: "Google's statically typed, compiled programming language" },
+    { word: "rust", hint: "Systems programming language focused on safety and performance" },
+    { word: "ruby", hint: "Dynamic programming language focused on simplicity and productivity" },
+    { word: "php", hint: "Server-side scripting language designed for web development" },
+    { word: "csharp", hint: "Microsoft's object-oriented programming language" },
+    { word: "scala", hint: "Programming language combining object-oriented and functional programming" },
+    { word: "perl", hint: "High-level, general-purpose programming language" },
+    { word: "dart", hint: "Client-optimized language for fast apps on any platform" },
+    { word: "lua", hint: "Lightweight, high-level, multi-paradigm programming language" },
+    
+    // Frameworks & Libraries (20)
+    { word: "react", hint: "JavaScript library for building user interfaces" },
+    { word: "angular", hint: "TypeScript-based web application framework" },
+    { word: "vue", hint: "Progressive JavaScript framework for building UIs" },
+    { word: "nodejs", hint: "JavaScript runtime built on Chrome's V8 engine" },
+    { word: "express", hint: "Minimal web application framework for Node.js" },
+    { word: "django", hint: "High-level Python web framework" },
+    { word: "flask", hint: "Micro web framework written in Python" },
+    { word: "spring", hint: "Application framework for Java" },
+    { word: "laravel", hint: "PHP web application framework" },
+    { word: "rails", hint: "Server-side web application framework written in Ruby" },
+    { word: "flutter", hint: "UI toolkit for building natively compiled applications" },
+    { word: "electron", hint: "Framework for building desktop apps with web technologies" },
+    { word: "nextjs", hint: "React framework for production" },
+    { word: "nuxtjs", hint: "Vue framework for creating modern web applications" },
+    { word: "svelte", hint: "Component framework that compiles to JavaScript" },
+    { word: "jquery", hint: "Fast, small, feature-rich JavaScript library" },
+    { word: "bootstrap", hint: "Front-end component library for responsive web design" },
+    { word: "tailwind", hint: "Utility-first CSS framework" },
+    { word: "tensorflow", hint: "Open-source machine learning framework" },
+    { word: "pytorch", hint: "Open-source machine learning library" },
+    
+    // Databases (15)
+    { word: "mongodb", hint: "NoSQL database program using JSON-like documents" },
+    { word: "postgresql", hint: "Open-source relational database system" },
+    { word: "mysql", hint: "Open-source relational database management system" },
+    { word: "sqlite", hint: "C-language library that implements a small database engine" },
+    { word: "redis", hint: "In-memory data structure store used as a database" },
+    { word: "cassandra", hint: "Distributed NoSQL database management system" },
+    { word: "elasticsearch", hint: "Search and analytics engine" },
+    { word: "firebase", hint: "Platform developed by Google for creating mobile and web applications" },
+    { word: "dynamodb", hint: "Amazon's fully managed NoSQL database service" },
+    { word: "oracle", hint: "Multi-model database management system" },
+    { word: "mariadb", hint: "Community-developed fork of MySQL" },
+    { word: "couchdb", hint: "Open-source document-oriented NoSQL database" },
+    { word: "neo4j", hint: "Graph database management system" },
+    { word: "influxdb", hint: "Time series database" },
+    { word: "cockroachdb", hint: "Distributed SQL database" },
+    
+    // Tools & Platforms (20)
+    { word: "docker", hint: "Platform for developing, shipping, and running applications" },
+    { word: "kubernetes", hint: "Open-source container orchestration system" },
+    { word: "jenkins", hint: "Open-source automation server" },
+    { word: "github", hint: "Platform for version control and collaboration" },
+    { word: "gitlab", hint: "Web-based DevOps lifecycle tool" },
+    { word: "aws", hint: "Comprehensive cloud computing platform by Amazon" },
+    { word: "azure", hint: "Microsoft's cloud computing service" },
+    { word: "gcp", hint: "Google Cloud Platform suite of cloud computing services" },
+    { word: "heroku", hint: "Cloud platform as a service" },
+    { word: "vercel", hint: "Cloud platform for static sites and serverless functions" },
+    { word: "netlify", hint: "Cloud computing company offering hosting and serverless backend services" },
+    { word: "ansible", hint: "Open-source software provisioning, configuration management" },
+    { word: "terraform", hint: "Infrastructure as code software tool" },
+    { word: "vagrant", hint: "Tool for building and maintaining portable virtual software environments" },
+    { word: "webpack", hint: "Static module bundler for JavaScript applications" },
+    { word: "npm", hint: "Package manager for JavaScript programming language" },
+    { word: "yarn", hint: "Package manager that doubles down as project manager" },
+    { word: "postman", hint: "API platform for building and using APIs" },
+    { word: "figma", hint: "Collaborative interface design tool" },
+    { word: "vscode", hint: "Source-code editor developed by Microsoft" },
+    
+    // Web Technologies (15)
+    { word: "html", hint: "Standard markup language for documents designed for web browsers" },
+    { word: "css", hint: "Style sheet language used for describing presentation of documents" },
+    { word: "sass", hint: "Preprocessor scripting language that is interpreted into CSS" },
+    { word: "websocket", hint: "Computer communications protocol providing full-duplex channels" },
+    { word: "http", hint: "Application layer protocol for distributed, collaborative systems" },
+    { word: "https", hint: "Secure version of HTTP using encryption" },
+    { word: "restapi", hint: "Architectural style for designing networked applications" },
+    { word: "graphql", hint: "Query language for APIs and runtime for fulfilling queries" },
+    { word: "json", hint: "Lightweight data interchange format" },
+    { word: "xml", hint: "Markup language that defines set of rules for encoding documents" },
+    { word: "ajax", hint: "Technique for creating fast and dynamic web pages" },
+    { word: "oauth", hint: "Open standard for access delegation" },
+    { word: "jwt", hint: "Compact, URL-safe means of representing claims to be transferred" },
+    { word: "pwa", hint: "Web application that can be installed on device home screen" },
+    { word: "seo", hint: "Process of improving quality and quantity of website traffic" },
+    
+    // Cloud & DevOps (15)
+    { word: "serverless", hint: "Cloud computing execution model where cloud provider runs server" },
+    { word: "microservices", hint: "Architectural style that structures app as collection of services" },
+    { word: "container", hint: "Standard unit of software that packages code and dependencies" },
+    { word: "loadbalancer", hint: "Device that acts as reverse proxy and distributes traffic" },
+    { word: "cdn", hint: "Geographically distributed network of proxy servers" },
+    { word: "ci", hint: "Practice of merging all developers' working copies to shared mainline" },
+    { word: "cd", hint: "Software engineering approach where teams produce software in short cycles" },
+    { word: "iac", hint: "Managing and provisioning computer data centers through machine-readable files" },
+    { word: "monitoring", hint: "Process of collecting, analyzing, and using information" },
+    { word: "logging", hint: "Recording events that happen in software execution" },
+    { word: "prometheus", hint: "Systems monitoring and alerting toolkit" },
+    { word: "grafana", hint: "Multi-platform open source analytics and interactive visualization web application" },
+    { word: "sentry", hint: "Cross-platform application monitoring with focus on error reporting" },
+    { word: "datadog", hint: "Monitoring service for cloud-scale applications" },
+    { word: "newrelic", hint: "Performance management solution helping developers improve web applications" },
+    
+    // AI/ML & Data Science (10)
+    { word: "neuralnetwork", hint: "Computing system vaguely inspired by biological neural networks" },
+    { word: "machinelearning", hint: "Scientific study of algorithms and statistical models" },
+    { word: "deeplearning", hint: "Part of broader family of machine learning methods" },
+    { word: "computervision", hint: "Field concerned with how computers can gain understanding from digital images" },
+    { word: "nlp", hint: "Subfield of linguistics, computer science, and AI concerned with human-computer interaction" },
+    { word: "chatgpt", hint: "AI chatbot developed by OpenAI" },
+    { word: "opencv", hint: "Library of programming functions mainly aimed at real-time computer vision" },
+    { word: "pandas", hint: "Software library for data manipulation and analysis" },
+    { word: "numpy", hint: "Library for large, multi-dimensional arrays and matrices" },
+    { word: "matplotlib", hint: "Plotting library for Python programming language" },
+    
+    // Miscellaneous (10)
+    { word: "agile", hint: "Group of iterative development methodologies" },
+    { word: "scrum", hint: "Framework for project management with emphasis on software development" },
+    { word: "kanban", hint: "Visual system for managing work as it moves through process" },
+    { word: "devops", hint: "Set of practices combining software development and IT operations" },
+    { word: "opensource", hint: "Practice of making source code publicly accessible" },
+    { word: "blockchain", hint: "Distributed database that maintains continuously growing list of records" },
+    { word: "cryptocurrency", hint: "Digital currency designed to work as medium of exchange" },
+    { word: "iot", hint: "Network of physical objects embedded with sensors and software" },
+    { word: "ar", hint: "Interactive experience of real-world environment enhanced by computer-generated perceptual information" },
+    { word: "vr", hint: "Simulated experience that can be similar to or completely different from real world" }
 ];
 
 let hangman = {
@@ -2616,7 +2740,7 @@ function updateHangmanUI() {
                 <div class="flex items-center gap-3 mb-3">
                     <i data-lucide="trophy" class="w-8 h-8 text-yellow-500"></i>
                     <div>
-                        <h4 class="font-bold text-lg">🎉 Congratulations! You won! 🎉</h4>
+                        <h4 class="font-bold text-lg"> Congratulations! You won! </h4>
                         <p class="text-sm text-green-700 mt-1">You guessed the word with ${hangman.lives} lives remaining!</p>
                     </div>
                 </div>
@@ -2629,7 +2753,7 @@ function updateHangmanUI() {
                 <div class="flex items-center gap-3 mb-3">
                     <i data-lucide="x-circle" class="w-8 h-8 text-red-500"></i>
                     <div>
-                        <h4 class="font-bold text-lg">💀 Game Over! You lost! 💀</h4>
+                        <h4 class="font-bold text-lg"> Game Over! You lost! </h4>
                         <p class="text-sm text-red-700 mt-1">Better luck next time!</p>
                     </div>
                 </div>
