@@ -2706,7 +2706,101 @@ const HANGMAN_WORDS = [
     { word: "cryptocurrency", hint: "Digital currency designed to work as medium of exchange" },
     { word: "iot", hint: "Network of physical objects embedded with sensors and software" },
     { word: "ar", hint: "Interactive experience of real-world environment enhanced by computer-generated perceptual information" },
-    { word: "vr", hint: "Simulated experience that can be similar to or completely different from real world" }
+    { word: "vr", hint: "Simulated experience that can be similar to or completely different from real world" },
+
+    // Development Tools (15)
+    { word: "vscodium", hint: "Free/Libre Open Source Software Binaries of VSCode" },
+    { word: "sublime", hint: "Sophisticated text editor for code, markup and prose" },
+    { word: "vim", hint: "Highly configurable text editor built for efficient editing" },
+    { word: "emacs", hint: "Extensible, customizable text editor with Lisp interpreter" },
+    { word: "intellij", hint: "Integrated development environment for Java development" },
+    { word: "pycharm", hint: "Python IDE for professional developers" },
+    { word: "webstorm", hint: "JavaScript and TypeScript IDE by JetBrains" },
+    { word: "androidstudio", hint: "Official IDE for Android app development" },
+    { word: "xcode", hint: "IDE for macOS containing software development tools" },
+    { word: "eclipse", hint: "Integrated development environment primarily for Java" },
+    { word: "notepadplusplus", hint: "Source code editor and Notepad replacement" },
+    { word: "atom", hint: "Free and open-source text and source code editor" },
+    { word: "brackets", hint: "Open-source text editor with focus on web design" },
+    { word: "insomnia", hint: "API client for REST, GraphQL, and gRPC" },
+    { word: "thunderclient", hint: "Lightweight REST API Client Extension for VS Code" },
+    
+    // Programming Concepts (15)
+    { word: "recursion", hint: "Function calling itself to solve smaller instances" },
+    { word: "polymorphism", hint: "Ability of different objects to respond to same message" },
+    { word: "encapsulation", hint: "Bundling of data with methods operating on that data" },
+    { word: "abstraction", hint: "Hiding complex implementation details" },
+    { word: "inheritance", hint: "Deriving new classes from existing ones" },
+    { word: "interface", hint: "Contract that specifies capabilities a class should provide" },
+    { word: "composition", hint: "Design principle to compose objects for complex behaviors" },
+    { word: "dependencyinjection", hint: "Design pattern for achieving Inversion of Control" },
+    { word: "singleton", hint: "Design pattern restricting instantiation to single object" },
+    { word: "factory", hint: "Creational design pattern for creating objects" },
+    { word: "observer", hint: "Design pattern for event handling systems" },
+    { word: "strategy", hint: "Behavioral design pattern for selecting algorithms" },
+    { word: "decorator", hint: "Design pattern adding behavior to objects dynamically" },
+    { word: "iterator", hint: "Design pattern for traversing container elements" },
+    { word: "adapter", hint: "Design pattern for incompatible interfaces" },
+    
+    // Testing & Quality (10)
+    { word: "jest", hint: "JavaScript testing framework with focus on simplicity" },
+    { word: "mocha", hint: "Feature-rich JavaScript test framework running on Node.js" },
+    { word: "chai", hint: "BDD/TDD assertion library for Node.js and browser" },
+    { word: "cypress", hint: "End-to-end testing framework for web applications" },
+    { word: "selenium", hint: "Portable framework for testing web applications" },
+    { word: "pytest", hint: "Framework for writing small tests in Python" },
+    { word: "junit", hint: "Unit testing framework for Java programming language" },
+    { word: "eslint", hint: "Static code analysis tool for JavaScript and JSX" },
+    { word: "prettier", hint: "Code formatter supporting multiple languages" },
+    { word: "sonarqube", hint: "Platform for continuous inspection of code quality" },
+    
+    // Mobile Development (10)
+    { word: "reactnative", hint: "Framework for building native apps using React" },
+    { word: "xamarin", hint: ".NET developer platform for building iOS and Android apps" },
+    { word: "ionic", hint: "Open source UI toolkit for building mobile apps" },
+    { word: "cordova", hint: "Mobile application development framework" },
+    { word: "capacitor", hint: "Cross-platform native runtime for web apps" },
+    { word: "expo", hint: "Framework and platform for universal React applications" },
+    { word: "appium", hint: "Open source test automation framework for mobile apps" },
+    { word: "realm", hint: "Mobile database alternative to SQLite and Core Data" },
+    { word: "firebaseauth", hint: "Backend service for app authentication" },
+    { word: "onesignal", hint: "Free push notification service for mobile apps" },
+    
+    // DevOps & Infrastructure (10)
+    { word: "ansible", hint: "Open-source software provisioning, configuration management" },
+    { word: "puppet", hint: "Configuration management tool for system administration" },
+    { word: "chef", hint: "Configuration management tool for infrastructure automation" },
+    { word: "saltstack", hint: "Python-based configuration management and remote execution" },
+    { word: "packer", hint: "Open source tool for creating identical machine images" },
+    { word: "consul", hint: "Service networking solution for service discovery" },
+    { word: "vault", hint: "Tool for securely accessing secrets and encrypting data" },
+    { word: "nomad", hint: "Flexible scheduler and orchestrator for containers" },
+    { word: "prometheus", hint: "Systems monitoring and alerting toolkit" },
+    { word: "grafana", hint: "Multi-platform open source analytics and visualization" },
+    
+    // Data & Analytics (10)
+    { word: "apachespark", hint: "Unified analytics engine for large-scale data processing" },
+    { word: "apachehadoop", hint: "Framework for distributed storage and processing" },
+    { word: "apachekafka", hint: "Distributed event streaming platform" },
+    { word: "apacheflink", hint: "Framework for stateful computations over data streams" },
+    { word: "apachebeam", hint: "Unified programming model for batch and streaming data" },
+    { word: "tableau", hint: "Interactive data visualization software" },
+    { word: "powerbi", hint: "Business analytics service by Microsoft" },
+    { word: "looker", hint: "Business intelligence software and big data analytics" },
+    { word: "snowflake", hint: "Cloud-based data warehousing platform" },
+    { word: "databricks", hint: "Unified data analytics platform" },
+    
+    // Security (10)
+    { word: "owasp", hint: "Online community producing freely available security articles" },
+    { word: "burpsuite", hint: "Platform for web application security testing" },
+    { word: "metasploit", hint: "Penetration testing framework for security teams" },
+    { word: "wireshark", hint: "Network protocol analyzer for troubleshooting" },
+    { word: "nmap", hint: "Network discovery and security auditing tool" },
+    { word: "hashicorp", hint: "Company providing infrastructure automation software" },
+    { word: "letsencrypt", hint: "Certificate authority providing free SSL certificates" },
+    { word: "cloudflare", hint: "Web infrastructure and security company" },
+    { word: "auth0", hint: "Identity management platform for developers" },
+    { word: "okta", hint: "Identity and access management service" }
 ];
 
 let hangman = {
