@@ -714,66 +714,13 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   <!-- Enhanced Courses Section -->
 <section id="courses" class="hidden py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<!-- Hero Section with Xavi - DESKTOP with pop-up style mobile -->
-<div class="mb-16">
-  <!-- Desktop Layout -->
-  <div class="hidden lg:block">
-    <div class="flex items-start justify-center gap-12">
-      <!-- Xavi Image with speech bubble -->
-      <div class="relative">
-        <!-- Speech bubble ABOVE image with triangle pointing DOWN -->
-        <div class="absolute -top-24 left-1/2 transform -translate-x-1/2 bg-white p-4 rounded-xl shadow-lg border border-emerald-200 max-w-xs z-10">
-          <p class="text-sm text-emerald-700">"Let's explore programming together!"</p>
-          <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-emerald-200 rotate-45"></div>
-        </div>
-        
-        <!-- Smaller desktop image -->
-        <img 
-          src="xavi-program.png" 
-          alt="Xavi Programming" 
-          class="w-40 h-auto mt-2" <!-- Smaller: w-40 instead of w-52 -->
-        >
-      </div>
-      
-      <!-- Content -->
-      <div class="max-w-2xl">
-        <h2 class="text-4xl md:text-5xl font-extrabold brand text-emerald-600 mb-4">
-          Programming Resource Hub
-        </h2>
-        <p class="text-xl text-gray-600 mb-6">Curated tutorials & learning resources for SRCAS students</p>
-        
-        <!-- Tags -->
-        <div class="flex flex-wrap gap-3 mb-8">
-          <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">C/C++</span>
-          <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">Python</span>
-          <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">Java</span>
-          <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">JavaScript</span>
-          <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">HTML/CSS</span>
-          <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">Frameworks</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Mobile Layout - Popup style (initially hidden) -->
-  <div class="lg:hidden">
-    <!-- Popup Trigger Button -->
-    <div class="text-center mb-6">
-      <button onclick="openXaviPopup()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 flex items-center gap-2 mx-auto">
-        <i data-lucide="sparkles" class="w-5 h-5"></i>
-        Meet Xavi - Your Programming Guide
-      </button>
-    </div>
-    
-    <!-- Content for mobile (without image) -->
-    <div class="text-center">
-      <h2 class="text-3xl font-extrabold brand text-emerald-600 mb-4">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-extrabold brand text-emerald-600 mb-4">
         Programming Resource Hub
       </h2>
-      <p class="text-lg text-gray-600 mb-6">Curated tutorials & learning resources for SRCAS students</p>
-      
-      <!-- Tags -->
-      <div class="flex flex-wrap justify-center gap-3">
+      <p class="text-xl text-gray-600 mb-6">Curated tutorials & learning resources for SRCAS students</p>
+      <div class="flex flex-wrap justify-center gap-3 mb-8">
         <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">C/C++</span>
         <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">Python</span>
         <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">Java</span>
@@ -782,48 +729,6 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
         <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">Frameworks</span>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- Mobile Xavi Popup (like intro) -->
-<div id="xaviMobilePopup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full overflow-hidden">
-    <div class="flex flex-col items-center">
-      <!-- Close Button -->
-      <button onclick="closeXaviPopup()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-        <i data-lucide="x" class="w-6 h-6"></i>
-      </button>
-      
-      <!-- Xavi Image -->
-      <div class="p-6">
-        <img 
-          src="xavi-program.png" 
-          alt="Xavi Programming" 
-          class="w-64 h-auto mx-auto mb-4"
-        >
-      </div>
-      
-      <!-- Text Content -->
-      <div class="p-6 pt-0 text-center">
-        <div class="flex items-center justify-center gap-2 mb-4">
-          <i data-lucide="code" class="text-emerald-600 w-6 h-6"></i>
-          <h3 class="text-lg font-bold text-emerald-600">Hi, I'm Xavi!</h3>
-        </div>
-        
-        <div class="mb-6">
-          <p class="font-semibold text-gray-800 text-base mb-2">Your Programming Guide</p>
-          <p class="text-sm text-gray-600">"Let's explore programming together!"</p>
-          <p class="text-sm text-gray-600 mt-2">I'll help you find the best learning resources!</p>
-        </div>
-        
-        <!-- Close Button -->
-        <button onclick="closeXaviPopup()" class="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-8 rounded-lg transition duration-300 w-full">
-          Start Exploring!
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
 
     <!-- Search and Filter -->
     <div class="mb-8">
@@ -4145,28 +4050,6 @@ function filterCourses(searchTerm, filter = '') {
     }
   } else if (message) {
     message.remove();
-  }
-}
-
-  // Xavi Popup Functions for Mobile
-function openXaviPopup() {
-  document.getElementById('xaviMobilePopup').classList.remove('hidden');
-  lucide.createIcons();
-}
-
-function closeXaviPopup() {
-  document.getElementById('xaviMobilePopup').classList.add('hidden');
-}
-
-// Auto-open popup on mobile when courses section loads
-function initializeCourses() {
-  renderAllCourses();
-  setupSearch();
-  setupFilter();
-  
-  // Auto-open Xavi popup on mobile
-  if (window.innerWidth < 1024) { // lg breakpoint
-    setTimeout(openXaviPopup, 800); // Delay for better UX
   }
 }
 </script>
