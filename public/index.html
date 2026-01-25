@@ -714,28 +714,28 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
   <!-- Enhanced Courses Section -->
 <section id="courses" class="hidden py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-   <!-- Hero Section with Xavi and speech bubble - CORRECTED -->
+<!-- Hero Section with Xavi and speech bubble - FINAL CORRECTED VERSION -->
 <div class="mb-16">
   <div class="relative">
-    <!-- Xavi Image positioned to the side - ADJUSTED POSITION -->
-    <div class="absolute left-0 top-0 hidden lg:block mt-[-60px]"> <!-- Added mt-[-60px] to move it up -->
+    <!-- Xavi Image positioned to the side - CORRECTED -->
+    <div class="absolute left-0 top-0 hidden lg:block mt-[-30px] ml-[-20px]"> <!-- Reduced mt, added ml-[-20px] to move left -->
       <div class="relative">
-        <!-- Speech bubble on LEFT side of image -->
-        <div class="absolute -top-6 left-48 bg-white p-4 rounded-xl shadow-lg border border-emerald-200 max-w-xs z-10">
+        <!-- Speech bubble on LEFT side of image - CORRECTED TRIANGLE -->
+        <div class="absolute -top-6 -right-44 bg-white p-4 rounded-xl shadow-lg border border-emerald-200 max-w-xs z-10">
           <p class="text-sm text-emerald-700">"Let's explore programming together!"</p>
-          <div class="absolute -right-2 top-6 w-4 h-4 bg-white transform rotate-45 border-r border-b border-emerald-200"></div>
+          <div class="absolute -left-2 top-6 w-4 h-4 bg-white transform rotate-45 border-l border-b border-emerald-200"></div>
         </div>
         
         <img 
           src="xavi-program.png" 
           alt="Xavi Programming" 
-          class="w-48 h-auto ml-20" <!-- Added ml-20 for spacing from left edge -->
+          class="w-52 h-auto" <!-- Increased to w-52 -->
         >
       </div>
     </div>
     
-    <!-- Content centered - ADJUSTED MARGIN -->
-    <div class="text-center lg:ml-80 mt-8"> <!-- Increased ml-64 to ml-80, added mt-8 -->
+    <!-- Content centered - ADJUSTED FOR BETTER CENTERING -->
+    <div class="text-center lg:px-20"> <!-- Changed from ml-80 to px-20 for centering -->
       <h2 class="text-4xl md:text-5xl font-extrabold brand text-emerald-600 mb-4">
         Programming Resource Hub
       </h2>
@@ -752,16 +752,17 @@ input[type="password"] { user-select: none; -webkit-user-select: none; }
       </div>
     </div>
     
-    <!-- Mobile version - UPDATED WITH BETTER POSITIONING -->
+    <!-- Mobile version - LARGER IMAGE -->
     <div class="lg:hidden flex flex-col items-center mb-8">
       <div class="relative mb-4">
+        <!-- Larger image on mobile -->
         <img 
           src="xavi-program.png" 
           alt="Xavi Programming" 
-          class="w-32 h-auto"
+          class="w-48 h-auto" <!-- Increased from w-32 to w-48 -->
         >
-        <!-- Speech bubble for mobile -->
-        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white p-3 rounded-xl shadow-lg border border-emerald-200 max-w-xs text-center">
+        <!-- Speech bubble for mobile - CORRECTED -->
+        <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-white p-3 rounded-xl shadow-lg border border-emerald-200 max-w-xs text-center">
           <p class="text-xs text-emerald-700">"Let's explore programming together!"</p>
           <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-emerald-200 rotate-45"></div>
         </div>
