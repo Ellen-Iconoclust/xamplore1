@@ -2336,23 +2336,24 @@ function renderQuestion() {
     el('questionBox').innerHTML = `
         <p class="font-semibold mb-4 text-lg">Q${currentIndex+1}: ${q.q}</p>
         
+        <!-- Container: options on left, QR on right - ALWAYS side by side -->
         <div class="flex flex-row gap-2">
-            <!-- Options take most space -->
-            <div class="flex-1 space-y-2">
+            <!-- Options - takes about 70% width -->
+            <div class="w-3/5 space-y-2">
                 ${q.options.map(o => `
-                    <label class="flex items-center mb-2 cursor-pointer hover:bg-gray-50 p-3 rounded border border-gray-300 transition duration-200">
-                        <input type="radio" name="ans" value="${o}" class="mr-3 h-4 w-4 text-emerald-600">
-                        <span class="text-gray-700">${o}</span>
+                    <label class="flex items-center cursor-pointer hover:bg-gray-50 p-3 rounded border border-gray-300 transition duration-200">
+                        <input type="radio" name="ans" value="${o}" class="mr-3 h-4 w-4 text-emerald-600 flex-shrink-0">
+                        <span class="text-gray-700 text-sm md:text-base truncate">${o}</span>
                     </label>
                 `).join("")}
             </div>
             
-            <!-- QR Code right beside options, smaller on mobile -->
-            <div class="w-24 md:w-32 flex-shrink-0 flex items-start">
+            <!-- QR Code - takes about 40% width, positioned immediately to the right -->
+            <div class="w-2/5 flex items-center justify-center">
                 <img 
                     src="xamplore-qr-code.png" 
                     alt="QR Code"
-                    class="w-full h-auto object-contain"
+                    class="w-full h-auto max-w-xs object-contain"
                     onerror="this.style.display='none';"
                 >
             </div>
@@ -2372,7 +2373,6 @@ function renderQuestion() {
         nextButton.onclick = nextQuestion;
     }
 }
-
 async function handleLastQuestion() {
     const sel = document.querySelector("input[name='ans']:checked");
     if (!sel) return alert("Please select an option");
