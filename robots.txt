@@ -1,1 +1,14 @@
+User-agent: *
+Allow: /
+Allow: /api/*
+Disallow: /admin
+Disallow: /test/*
 
+Sitemap: https://xamplore1.vercel.app/sitemap.xml
+
+# Creator Information
+# Created by Ellen Iconoclust - Lead Developer at Code Ronins
+# Portfolio: https://ellen-dev.vercel.app
+# Other Projects: 
+#   - PromptBud: https://promptbud.vercel.app
+#   - Code Ronins: https://coderonins.vercel.app
